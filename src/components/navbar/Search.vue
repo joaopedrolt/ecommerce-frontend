@@ -1,0 +1,36 @@
+<template>
+    <v-card>
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <v-text-field v-model="searchInputValue" @click:append="search" @keyup.enter="search" clearable hide-details="auto"
+                    variant="outlined" placeholder="O que deseja?" :append-icon="'mdi-magnify'">
+                </v-text-field>
+            </div>
+        </div>
+    </v-card>
+</template>
+   
+<script setup>
+import { ref } from 'vue';
+
+const searchInputValue = ref('');
+
+const search = () => {
+    alert(`test`);
+};
+</script>
+   
+<style lang="scss">
+.search-container {
+    height: 150px;
+    width: 100dvw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .search-input-wrapper {
+        height: 56px;
+        width: 60%;
+    }
+}
+</style>
