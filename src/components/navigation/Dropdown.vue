@@ -13,7 +13,7 @@
 </template>
    
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     menu: String,
@@ -23,16 +23,5 @@ const menu = ref(props.menu);
 </script>
    
 <style lang="scss">
-.search-container {
-    height: 150px;
-    width: 100dvw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    .search-input-wrapper {
-        height: 56px;
-        width: 60%;
-    }
-}
 </style>

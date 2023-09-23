@@ -9,7 +9,5 @@
 </script>
 
 <style lang="scss">
-.fluid-spacing {
-  padding: 0 40px;
-}
+
 </style>
