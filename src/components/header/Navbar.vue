@@ -120,7 +120,7 @@ const displaySearchOverlay = () => {
     z-index: 1005 !important;
 
     .nav-side-container {
-      width: 341.4px;
+      width: 342px;
     }
 
     .nav-mobile-icon-container {

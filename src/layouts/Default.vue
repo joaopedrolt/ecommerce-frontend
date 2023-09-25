@@ -4,12 +4,11 @@
   <v-main>
     <router-view />
   </v-main>
-  <v-footer>
-
-  </v-footer>
+  <footerbar />
 </template>
 
 <script setup>
-import Navbar from '../components/navigation/Navbar.vue'
-import NavigationDrawer from '../components/navigation/NavigationDrawer.vue';
+import Navbar from '../components/header/Navbar.vue'
+import NavigationDrawer from '../components/header/NavigationDrawer.vue';
+import Footerbar from '../components/Footer.vue';
 </script>

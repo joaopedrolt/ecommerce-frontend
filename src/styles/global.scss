@@ -1,1 +1,9 @@
 $breakpoint: 960px;
+
+$color-gray: rgb(113, 113, 113);
+
+@mixin grid($width) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax($width, 1fr));
+    gap: 1.5rem;
+}
