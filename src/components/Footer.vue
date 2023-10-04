@@ -2,21 +2,24 @@
     <v-footer elevation="10">
         <div class="footer-container">
             <div class="footer-row left-row">
-                <div class="footer-column brand-field">
-                    <div class="column-title">
-                        ECOMMERCE
-                    </div>
-                    <div class="column-components">
-                        <div class="text-caption">
-                            Há mais de 10 anos no mercado, a Ellos Design tem como um de seus principais pilares, o
-                            compromisso
-                            em gerar resultados de qualidade, de maneira prática e efetiva aos nossos clientes por todo o
-                            Brasil.
+                <div class="footer-column side-field brand-field">
+                    <div class="brand-column-wrapper">
+                        <div class="column-title">
+                            ECOMMERCE
                         </div>
-                        <div style="display: flex; margin-left: -8px;">
-                            <v-btn size="x-small" variant="text" icon="mdi-instagram" :ripple="false" />
-                            <v-btn size="x-small" variant="text" icon="mdi-facebook" :ripple="false" />
-                            <v-btn size="x-small" variant="text" icon="mdi-twitter" :ripple="false" />
+                        <div class="column-components">
+                            <div class="text-caption">
+                                Há mais de 10 anos no mercado, a Ellos Design tem como um de seus principais pilares, o
+                                compromisso
+                                em gerar resultados de qualidade, de maneira prática e efetiva aos nossos clientes por todo
+                                o
+                                Brasil.
+                            </div>
+                            <div style="display: flex; margin-left: -8px;">
+                                <v-btn size="x-small" variant="text" icon="mdi-instagram" :ripple="false" />
+                                <v-btn size="x-small" variant="text" icon="mdi-facebook" :ripple="false" />
+                                <v-btn size="x-small" variant="text" icon="mdi-twitter" :ripple="false" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -90,8 +93,8 @@
                         </v-list>
                     </div>
                 </div>
-                <div class="footer-column newsletter">
-                    <div class="newsletter-column-wrapper ">
+                <div class="footer-column side-field newsletter">
+                    <div class="newsletter-column-wrapper">
                         <div class="column-title">
                             Newsletter
                         </div>
@@ -135,98 +138,128 @@ const newsletterEmailInputValue = ref('');
 
         .footer-column {
             flex: 1;
-            margin-bottom: 5px;
+
+            &.side-field {
+                /*  min-height: 166px;
+                max-height: 166px; */
+                height: 166px;
+                display: flex;
+                flex-direction: column;
+
+                .text-caption {
+                    color: $color-gray;
+                }
+            }
+
+            &.newsletter {
+                align-items: end;
+                margin-left: 30px;
+            }
+
+            &.brand-field {
+                margin-right: 40px;
+            }
+
+            .newsletter-column-wrapper,
+            .brand-column-wrapper {
+                width: 270px;
+            }
+
+            .column-list .column-list-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0 !important;
+
+                .column-list-item {
+                    padding: 0 !important;
+                    width: 65px;
+                }
+            }
 
             .column-title {
-                margin-bottom: 5px;
+                margin-bottom: 2px;
 
                 &.list-title {
                     text-align: center;
                 }
             }
+        }
+    }
 
-            .column-list {
-                .column-list-wrapper {
-                    padding: 0 !important;
+    @media (max-width: $tablet) {
+        flex-direction: column;
+
+        .footer-row {
+
+            &.left-row,
+            &.right-row {
+                gap: 40px;
+            }
+
+            &.right-row {
+                flex-direction: row-reverse;
+            }
+
+            .footer-column {
+                margin-bottom: 10px;
+
+                &.side-field {
+                    margin-left: 0px !important;
+                    margin-right: 0px !important;
                     display: flex;
+                    align-items: end;
                     flex-direction: column;
-                    align-items: center;
-
-                    .column-list-item {
-                        padding: 0 !important;
-                        width: 65px;
-                    }
                 }
-            }
 
-            .column-components {
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                width: 270px;
-            }
-
-            &.newsletter {
-                display: flex;
-                flex-direction: column;
-                align-items: end;
-                margin-left: 40px;
-
+                .brand-column-wrapper,
                 .newsletter-column-wrapper {
-                    width: 270px;
-                }
-            }
-
-            &.brand-field {
-                margin-right: 25px;
-            }
-
-            &.newsletter,
-            &.brand-field {
-                .text-caption {
-                    color: $color-gray;
+                    margin-left: 50px;
                 }
             }
         }
     }
 
-    @media (max-width: $breakpoint) {
-        flex-direction: column !important;
-        gap: 5px;
-
+    @media (max-width: $phone) {
         .footer-row {
-            flex-wrap: wrap;
+            flex-direction: column;
 
-            .footer-list {
-                min-width: 117px;
-            }
-
-            &.left-row {
-
-                .brand-field {
-                    margin-right: 90px !important;
-                }
+            &.left-row,
+            &.right-row {
+                gap: 0px;
             }
 
             &.right-row {
-                flex-direction: row-reverse !important;
-
-                .newsletter {
-                    align-items: start !important;
-                    margin-left: 0px !important;
-                    margin-right: 90px;
-                }
+                flex-direction: column;
             }
 
-            .column-title {
-                &.list-title {
-                    text-align: start !important;
-                }
-            }
+            .footer-column {
+                &.side-field {
+                    /*  min-height: auto !important; */
+                    /*  max-height: auto !important; */
+                    align-items: start;
 
-            .column-list {
-                .column-list-wrapper {
-                    align-items: start !important;
+                    .text-caption {
+                        color: $color-gray;
+                    }
+                }
+
+                &.brand-field {
+                    margin-bottom: 5px;
+                }
+
+                .brand-column-wrapper,
+                .newsletter-column-wrapper {
+                    margin-left: 0 !important;
+                    width: auto;
+                }
+
+                .column-list .column-list-wrapper {
+                    align-items: start;
+                }
+
+                .column-title.list-title {
+                    text-align: start;
                 }
             }
         }

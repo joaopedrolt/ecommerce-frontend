@@ -33,7 +33,7 @@ const search = () => {
     .search-input-wrapper {
         width: 60%;
 
-        @media (max-width: $breakpoint) {
+        @media (max-width: $tablet) {
             width: 90%;
         }
     }
