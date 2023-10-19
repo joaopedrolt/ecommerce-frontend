@@ -4,10 +4,14 @@
   </v-app>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style lang="scss">
 
+.container-limit {
+  padding: 0 !important;
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+}
 </style>

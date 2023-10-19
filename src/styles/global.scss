@@ -1,7 +1,8 @@
 $tablet: 960px;
 $phone: 560px;
 
-$color-gray: rgb(113, 113, 113);
+$color-gray: #757575; // grey-darken-1
+$color-black: #000000DE; // grey-darken-1
 
 @mixin grid($width) {
     display: grid;
