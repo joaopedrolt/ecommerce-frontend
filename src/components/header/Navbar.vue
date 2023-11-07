@@ -1,5 +1,9 @@
 <template>
-  <v-app-bar class="nav-component" :elevation="1">
+  <v-app-bar
+    class="nav-component"
+    style="z-index: 1003 !important"
+    :elevation="1"
+  >
     <div class="container-limit navbar-limit nav-container">
       <div class="h-100 w-100 d-flex justify-space-between align-center">
         <!-- Desktop -->
@@ -91,7 +95,11 @@
             <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
           </v-btn>
 
-          <v-btn class="nav-btn-custom h-100" :ripple="false">
+          <v-btn
+            @click="handleSignInClick"
+            class="nav-btn-custom h-100"
+            :ripple="false"
+          >
             Entrar
             <v-icon style="margin: 0 0 2px 3px">mdi-account</v-icon>
           </v-btn>
@@ -104,7 +112,7 @@
 
         <!-- Mobile -->
         <div class="d-md-none nav-mobile-icon-container">
-          <v-btn icon size="small">
+          <v-btn @click="handleSignInClick" icon size="small">
             <v-icon>mdi-account</v-icon>
           </v-btn>
           <v-btn icon size="small">
@@ -124,11 +132,13 @@
 <script setup>
 import { ref } from "vue";
 import { useDrawerStore } from "@/store/store";
+import { useRouter } from "vue-router";
 
 import Dropdown from "./Dropdown.vue";
 import Search from "./Search.vue";
 
 const drawerStore = useDrawerStore();
+const router = useRouter();
 
 const firstMenu = ref(false);
 const secondMenu = ref(false);
@@ -143,11 +153,15 @@ const displayNavigationDrawer = () => {
 const displaySearchOverlay = () => {
   displaySearch.value = true;
 };
+
+const handleSignInClick = () => {
+  router.push({name: 'SignIn'});
+};
 </script>
 
 <style lang="scss">
 .container-limit.navbar-limit {
-  max-width: 1216px !important;
+  max-width: 1202px !important;
 }
 
 .nav-container {

@@ -4,11 +4,22 @@ import { createRouter, createWebHistory } from "vue-router";
 // Layouts
 
 import DefaultLayout from "@/layouts/Default.vue";
-/* import PaymentLayout from "@/layouts/Payment.vue"; */
+import CleanLayout from "@/layouts/Clean.vue";
 
 // Views
 
 const routes = [
+  {
+    path: "/entrar", // Ver se vai mudar o nome
+    component: CleanLayout,
+    children: [
+      {
+        path: "",
+        name: "SignIn",
+        component: () => import("@/views/clean/SignIn.vue"),
+      },
+    ],
+  },
   {
     path: "/",
     component: DefaultLayout,
@@ -16,7 +27,7 @@ const routes = [
       {
         path: "",
         name: "Home",
-        component: () => import("@/views/Home.vue"),
+        component: () => import("@/views/default/Home.vue"),
       },
     ],
   },

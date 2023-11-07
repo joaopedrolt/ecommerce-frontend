@@ -1,6 +1,6 @@
 <template>
   <footer class="footer-component elevation-10">
-    <div class="container-limit">
+    <div v-if="showTopSide" class="container-limit">
       <top-side />
     </div>
     <v-divider class="w-100" color="black" :thickness="1"></v-divider>
@@ -11,6 +11,14 @@
 <script setup>
 import TopSide from "./Columns.vue";
 import BottomSide from "./Baseboard.vue";
+
+import { ref } from "vue";
+
+const props = defineProps({
+  showTopSide: Boolean,
+});
+
+const showTopSide = ref(props.showTopSide);
 </script>
 
 <style lang="scss">

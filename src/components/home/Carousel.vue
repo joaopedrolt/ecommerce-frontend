@@ -1,7 +1,7 @@
 <template>
   <div class="carousel-container">
     <div class="container-limit carousel-limit carousel-height-limit">
-        <v-carousel
+   <!--    <v-carousel
         cycle
         interval="4000"
         hide-delimiter-background
@@ -47,7 +47,7 @@
           src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
           cover
         ></v-carousel-item>
-      </v-carousel>
+      </v-carousel> -->
 
       <!-- <Splide class="carousel-height-limit" :has-track="false" aria-label="...">
         <SplideTrack style="width: 100%">
@@ -94,11 +94,20 @@
         </SplideTrack>
 
         <div class="splide__arrows">
-          <button class="splide__arrow splide__arrow--prev">Prev</button>
-          <button class="splide__arrow splide__arrow--next">Next</button>
+          <button class="splide__arrow splide__arrow--prev">
+            <v-icon
+              icon="mdi-chevron-left"
+              size="small"
+            ></v-icon>
+          </button>
+          <button class="splide__arrow splide__arrow--next">
+            <v-icon
+              icon="mdi-chevron-right"
+              size="small"
+            ></v-icon>
+          </button>
         </div>
       </Splide>
-
     </div>
   </div>
 </template>
@@ -109,10 +118,22 @@ import "@splidejs/vue-splide/css";
 </script>
 
 <style lang="scss">
+@import "@/styles/global.scss";
+
 /* .carousel-limit.carousel-limit {
   max-width: 1600px !important;
 }
  */
+
+.splide__arrow /* .splide__arrow--prev */
+/* .splide__arrow .splide__arrow--next  */{
+  background: $color-white !important;
+  opacity: 1 !important;
+
+  &:hover{
+    opacity: 0.87 !important;
+  }
+}
 
 .carousel-container {
   .carousel-height-limit {

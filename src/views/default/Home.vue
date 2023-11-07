@@ -2,7 +2,6 @@
   <div class="home-view">
     <carousel />
     <category-cards />
-   <!--  <category-cards /> -->
   </div>
 </template>
 
