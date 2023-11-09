@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-import Carousel from "@/components/home/Carousel.vue";
-import CategoryCards from "@/components/home/CategoryCards.vue";
+import Carousel from "@/components/Home/Carousel.vue";
+import CategoryCards from "@/components/Home/CategoryCards.vue";
 </script>
 
 <style lang="scss">

@@ -44,7 +44,7 @@ const itemsBaseboardLinks = [
 
   .footer-breadcrumbs {
     justify-content: center !important;
-    padding: 14px 0 9px 0 !important;
+    padding: 10px 0 9px 0 !important;
     color: $color-black !important;
   }
 }

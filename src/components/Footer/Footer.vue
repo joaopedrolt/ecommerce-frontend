@@ -1,5 +1,8 @@
 <template>
-  <footer class="footer-component elevation-10">
+  <footer
+    class="footer-component"
+    :class="{ 'elevation-10': showTopSide, 'footer-hide-top': !showTopSide }"
+  >
     <div v-if="showTopSide" class="container-limit">
       <top-side />
     </div>
@@ -28,23 +31,27 @@ const showTopSide = ref(props.showTopSide);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 12px !important;
+  padding-top: 12px;
   padding-left: 10px !important;
   padding-right: 10px !important;
   padding-bottom: 8px !important;
 
   @media (max-width: $tablet) {
-    padding-top: 27px !important;
+    padding-top: 27px;
   }
 
   @media (max-width: $phone) {
-    padding-top: 8px !important;
+    padding-top: 8px;
   }
 
   .footer-container {
     height: 100%;
     width: 100%;
     margin: auto;
+  }
+
+  &.footer-hide-top {
+    padding-top: 0 !important;
   }
 }
 </style>

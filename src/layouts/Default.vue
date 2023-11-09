@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import Navbar from "../components/header/Navbar.vue";
-import NavigationDrawer from "../components/header/NavigationDrawer.vue";
-import FooterArea from "../components/footer/Footer.vue";
+import Navbar from "@/components/Header/Navbar.vue";
+import NavigationDrawer from "@/components/Header/NavigationDrawer.vue";
+import FooterArea from "@/components/Footer/Footer.vue";
 </script>

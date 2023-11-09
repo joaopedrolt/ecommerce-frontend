@@ -12,6 +12,7 @@
   padding: 0 !important;
   max-width: 1200px;
   width: 100%;
+  height: 100%;
   margin: auto;
 }
 </style>
