@@ -155,7 +155,9 @@ const displaySearchOverlay = () => {
 };
 
 const handleSignInClick = () => {
-  router.push({name: 'SignIn'});
+  router.push({
+    name: "Identifier"
+  });
 };
 </script>
 

@@ -10,13 +10,24 @@ import CleanLayout from "@/layouts/Clean.vue";
 
 const routes = [
   {
-    path: "/entrar", // Ver se vai mudar o nome
+    path: "/c", // Ver se vai mudar o nome
     component: CleanLayout,
     children: [
       {
-        path: "",
-        name: "SignIn",
+        path: "entrar",
         component: () => import("@/views/Clean/SignIn.vue"),
+        children: [
+          {
+            path: "indetificar",
+            name: "Identifier",
+            component: () => import("@/components/SignIn/IdentifierForm.vue"),
+          },
+          {
+            path: "credencial",
+            name: "Credentials",
+            component: () => import("@/components/SignIn/CredentialsForm.vue"),
+          },
+        ],
       },
     ],
   },

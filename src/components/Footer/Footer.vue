@@ -1,13 +1,13 @@
 <template>
   <footer
     class="footer-component"
-    :class="{ 'elevation-10': showTopSide, 'footer-hide-top': !showTopSide }"
+    :class="{ 'elevation-10': cleanFooter, 'footer-hide-top': !cleanFooter }"
   >
-    <div v-if="showTopSide" class="container-limit">
+    <div v-if="cleanFooter" class="container-limit">
       <top-side />
     </div>
     <v-divider class="w-100" color="black" :thickness="1"></v-divider>
-    <bottom-side />
+    <bottom-side :cleanFooter="cleanFooter"/>
   </footer>
 </template>
 
@@ -18,10 +18,10 @@ import BottomSide from "./Baseboard.vue";
 import { ref } from "vue";
 
 const props = defineProps({
-  showTopSide: Boolean,
+  cleanFooter: Boolean,
 });
 
-const showTopSide = ref(props.showTopSide);
+const cleanFooter = ref(props.cleanFooter);
 </script>
 
 <style lang="scss">

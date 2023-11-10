@@ -7,15 +7,25 @@
         divider="-"
       />
     </div>
-    <div class="text-caption">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
-    <div class="text-caption">
-      CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim,
-      Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
-    </div>
+    <template v-if="cleanFooter">
+      <div class="text-caption">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
+      <div class="text-caption">
+        CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim,
+        Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
+const props = defineProps({
+  cleanFooter: Boolean,
+});
+
+const cleanFooter = ref(props.cleanFooter);
+
 const itemsBaseboardLinks = [
   {
     title: "Termos e condições",
@@ -44,7 +54,7 @@ const itemsBaseboardLinks = [
 
   .footer-breadcrumbs {
     justify-content: center !important;
-    padding: 10px 0 9px 0 !important;
+    padding: 16px 0 9px 0 !important;
     color: $color-black !important;
   }
 }

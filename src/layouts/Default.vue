@@ -4,7 +4,7 @@
   <v-main>
     <router-view />
   </v-main>
-  <footer-area :showTopSide="true"/>
+  <footer-area :cleanFooter="true"/>
 </template>
 
 <script setup>
