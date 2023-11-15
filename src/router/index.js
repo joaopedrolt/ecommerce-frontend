@@ -33,7 +33,7 @@ const routes = [
             beforeEnter(to, from, next) {
               const signInStore = useSignInStore();
 
-              if (signInStore.signInEmail.length == 0) {
+              if (signInStore.signInEmailInput.length == 0) {
                 next(from.path);
               } else {
                 next();

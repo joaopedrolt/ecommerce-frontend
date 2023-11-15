@@ -4,7 +4,7 @@
       <div class="text-h3 font-weight-light">Bem-vindo</div>
       <div class="text-h6 mb-4 font-weight-light">Digite seu e-mail</div>
       <v-text-field
-        v-model="emailInputValue"
+        v-model="signInEmailInput"
         variant="outlined"
         placeholder="E-mail"
       >
@@ -33,18 +33,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+/* import { ref } from "vue"; */
 import { useSignInStore } from "@/store/store";
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const signInStore = useSignInStore();
-
-const emailInputValue = ref("");
+const { signInEmailInput } = storeToRefs(signInStore);
 
 const handleContinueClick = () => {
-  signInStore.setSignInEmail(emailInputValue.value);
   setTimeout(() => {
     router.push({ name: "Credentials" });
   }, 100);
