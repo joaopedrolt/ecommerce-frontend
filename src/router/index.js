@@ -6,6 +6,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from "@/layouts/Default.vue";
 import CleanLayout from "@/layouts/Clean.vue";
 
+// Stores
+
+import { useSignInStore } from "@/store/store";
+
 // Views
 
 const routes = [
@@ -26,6 +30,15 @@ const routes = [
             path: "credencial",
             name: "Credentials",
             component: () => import("@/components/SignIn/CredentialsForm.vue"),
+            beforeEnter(to, from, next) {
+              const signInStore = useSignInStore();
+
+              if (signInStore.signInEmail.length == 0) {
+                next(from.path);
+              } else {
+                next();
+              }
+            },
           },
         ],
       },

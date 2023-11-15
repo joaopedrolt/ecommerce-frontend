@@ -34,21 +34,20 @@
 
 <script setup>
 import { ref } from "vue";
+import { useSignInStore } from "@/store/store";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
+const signInStore = useSignInStore();
+
 const emailInputValue = ref("");
 
 const handleContinueClick = () => {
+  signInStore.setSignInEmail(emailInputValue.value);
   setTimeout(() => {
-    router.push({
-      name: "Credentials",
-      state: {
-        email: emailInputValue.value,
-      },
-    });
-  }, 1000);
+    router.push({ name: "Credentials" });
+  }, 100);
 };
 </script>
 

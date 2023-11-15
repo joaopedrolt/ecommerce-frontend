@@ -4,14 +4,14 @@
       <div class="text-h3 font-weight-light">Credenciais</div>
       <div class="text-h6 mb-4 font-weight-light">Digite sua senha</div>
       <v-text-field
-        v-model="emailInputValue"
+        v-model="signInEmail"
         variant="outlined"
         placeholder="E-mail"
+        :disabled="true"
       >
       </v-text-field>
 
       <v-btn
-        @click="handleSignInClick"
         class="text-subtitle-1 font-weight-regular mb-4"
         color="primary"
         height="45px"
@@ -33,25 +33,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useSignInStore } from "@/store/store";
+import { storeToRefs } from "pinia";
 
-const router = useRouter();
-
-const emailInputValue = ref("");
-
-
-router.beforeEach(async to => {
-  if (to.meta.shouldFetch) {
-    // name `data` whatever you want
-    to.meta.data = await fetchSomething()
-    console.log(to.meta.email = await fetchSomething())
-  }
-})
-
-const handleSignInClick = () => {
-/*   console.log(route.params); */
-};
+const signInStore = useSignInStore();
+const { signInEmail } = storeToRefs(signInStore);
 </script>
 
 <style lang="scss">

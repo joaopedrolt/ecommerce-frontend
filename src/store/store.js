@@ -15,3 +15,15 @@ export const useDrawerStore = defineStore("drawer", {
     },
   },
 });
+
+/* SignIn */
+export const useSignInStore = defineStore("signin", {
+  state: () => ({
+    signInEmail: "",
+  }),
+  actions: {
+    setSignInEmail(value) {
+      this.signInEmail = value;
+    },
+  },
+});
