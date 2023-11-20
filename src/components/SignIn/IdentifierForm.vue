@@ -3,8 +3,9 @@
     <div class="signin-content mb-15">
       <div class="text-h3 font-weight-light">Bem-vindo</div>
       <div class="text-h6 mb-7 font-weight-light">Digite seu e-mail</div>
+
       <v-text-field
-        class="my-3"
+        class="mt-4"
         v-model="signInEmailInput"
         variant="outlined"
         label="E-mail"
@@ -13,6 +14,8 @@
         @keydown.enter.prevent
       >
       </v-text-field>
+
+      <validation-filler :active="emailValidationState" />
 
       <v-btn
         @click="handleContinueClick"
@@ -42,34 +45,24 @@ import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
+import ValidationFiller from "../ValidationFiller.vue";
+import { emailRules } from "@/utils/rules";
+
 const router = useRouter();
 
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
 const identifierForm = ref();
-
-const emailRules = [
-  (value) => {
-    if (value) return true;
-
-    return "E-mail não pode ser vazio.";
-  },
-  (value) => {
-    if (/.+@.+\..+/.test(value)) return true;
-
-    return "E-mail must be valid.";
-  },
-];
+const emailValidationState = ref(false);
 
 const handleContinueClick = async () => {
   const { valid } = await identifierForm.value.validate();
 
   if (valid) {
-    setTimeout(() => {
-      router.push({ name: "Credentials" });
-    }, 100);
-  } else alert("invalido");
+    emailValidationState.value = false;
+    router.push({ name: "Credentials" });
+  } else emailValidationState.value = true;
 };
 </script>
 

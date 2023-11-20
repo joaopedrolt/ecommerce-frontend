@@ -1,8 +1,13 @@
 <template>
-  <div class="signin-form-container">
+  <v-form
+    ref="credentialsForm"
+    validate-on="layz"
+    class="signin-form-container"
+  >
     <div class="signin-content mb-15">
       <div class="text-h3 font-weight-light">Credenciais</div>
-      <div class="text-h6 mb-4 font-weight-light">Digite sua senha</div>
+      <div class="text-h6 mb-7 font-weight-light">Digite sua senha</div>
+
       <v-text-field
         v-model="signInEmailInput"
         class="custom-disabled-input"
@@ -14,14 +19,21 @@
       >
       </v-text-field>
 
-      <v-text-field
-        v-model="passwordInputValue"
-        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="showPassword ? 'text' : 'password'"
-        label="Senha"
-        variant="outlined"
-        @click:append-inner="showPassword = !showPassword"
-      ></v-text-field>
+      <div class="signin-password-area">
+        <v-text-field
+          v-model="passwordInputValue"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="showPassword ? 'text' : 'password'"
+          label="Senha"
+          variant="outlined"
+          @click:append-inner="showPassword = !showPassword"
+          :rules="passwordRules"
+          hint="A senha requer no mínimo 8 caracteres, incluindo letras e números."
+          persistent-hint
+        ></v-text-field>
+      </div>
+
+      <validation-filler :active="true" />
 
       <v-btn
         @click="handleLogInClick"
@@ -42,23 +54,30 @@
         </a>
       </div>
     </div>
-  </div>
+  </v-form>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import { sha256 } from 'js-sha256';
+import { sha256 } from "js-sha256";
+
+import ValidationFiller from "../ValidationFiller.vue";
+import { passwordRules } from "@/utils/rules";
 
 const router = useRouter();
 
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
+const credentialsForm = ref();
+
 const passwordInputValue = ref("");
 const showPassword = ref(false);
+
+var emailInputValue = "";
 
 const handleEditClick = () => {
   router.push({
@@ -66,12 +85,19 @@ const handleEditClick = () => {
   });
 };
 
-const handleLogInClick = () => {
-  console.log(sha256(passwordInputValue.value))
-  /*  router.push({
-    name: "Identifier",
-  }); */
+const handleLogInClick = async () => {
+  const { valid } = await credentialsForm.value.validate();
+
+  if (valid) {
+    console.log(sha256(passwordInputValue.value));
+    console.log(emailInputValue);
+  
+  } else console.log("erro");
 };
+
+onMounted(() => {
+  emailInputValue = signInEmailInput.value;
+});
 </script>
 
 <style lang="scss">
@@ -89,7 +115,17 @@ const handleLogInClick = () => {
   }
 }
 
+.signin-password-area {
+  .v-messages__message {
+    height: 24px !important;
+  }
+}
+
 .custom-disabled-input {
+  label {
+    opacity: var(--v-medium-emphasis-opacity) !important;
+  }
+
   input {
     cursor: default !important;
   }
