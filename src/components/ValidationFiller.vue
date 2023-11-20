@@ -11,7 +11,7 @@ const props = defineProps({
 <style lang="scss">
 .validation-filler {
   height: 0;
-  transition: height 0.2s ease-in-out;
+  transition: height 0.2  s ease-in-out;
 
   &.validation-active {
     height: 20px !important;
