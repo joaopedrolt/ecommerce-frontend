@@ -4,8 +4,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style lang="scss"></style>
+<style lang="scss">
+.signin-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

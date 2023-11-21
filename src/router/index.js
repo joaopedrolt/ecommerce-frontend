@@ -27,6 +27,20 @@ const routes = [
             component: () => import("@/components/SignIn/IdentifierForm.vue"),
           },
           {
+            path: "validacao",
+            name: "EmailValidation",
+            component: () => import("@/components/SignIn/EmailValidationForm.vue"),
+            beforeEnter(to, from, next) {
+              const signInStore = useSignInStore();
+
+              if (signInStore.signInEmailInput.length == 0) {
+                next(from.path);
+              } else {
+                next();
+              }
+            },
+          },
+          {
             path: "credencial",
             name: "Credentials",
             component: () => import("@/components/SignIn/CredentialsForm.vue"),

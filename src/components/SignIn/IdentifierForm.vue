@@ -1,42 +1,56 @@
 <template>
-  <v-form ref="identifierForm" validate-on="layz" class="signin-form-container">
-    <div class="signin-content mb-15">
-      <div class="text-h3 font-weight-light">Bem-vindo</div>
-      <div class="text-h6 mb-7 font-weight-light">Digite seu e-mail</div>
-
-      <v-text-field
-        class="mt-4"
-        v-model="signInEmailInput"
-        variant="outlined"
-        label="E-mail"
-        :rules="emailRules"
-        @keyup.enter="handleContinueClick"
-        @keydown.enter.prevent
+  <Presence>
+    <Motion
+      v-show="showForm"
+      :initial="{ opacity: 0, scale: 0 }"
+      :animate="{ opacity: 1, scale: 1 }"
+      :exit="{ opacity: 0, scale: 0.6 }"
+      :transition="{ duration: 0.35, easing: 'ease-in-out' }"
+    >
+      <v-form
+        ref="identifierForm"
+        validate-on="layz"
+        class="signin-form-container"
       >
-      </v-text-field>
+        <div class="signin-content mb-16">
+          <div class="text-h3 font-weight-light">Bem-vindo</div>
+          <div class="text-h6 mb-7 font-weight-light">Digite seu e-mail</div>
 
-      <validation-filler :active="emailValidationState" />
+          <v-text-field
+            class="mt-4"
+            v-model="signInEmailInput"
+            variant="outlined"
+            label="E-mail"
+            :rules="emailRules"
+            @keyup.enter="handleContinueClick"
+            @keydown.enter.prevent
+          >
+          </v-text-field>
 
-      <v-btn
-        @click="handleContinueClick"
-        class="text-subtitle-1 font-weight-regular mb-4"
-        color="primary"
-        height="45px"
-        width="100%"
-        variant="flat"
-        :ripple="false"
-      >
-        Continuar
-      </v-btn>
+          <validation-filler :active="emailValidationState" />
 
-      <div class="d-flex flex-column">
-        É novo por aqui?
-        <a class="text-decoration-none" href="" style="color: #0d47a1">
-          Clique aqui para criar sua conta!
-        </a>
-      </div>
-    </div>
-  </v-form>
+          <v-btn
+            @click="handleContinueClick"
+            class="text-subtitle-1 font-weight-regular mb-4"
+            color="primary"
+            height="45px"
+            width="100%"
+            variant="flat"
+            :ripple="false"
+          >
+            Continuar
+          </v-btn>
+
+          <div class="d-flex flex-column text-subtitle-1 font-weight-regular">
+            É novo por aqui?
+            <div class="text-subtitle-2 font-weight-light">
+              Digite seu e-mail e te enviaremos um código de segurança!
+            </div>
+          </div>
+        </div>
+      </v-form>
+    </Motion>
+  </Presence>
 </template>
 
 <script setup>
@@ -48,20 +62,47 @@ import { useRouter } from "vue-router";
 import ValidationFiller from "../ValidationFiller.vue";
 import { emailRules } from "@/utils/rules";
 
+import { Motion, Presence } from "motion/vue";
+
 const router = useRouter();
 
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
 const identifierForm = ref();
+
 const emailValidationState = ref(false);
+const showForm = ref(true);
 
 const handleContinueClick = async () => {
   const { valid } = await identifierForm.value.validate();
 
   if (valid) {
-    emailValidationState.value = false;
-    router.push({ name: "Credentials" });
+    showForm.value = false;
+
+    // Validacao se email exite
+
+    var isAreadyRegistered = false;
+
+    if (signInEmailInput.value == "v@gmail.com") {
+      isAreadyRegistered = false;
+    } else {
+      isAreadyRegistered = true;
+    }
+
+    // Fim validacao
+
+    if (isAreadyRegistered) {
+      setTimeout(() => {
+        router.push({ name: "Credentials" });
+      }, 600);
+    }
+
+    if (!isAreadyRegistered) {
+      setTimeout(() => {
+        router.push({ name: "EmailValidation" });
+      }, 600);
+    }
   } else emailValidationState.value = true;
 };
 </script>
