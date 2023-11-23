@@ -111,7 +111,6 @@ const handleCreateAccountClick = async () => {
   const { valid } = await createPasswordForm.value.validate();
 
   if (valid) {
-
     // parei aqui
 
 
