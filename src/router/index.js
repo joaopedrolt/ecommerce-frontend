@@ -29,7 +29,8 @@ const routes = [
           {
             path: "validacao",
             name: "EmailValidation",
-            component: () => import("@/components/SignIn/EmailValidationForm.vue"),
+            component: () =>
+              import("@/components/SignIn/EmailValidationForm.vue"),
             beforeEnter(to, from, next) {
               const signInStore = useSignInStore();
 
@@ -53,6 +54,11 @@ const routes = [
                 next();
               }
             },
+          },
+          {
+            path: "criarsenha",
+            name: "CreatePassword",
+            component: () => import("@/components/SignIn/CreatePasswordForm.vue"),
           },
         ],
       },

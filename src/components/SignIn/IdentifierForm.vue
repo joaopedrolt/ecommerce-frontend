@@ -27,7 +27,7 @@
           >
           </v-text-field>
 
-          <validation-filler :active="emailValidationState" />
+          <validation-filler :active="!isValidEmail" />
 
           <v-btn
             @click="handleContinueClick"
@@ -71,7 +71,7 @@ const { signInEmailInput } = storeToRefs(signInStore);
 
 const identifierForm = ref();
 
-const emailValidationState = ref(false);
+const isValidEmail = ref(true);
 const showForm = ref(true);
 
 const handleContinueClick = async () => {
@@ -103,7 +103,7 @@ const handleContinueClick = async () => {
         router.push({ name: "EmailValidation" });
       }, 600);
     }
-  } else emailValidationState.value = true;
+  } else isValidEmail.value = false;
 };
 </script>
 

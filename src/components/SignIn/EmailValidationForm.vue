@@ -4,11 +4,11 @@
       v-show="showForm"
       :initial="{ opacity: 0 }"
       :animate="{ opacity: 1 }"
-      :exit="{ opacity: 0, scale: 0.6 }"
+      :exit="{ opacity: 0, scale: 1 }"
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
       <v-form
-        ref="credentialsForm"
+        ref="emailValidationForm"
         validate-on="layz"
         class="signin-form-container"
       >
@@ -21,6 +21,7 @@
           <v-otp-input
             v-model="validationCodeInput"
             class="my-1"
+            type="number"
             :error="validationError"
           ></v-otp-input>
 
@@ -49,7 +50,7 @@
 
           <v-btn
             v-if="!showCountdown"
-            @click="showCountdown = true"
+            @click="handleSendAnotherCodeClick"
             class="text-subtitle-1 font-weight-regular mt-4 mb-2"
             color="primary"
             height="45px"
@@ -68,6 +69,7 @@
             width="100%"
             variant="flat"
             :ripple="false"
+            :disabled="disableConfirmButton"
           >
             Confirmar
           </v-btn>
@@ -78,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onUnmounted } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
@@ -90,15 +92,13 @@ const router = useRouter();
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
-const credentialsForm = ref();
-
 const showForm = ref(true);
-const showCountdown = ref(true);
 
+const showCountdown = ref(true);
 const validationCodeInput = ref("");
 const validationError = ref(false);
 
-var emailInputValue = ""; // request email
+const disableConfirmButton = ref(true);
 
 const formattedTime = (props) => {
   const formattedProps = {};
@@ -110,14 +110,39 @@ const formattedTime = (props) => {
   return formattedProps;
 };
 
-const handleValidationClick = async () => {
-  alert(validationCodeInput.value);
-  // handle code validation
-  validationError.value = true;
+const codeStringValidation = (codeString) => {
+  return (
+    codeString.length >= 6 &&
+    !/\s/g.test(codeString) &&
+    !/[a-zA-Z]/.test(codeString)
+  );
 };
 
-onMounted(() => {
-  emailInputValue = signInEmailInput.value;
+const handleSendAnotherCodeClick = async () => {
+  showCountdown.value = true;
+  validationCodeInput.value = "";
+};
+
+const handleValidationClick = async () => {
+  //validacoes
+
+  if (!codeStringValidation(validationCodeInput.value)) {
+    validationError.value = true;
+    return;
+  }
+
+  router.push({
+    name: "CreatePassword"
+  });
+};
+
+watch(validationCodeInput, (newCodeInput) => {
+  if (codeStringValidation(newCodeInput)) disableConfirmButton.value = false;
+  else if (!disableConfirmButton.value) disableConfirmButton.value = true;
+});
+
+onUnmounted(() => {
+  signInEmailInput.value = "";
 });
 </script>
 
