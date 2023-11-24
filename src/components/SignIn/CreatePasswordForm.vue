@@ -1,12 +1,7 @@
 <template>
   <Presence>
-    <Motion
-      v-show="showForm"
-      :initial="{ opacity: 0 }"
-      :animate="{ opacity: 1 }"
-      :exit="{ opacity: 0, scale: 0.6 }"
-      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
-    >
+    <Motion v-show="showForm" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :exit="{ opacity: 0, scale: 0.6 }"
+      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }">
       <v-form ref="createPasswordForm" class="signin-form-container">
         <div class="signin-content mb-16">
           <div class="text-h3 font-weight-light">Criar Senha</div>
@@ -14,59 +9,29 @@
             Insira uma senha para sua conta
           </div>
 
-          <v-text-field
-            v-model="passwordInputValue"
-            class="mt-4 hide-details-replacement"
-            :class="[
-              isPasswordValid ? 'default-input-color' : 'error-input-color',
-            ]"
-            :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-            :type="showPassword ? 'text' : 'password'"
-            label="Senha"
-            variant="outlined"
-            @click:append-inner="showPassword = !showPassword"
-            :rules="passwordRules"
-            @blur="passwordStringValidation"
-            validate-on="blur"
-            hide-details
-          >
+          <v-text-field v-model="passwordInputValue" class="mt-4 hide-details-replacement" :class="[
+            isPasswordValid ? 'default-input-color' : 'error-input-color',
+          ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
+            label="Senha" variant="outlined" @click:append-inner="showPassword = !showPassword" :rules="passwordRules"
+            @blur="handlePasswordValidation" validate-on="blur" hide-details>
           </v-text-field>
 
-          <v-text-field
-            v-model="passwordConfirmationInputValue"
-            class="mt-4 hide-details-replacement"
-            :class="[
-              isPasswordValid ? 'default-input-color' : 'error-input-color',
-            ]"
-            :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-            :type="showPassword ? 'text' : 'password'"
-            label="Repita a senha mais uma vez "
-            variant="outlined"
-            @click:append-inner="showPassword = !showPassword"
-            :rules="passwordRules"
-            @blur="passwordStringValidation"
-            validate-on="blur"
-            hide-details
-          >
+          <v-text-field v-model="passwordConfirmationInputValue" class="mt-4 hide-details-replacement" :class="[
+            isPasswordConfirmationValid ? 'default-input-color' : 'error-input-color',
+          ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
+            label="Repita a senha mais uma vez " variant="outlined" @click:append-inner="showPassword = !showPassword"
+            validate-on="blur" @blur="handlePasswordConfirmationValidation"
+            :rules="isPasswordConfirmationValid ? [() => true] : [() => false]" :disabled="!isPasswordValid" hide-details>
           </v-text-field>
 
-          <v-btn
-            class="text-subtitle-1 font-weight-regular mb-4"
-            color="primary"
-            height="45px"
-            width="100%"
-            variant="flat"
-            :ripple="false"
-          >
+          <v-btn @click="handleCreateAccountClick" class="text-subtitle-1 font-weight-regular mb-4" color="primary"
+            height="45px" width="100%" variant="flat" :ripple="false">
             Criar Conta
           </v-btn>
 
-          <div
-            class="d-flex flex-column text-subtitle-1 font-weight-regular"
-            :class="[
-              isPasswordValid ? 'default-input-color' : 'error-input-color',
-            ]"
-          >
+          <div class="d-flex flex-column text-subtitle-1 font-weight-regular" :class="[
+            isPasswordValid ? 'default-input-color' : 'error-input-color',
+          ]">
             Atenção!
             <div class="text-subtitle-2 font-weight-light">
               A senha requer no mínimo 8 caracteres, incluindo letras e números.
@@ -79,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Motion, Presence } from "motion/vue";
 
 import { passwordRules } from "@/utils/rules";
@@ -96,26 +61,44 @@ const showPassword = ref(false);
 const isPasswordValid = ref(true);
 const isPasswordConfirmationValid = ref(true);
 
-const passwordStringValidation = () => {
+const handlePasswordValidation = () => {
   const validationFunction = passwordRules[0].bind(this);
 
   if (validationFunction(passwordInputValue.value) != true) {
     isPasswordValid.value = false;
+    passwordConfirmationInputValue.value = "";
+    isPasswordConfirmationValid.value = true;
     return;
   }
 
   isPasswordValid.value = true;
 };
 
-const handleCreateAccountClick = async () => {
-  const { valid } = await createPasswordForm.value.validate();
-
-  if (valid) {
-    // parei aqui
-
-
-  } else isPasswordConfirmationValid.value = false;
+const handlePasswordConfirmationValidation = () => {
+  if (passwordConfirmationInputValue.value == passwordInputValue.value) {
+    console.log("oi")
+    isPasswordConfirmationValid.value = true;
+    return true;
+  } else {
+    console.log("fff")
+    isPasswordConfirmationValid.value = false;
+    return false;
+  };
 };
+
+const handleCreateAccountClick = async () => {
+  const valid = handlePasswordConfirmationValidation();
+
+  if(valid){
+    console.log("valido")
+  }
+};
+
+watch(isPasswordValid, (newVal) => {
+  if (!newVal) {
+
+  }
+})
 </script>
 
 <style lang="scss">
