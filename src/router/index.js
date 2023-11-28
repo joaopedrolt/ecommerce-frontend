@@ -95,6 +95,11 @@ const routes = [
         name: "Home",
         component: () => import("@/views/Default/Home.vue"),
       },
+      {
+        path: "/loja",
+        name: "Shop",
+        component: () => import("@/views/Default/Shop.vue"),
+      },
     ],
   },
 ];

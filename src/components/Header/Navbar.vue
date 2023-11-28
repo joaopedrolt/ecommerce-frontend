@@ -95,6 +95,11 @@
             <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
           </v-btn>
 
+          <v-btn class="nav-btn-custom h-100" :ripple="false">
+            Carrinho
+            <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
+          </v-btn>
+
           <v-btn
             @click="handleSignInClick"
             class="nav-btn-custom h-100"
@@ -103,20 +108,15 @@
             Entrar
             <v-icon style="margin: 0 0 2px 3px">mdi-account</v-icon>
           </v-btn>
-
-          <v-btn class="nav-btn-custom h-100" :ripple="false">
-            Carrinho
-            <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
-          </v-btn>
         </div>
 
         <!-- Mobile -->
         <div class="d-md-none nav-mobile-icon-container">
-          <v-btn @click="handleSignInClick" icon size="small">
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
           <v-btn icon size="small">
             <v-icon>mdi-cart</v-icon>
+          </v-btn>
+          <v-btn @click="handleSignInClick" icon size="small">
+            <v-icon>mdi-account</v-icon>
           </v-btn>
         </div>
 
@@ -156,7 +156,7 @@ const displaySearchOverlay = () => {
 
 const handleSignInClick = () => {
   router.push({
-    name: "EmailValidation"
+    name: "EmailValidation",
   });
 };
 </script>

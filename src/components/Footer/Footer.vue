@@ -1,7 +1,7 @@
 <template>
   <footer
     class="footer-component"
-    :class="{ 'elevation-10': cleanFooter, 'footer-hide-top': !cleanFooter }"
+    :class="{ 'elevation-3': cleanFooter, 'footer-hide-top': !cleanFooter }"
   >
     <div v-if="cleanFooter" class="container-limit">
       <top-side />
