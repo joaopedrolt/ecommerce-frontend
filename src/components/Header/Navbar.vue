@@ -156,7 +156,7 @@ const displaySearchOverlay = () => {
 
 const handleSignInClick = () => {
   router.push({
-    name: "Identifier"
+    name: "EmailValidation"
   });
 };
 </script>

@@ -8,13 +8,13 @@
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
       <v-form
-        ref="credentialsForm"
+        ref="loginForm"
         validate-on="layz"
         class="signin-form-container"
       >
         <div class="signin-content mb-16">
           <div class="text-h3 font-weight-light">Credenciais</div>
-          <div class="text-h6 mb-7 font-weight-light">Digite sua senha</div>
+          <div class="text-h6 mb-7 font-weight-light">Insira sua senha</div>
 
           <v-text-field
             v-model="signInEmailInput"
@@ -62,9 +62,13 @@
 
           <div class="d-flex flex-column">
             Esqueceu sua senha?
-            <a class="text-decoration-none" href="" style="color: #0d47a1">
-              Clique aqui para recuperar sua senha!
-            </a>
+            <router-link
+              class="text-decoration-none"
+              style="color: #0d47a1"
+              :to="{ name: 'EmailCodeValidation', query: {type: 'recover'} }"
+            >
+              Clique aqui para recuperar sua senha!</router-link
+            >
           </div>
         </div>
       </v-form>
@@ -89,7 +93,7 @@ const router = useRouter();
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
-const credentialsForm = ref();
+const loginForm = ref();
 
 const passwordInputValue = ref("");
 
@@ -102,12 +106,12 @@ var emailInputValue = "";
 
 const handleEditClick = () => {
   router.push({
-    name: "Identifier",
+    name: "EmailValidation",
   });
 };
 
 const handleLogInClick = async () => {
-  const { valid } = await credentialsForm.value.validate();
+  const { valid } = await loginForm.value.validate();
 
   if (valid) {
     isPasswordValid.value = true;

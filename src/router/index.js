@@ -14,56 +14,78 @@ import { useSignInStore } from "@/store/store";
 
 const routes = [
   {
-    path: "/c", // Ver se vai mudar o nome
+    //Layout Limpo
+    path: "/c",
     component: CleanLayout,
     children: [
       {
         path: "entrar",
         component: () => import("@/views/Clean/SignIn.vue"),
         children: [
+          //Rotas Cadastro Usuario
           {
             path: "indetificar",
-            name: "Identifier",
-            component: () => import("@/components/SignIn/IdentifierForm.vue"),
-          },
-          {
-            path: "validacao",
             name: "EmailValidation",
             component: () =>
               import("@/components/SignIn/EmailValidationForm.vue"),
+          },
+
+          {
+            path: "validacao",
+            name: "EmailCodeValidation",
+            component: () =>
+              import("@/components/SignIn/EmailCodeValidationForm.vue"),
             beforeEnter(to, from, next) {
               const signInStore = useSignInStore();
 
               if (signInStore.signInEmailInput.length == 0) {
                 next(from.path);
-              } else {
-                next();
+                return;
               }
+
+              if (to.query.type != "create" && to.query.type != "recover") {
+                next(from.path);
+                return;
+              }
+
+              next();
             },
           },
+
           {
             path: "credencial",
-            name: "Credentials",
-            component: () => import("@/components/SignIn/CredentialsForm.vue"),
+            name: "Login",
+            component: () => import("@/components/SignIn/LoginForm.vue"),
             beforeEnter(to, from, next) {
               const signInStore = useSignInStore();
 
               if (signInStore.signInEmailInput.length == 0) {
                 next(from.path);
-              } else {
-                next();
+                return;
               }
+
+              next();
             },
           },
+
           {
             path: "criarsenha",
-            name: "CreatePassword",
-            component: () => import("@/components/SignIn/CreatePasswordForm.vue"),
+            name: "Password",
+            component: () => import("@/components/SignIn/PasswordForm.vue"),
+            beforeEnter(to, from, next) {
+              if (to.query.type != "create" && to.query.type != "recover") {
+                next(from.path);
+                return;
+              }
+
+              next();
+            },
           },
         ],
       },
     ],
   },
+  //Home
   {
     path: "/",
     component: DefaultLayout,

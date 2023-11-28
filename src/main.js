@@ -8,6 +8,8 @@ import { registerPlugins } from "@/plugins";
 
 const app = createApp(App);
 
+app.config.devtools = true; // producao
+
 registerPlugins(app);
 
 app.mount("#app");

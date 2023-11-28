@@ -2,10 +2,10 @@
   <Presence>
     <Motion
       v-show="showForm"
-      :initial="{ opacity: 0 }"
-      :animate="{ opacity: 1 }"
-      :exit="{ opacity: 0, scale: 1 }"
-      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
+      :initial="{ opacity: 0, scale: 0 }"
+      :animate="{ opacity: 1, scale: 1 }"
+      :exit="{ opacity: 0, scale: 0.6 }"
+      :transition="{ duration: 0.35, easing: 'ease-in-out' }"
     >
       <v-form
         ref="emailValidationForm"
@@ -13,66 +13,41 @@
         class="signin-form-container"
       >
         <div class="signin-content mb-16">
-          <div class="text-h3 font-weight-light">Validação</div>
-          <div class="text-h6 font-weight-light">
-            Insira o código de segurança recebido
-          </div>
+          <div class="text-h3 font-weight-light">Bem-vindo</div>
+          <div class="text-h6 mb-7 font-weight-light">Digite seu e-mail</div>
 
-          <v-otp-input
-            v-model="validationCodeInput"
-            class="my-1"
-            type="number"
-            :error="validationError"
-          ></v-otp-input>
-
-          <div class="text-subtitle-2 font-weight-light">
-            Enviamos um código para o e-mail
-            <b>{{ signInEmailInput }}</b> para garantir sua segurança. Caso não
-            tenha recebido, verifique sua caixa de spam.
-          </div>
-
-          <div
-            v-if="showCountdown"
-            class="text-subtitle-1 font-weight-light mt-2 mb-3"
+          <v-text-field
+            class="mt-4"
+            v-model="signInEmailInput"
+            variant="outlined"
+            label="E-mail"
+            :rules="emailRules"
+            @keyup.enter="handleContinueClick"
+            @keydown.enter.prevent
           >
-            Tempo para reenviar o código:
-            <b>
-              <vue-countdown
-                :time="90000"
-                v-slot="{ minutes, seconds }"
-                :transform="formattedTime"
-                @end="showCountdown = false"
-              >
-                {{ minutes }}:{{ seconds }}
-              </vue-countdown>
-            </b>
-          </div>
+          </v-text-field>
+
+          <validation-filler :active="!isValidEmail" />
 
           <v-btn
-            v-if="!showCountdown"
-            @click="handleSendAnotherCodeClick"
-            class="text-subtitle-1 font-weight-regular mt-4 mb-2"
-            color="primary"
-            height="45px"
-            width="100%"
-            variant="flat"
-            :ripple="false"
-          >
-            Solicitar Código
-          </v-btn>
-
-          <v-btn
-            @click="handleValidationClick"
+            @click="handleContinueClick"
             class="text-subtitle-1 font-weight-regular mb-4"
             color="primary"
             height="45px"
             width="100%"
             variant="flat"
             :ripple="false"
-            :disabled="disableConfirmButton"
           >
-            Confirmar
+            Continuar
           </v-btn>
+
+          <div class="d-flex flex-column text-subtitle-1 font-weight-regular">
+            É novo por aqui?
+            <div class="text-subtitle-2 font-weight-light">
+              Digite seu e-mail e te enviaremos um código de segurança para você
+              criar sua conta!
+            </div>
+          </div>
         </div>
       </v-form>
     </Motion>
@@ -80,10 +55,13 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from "vue";
+import { ref } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+
+import ValidationFiller from "../ValidationFiller.vue";
+import { emailRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
 
@@ -92,57 +70,47 @@ const router = useRouter();
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
 
+const emailValidationForm = ref();
+
+const isValidEmail = ref(true);
 const showForm = ref(true);
 
-const showCountdown = ref(true);
-const validationCodeInput = ref("");
-const validationError = ref(false);
+const handleContinueClick = async () => {
+  const { valid } = await emailValidationForm.value.validate();
 
-const disableConfirmButton = ref(true);
+  if (valid) {
+    showForm.value = false;
 
-const formattedTime = (props) => {
-  const formattedProps = {};
+    // Validacao se email exite
 
-  Object.entries(props).forEach(([key, value]) => {
-    formattedProps[key] = value < 10 ? `0${value}` : String(value);
-  });
+    var isAreadyRegistered = false;
 
-  return formattedProps;
+    if (signInEmailInput.value == "v@gmail.com") {
+      isAreadyRegistered = false;
+    } else {
+      isAreadyRegistered = true;
+    }
+
+    // Fim validacao
+
+    if (isAreadyRegistered) {
+      setTimeout(() => {
+        router.push({ name: "Login" });
+      }, 600);
+    }
+
+    if (!isAreadyRegistered) {
+      setTimeout(() => {
+        router.push({ name: "EmailCodeValidation", query: { type: "create" } });
+      }, 600);
+    }
+  } else isValidEmail.value = false;
 };
 
-const codeStringValidation = (codeString) => {
-  return (
-    codeString.length >= 6 &&
-    !/\s/g.test(codeString) &&
-    !/[a-zA-Z]/.test(codeString)
-  );
-};
-
-const handleSendAnotherCodeClick = async () => {
-  showCountdown.value = true;
-  validationCodeInput.value = "";
-};
-
-const handleValidationClick = async () => {
-  //validacoes
-
-  if (!codeStringValidation(validationCodeInput.value)) {
-    validationError.value = true;
-    return;
+onBeforeRouteLeave((to, from) => {
+  if (to.name != "EmailCodeValidation" && to.name != "Login") {
+    signInEmailInput.value = "";
   }
-
-  router.push({
-    name: "CreatePassword"
-  });
-};
-
-watch(validationCodeInput, (newCodeInput) => {
-  if (codeStringValidation(newCodeInput)) disableConfirmButton.value = false;
-  else if (!disableConfirmButton.value) disableConfirmButton.value = true;
-});
-
-onUnmounted(() => {
-  signInEmailInput.value = "";
 });
 </script>
 
@@ -158,27 +126,6 @@ onUnmounted(() => {
   .signin-content {
     width: 400px;
     text-align: center;
-  }
-}
-
-.signin-password-area {
-  .v-messages__message {
-    height: 24px !important;
-  }
-}
-
-.custom-disabled-input {
-  label {
-    opacity: var(--v-medium-emphasis-opacity) !important;
-  }
-
-  input {
-    cursor: default !important;
-  }
-
-  .v-field__outline {
-    --v-field-border-opacity: 0.38 !important;
-    --v-field-border-width: 1px !important;
   }
 }
 </style>
