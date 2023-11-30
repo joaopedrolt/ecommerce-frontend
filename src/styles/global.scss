@@ -2,11 +2,15 @@ $tablet: 960px;
 $phone: 560px;
 
 $color-gray: #757575; // grey-darken-1
-$color-black: #000000DE; // grey-darken-1
+$color-black: #000000de; // grey-darken-1
 $color-white: #fff; // grey-darken-1
 
+$color-border: rgba(0, 0, 0, 0.12);
+
+$border-small-line: 1px solid $color-border;
+
 @mixin grid($width) {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax($width, 1fr));
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($width, 1fr));
+  gap: 1rem;
 }

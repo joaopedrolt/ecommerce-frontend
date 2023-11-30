@@ -2,7 +2,8 @@
   <v-app-bar
     class="nav-component"
     style="z-index: 1003 !important"
-    :elevation="1"
+    :elevation="0"
+    height="60px"
   >
     <div class="container-limit navbar-limit nav-container">
       <div class="h-100 w-100 d-flex justify-space-between align-center">
@@ -162,22 +163,28 @@ const handleSignInClick = () => {
 </script>
 
 <style lang="scss">
+@import "@/styles/global.scss";
+
 .container-limit.navbar-limit {
   max-width: 1202px !important;
 }
 
-.nav-container {
-  /* Alteravel tamanho no futuro */
-  height: 64px;
-  min-width: 325px;
-  z-index: 1 !important;
+.nav-component {
+  border-bottom: $border-small-line !important;
 
-  .nav-side-container {
-    width: 342px;
-  }
+  .nav-container {
+    /* Alteravel tamanho no futuro */
+    height: 60px;
+    min-width: 325px;
+    z-index: 1 !important;
 
-  .nav-mobile-icon-container {
-    padding: 0 7px;
+    .nav-side-container {
+      width: 342px;
+    }
+
+    .nav-mobile-icon-container {
+      padding: 0 7px;
+    }
   }
 }
 

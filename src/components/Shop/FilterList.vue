@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 240px; border-right: 1px solid rgba(0, 0, 0, 0.12)">
+  <div class="filter-list-container">
     <v-expansion-panels eager multiple elevation="0">
       <v-expansion-panel
         v-for="i in 3"
@@ -38,7 +38,14 @@ import { ref } from "vue";
 const radios = ref("1");
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/global.scss";
+
+.filter-list-container {
+  border-right: $border-small-line;
+  width: 240px;
+}
+
 .v-expansion-panel-text__wrapper {
   padding-bottom: 8px !important;
 }

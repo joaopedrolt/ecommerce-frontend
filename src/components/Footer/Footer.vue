@@ -1,13 +1,12 @@
 <template>
   <footer
     class="footer-component"
-    :class="{ 'elevation-3': cleanFooter, 'footer-hide-top': !cleanFooter }"
+    :class="{ 'regular-footer': cleanFooter, 'footer-hide-top': !cleanFooter }"
   >
     <div v-if="cleanFooter" class="container-limit">
       <top-side />
     </div>
-    <v-divider class="w-100" color="black" :thickness="1"></v-divider>
-    <bottom-side :cleanFooter="cleanFooter"/>
+    <bottom-side :cleanFooter="cleanFooter" />
   </footer>
 </template>
 
@@ -31,7 +30,7 @@ const cleanFooter = ref(props.cleanFooter);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 12px;
+  padding-top: 14px;
   padding-left: 10px !important;
   padding-right: 10px !important;
   padding-bottom: 8px !important;
@@ -48,6 +47,10 @@ const cleanFooter = ref(props.cleanFooter);
     height: 100%;
     width: 100%;
     margin: auto;
+  }
+
+  &.regular-footer {
+    border-top: $border-small-line;
   }
 
   &.footer-hide-top {
