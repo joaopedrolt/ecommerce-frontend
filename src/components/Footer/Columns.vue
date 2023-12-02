@@ -3,7 +3,9 @@
     <div class="footer-row left-row">
       <div class="footer-column side-field brand-field">
         <div class="brand-column-wrapper">
-          <div class="column-title">ECOMMERCE</div>
+          <div class="column-title logo-white">
+            <v-img src="/logo.svg" width="120px" height="40px"></v-img>
+          </div>
           <div class="column-components">
             <div class="text-caption">
               Há mais de 10 anos no mercado, a Ellos Design tem como um de seus
@@ -34,7 +36,7 @@
           </div>
         </div>
       </div>
-      <div class="footer-column footer-list">
+      <!--  <div class="footer-column footer-list">
         <div class="column-title list-title" style="margin-bottom: 0">Section 2</div>
         <div class="column-list">
           <v-list class="column-list-wrapper" variant="plain">
@@ -75,10 +77,10 @@
             </v-list-item>
           </v-list>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="footer-row right-row">
-      <div class="footer-column footer-list">
+      <!--      <div class="footer-column footer-list">
         <div class="column-title list-title" style="margin: 0">Section 3</div>
         <div class="column-list">
           <v-list class="column-list-wrapper" variant="plain">
@@ -119,7 +121,7 @@
             </v-list-item>
           </v-list>
         </div>
-      </div>
+      </div> -->
       <div class="footer-column side-field newsletter">
         <div class="newsletter-column-wrapper">
           <div class="column-title">Newsletter</div>
@@ -140,11 +142,11 @@
             </v-text-field>
 
             <v-btn
-              color="primary"
+              color="white"
               height="30px"
               width="100%"
               size="x-small"
-              variant="flat"
+              variant="outlined"
             >
               Fique por Dentro!
             </v-btn>
@@ -177,11 +179,10 @@ const newsletterEmailInputValue = ref("");
       flex: 1;
 
       &.side-field {
-        /*  min-height: 166px;
-                max-height: 166px; */
         height: 166px;
         display: flex;
         flex-direction: column;
+        align-items: center !important;
 
         .text-caption {
           color: $color-gray;

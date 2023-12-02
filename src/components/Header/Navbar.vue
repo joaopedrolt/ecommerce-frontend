@@ -3,12 +3,12 @@
     class="nav-component"
     style="z-index: 1003 !important"
     :elevation="0"
-    height="60px"
+    height="75px"
   >
-    <div class="container-limit navbar-limit nav-container">
+    <div class="container-limit container-size-padding nav-container">
       <div class="h-100 w-100 d-flex justify-space-between align-center">
         <!-- Desktop -->
-        <div class="hidden-sm-and-down nav-side-container h-100">
+        <div class="hidden-sm-and-down nav-side-container side-left h-100">
           <v-menu
             v-model="firstMenu"
             open-on-hover
@@ -21,8 +21,9 @@
                 v-bind="props"
                 class="nav-btn-custom h-100"
                 :ripple="false"
+                variant="plain"
               >
-                section 1
+                Masculino
               </v-btn>
             </template>
 
@@ -41,8 +42,9 @@
                 v-bind="props"
                 class="nav-btn-custom h-100"
                 :ripple="false"
+                variant="plain"
               >
-                section 2
+                Roupas
               </v-btn>
             </template>
 
@@ -60,9 +62,11 @@
               <v-btn
                 v-bind="props"
                 class="nav-btn-custom h-100"
+                style="margin: 0"
                 :ripple="false"
+                variant="plain"
               >
-                section 3
+                Acessorios
               </v-btn>
             </template>
 
@@ -81,22 +85,25 @@
         </div>
 
         <!-- Hybrid -->
-        <div class="h-100">
-          <v-btn class="h-100" :ripple="false"> ECOMMERCE </v-btn>
+        <div class="h-100 logo-black">
+          <v-img src="/logo.svg" width="120px" height="75px"></v-img>
+          <!-- <v-btn class="h-100" :ripple="false"> ECOMMERCE </v-btn> -->
         </div>
 
         <!-- Desktop -->
-        <div class="hidden-sm-and-down nav-side-container h-100">
+        <div class="hidden-sm-and-down nav-side-container side-right h-100">
           <v-btn
             @click="displaySearchOverlay"
             class="nav-btn-custom h-100"
+            style="margin: 0"
             :ripple="false"
+            variant="plain"
           >
             Pesquisar
             <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
           </v-btn>
 
-          <v-btn class="nav-btn-custom h-100" :ripple="false">
+          <v-btn class="nav-btn-custom h-100" :ripple="false" variant="plain">
             Carrinho
             <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
           </v-btn>
@@ -105,6 +112,7 @@
             @click="handleSignInClick"
             class="nav-btn-custom h-100"
             :ripple="false"
+            variant="plain"
           >
             Entrar
             <v-icon style="margin: 0 0 2px 3px">mdi-account</v-icon>
@@ -165,30 +173,54 @@ const handleSignInClick = () => {
 <style lang="scss">
 @import "@/styles/global.scss";
 
-.container-limit.navbar-limit {
-  max-width: 1202px !important;
-}
-
 .nav-component {
-  border-bottom: $border-small-line !important;
+  /*   border-bottom: $border-small-line !important; */
+  height: $navbar-height !important;
+  background-color: white !important;
 
   .nav-container {
     /* Alteravel tamanho no futuro */
-    height: 60px;
+    height: $navbar-height;
     min-width: 325px;
     z-index: 1 !important;
 
     .nav-side-container {
-      width: 342px;
+      width: 295px;
     }
 
     .nav-mobile-icon-container {
       padding: 0 7px;
     }
   }
+
+  .side-left {
+    button {
+      margin-right: 10px;
+    }
+  }
+
+  .side-right {
+    button {
+      margin-left: 10px;
+    }
+  }
 }
 
 .nav-btn-custom {
-  padding: 0px 8px !important;
+  padding: 0 !important;
+  transition: opacity 0.2s ease-in !important;
+  font-size: 0.8rem !important;
+
+  &.v-btn--variant-plain {
+    opacity: 1 !important;
+  }
+
+  &.v-btn--size-default {
+    min-width: auto !important;
+  }
+
+  &:hover {
+    opacity: 0.6 !important;
+  }
 }
 </style>

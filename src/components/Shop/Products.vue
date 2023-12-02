@@ -71,6 +71,7 @@ const search = () => {
 
 <style lang="scss">
 @import "@/styles/global.scss";
+
 .products-search-container {
   .search-input-wrapper {
     width: 60%;

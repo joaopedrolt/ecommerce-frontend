@@ -1,9 +1,9 @@
 <template>
   <footer
-    class="footer-component"
+    class="footer-component   black-theme "
     :class="{ 'regular-footer': cleanFooter, 'footer-hide-top': !cleanFooter }"
   >
-    <div v-if="cleanFooter" class="container-limit">
+    <div v-if="cleanFooter" class="container-limit container-size-padding">
       <top-side />
     </div>
     <bottom-side :cleanFooter="cleanFooter" />
@@ -31,8 +31,6 @@ const cleanFooter = ref(props.cleanFooter);
   flex-direction: column;
   align-items: center;
   padding-top: 14px;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
   padding-bottom: 8px !important;
 
   @media (max-width: $tablet) {
