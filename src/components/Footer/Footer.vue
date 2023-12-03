@@ -1,11 +1,12 @@
 <template>
   <footer
-    class="footer-component   black-theme "
+    class="footer-component black-theme"
     :class="{ 'regular-footer': cleanFooter, 'footer-hide-top': !cleanFooter }"
   >
     <div v-if="cleanFooter" class="container-limit container-size-padding">
       <top-side />
     </div>
+    <v-divider thickness="1"></v-divider>
     <bottom-side :cleanFooter="cleanFooter" />
   </footer>
 </template>
