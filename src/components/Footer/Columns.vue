@@ -7,11 +7,12 @@
             <v-img src="/logo.svg" width="120px" height="40px"></v-img>
           </div>
           <div class="column-components">
-            <div class="text-caption">
+            <div class="text-caption opacity-text">
               Há mais de 10 anos no mercado, a Ellos Design tem como um de seus
               principais pilares, o compromisso em gerar resultados de
               qualidade, de maneira prática e efetiva aos nossos clientes por
-              todo o Brasil.
+              todo o Brasil. Há mais de 10 anos no mercado, rcado, rcado, rcado,
+              rcado, rcado, rcado,
             </div>
             <div style="display: flex; margin-left: -8px">
               <v-btn
@@ -36,97 +37,13 @@
           </div>
         </div>
       </div>
-      <!--  <div class="footer-column footer-list">
-        <div class="column-title list-title" style="margin-bottom: 0">Section 2</div>
-        <div class="column-list">
-          <v-list class="column-list-wrapper" variant="plain">
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Loja</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Mac</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">iPad</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">iPhone</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Watch</div>
-            </v-list-item>
-          </v-list>
-        </div>
-      </div> -->
     </div>
     <div class="footer-row right-row">
-      <!--      <div class="footer-column footer-list">
-        <div class="column-title list-title" style="margin: 0">Section 3</div>
-        <div class="column-list">
-          <v-list class="column-list-wrapper" variant="plain">
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Loja</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Mac</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">iPad</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">iPhone</div>
-            </v-list-item>
-            <v-list-item
-              class="column-list-item"
-              href="https://www.google.com/"
-              :ripple="false"
-            >
-              <div class="text-caption">Watch</div>
-            </v-list-item>
-          </v-list>
-        </div>
-      </div> -->
       <div class="footer-column side-field newsletter">
         <div class="newsletter-column-wrapper">
-          <div class="column-title">Newsletter</div>
+          <div class="column-title text-h6">Newsletter</div>
           <div class="column-components">
-            <div class="text-caption" style="margin-bottom: 2px">
+            <div class="text-caption opacity-text mb-2">
               Inscreva-se na nossa newsletter e fique por dentro das últimas
               novidades e promoções!
             </div>
@@ -170,6 +87,7 @@ const newsletterEmailInputValue = ref("");
   height: 100%;
   width: 100%;
   display: flex;
+  padding: 20px 0 28px 0 !important;
 
   .footer-row {
     display: flex;
@@ -182,7 +100,7 @@ const newsletterEmailInputValue = ref("");
         height: 166px;
         display: flex;
         flex-direction: column;
-        align-items: center !important;
+        align-items: start;
 
         .text-caption {
           color: $color-gray;
@@ -206,13 +124,13 @@ const newsletterEmailInputValue = ref("");
 
       .newsletter-column-wrapper,
       .brand-column-wrapper {
-        width: 270px;
+        width: 420px;
       }
 
       .column-list .column-list-wrapper {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: end;
         padding: 0 !important;
 
         .column-list-item {
@@ -235,37 +153,33 @@ const newsletterEmailInputValue = ref("");
 
   @media (max-width: $tablet) {
     flex-direction: column;
+    padding: 20px 0 18px 0 !important;
 
     .footer-row {
+      &.left-row {
+        margin-bottom: 30px;
+      }
+
       &.left-row,
       &.right-row {
         gap: 40px;
       }
 
-      &.right-row {
-        flex-direction: row-reverse;
-      }
-
       .footer-column {
-        margin-bottom: 10px;
-
         &.side-field {
           margin-left: 0px !important;
           margin-right: 0px !important;
           display: flex;
-          align-items: end;
+          align-items: center;
           flex-direction: column;
-        }
-
-        .brand-column-wrapper,
-        .newsletter-column-wrapper {
-          margin-left: 50px;
         }
       }
     }
   }
 
   @media (max-width: $phone) {
+    padding: 50px 0 48px 0 !important;
+
     .footer-row {
       flex-direction: column;
 

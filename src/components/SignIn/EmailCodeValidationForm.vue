@@ -12,11 +12,8 @@
         validate-on="layz"
         class="signin-form-container"
       >
-        <div class="signin-content mb-16">
-          <div class="text-h3 font-weight-light">Validação</div>
-          <div class="text-h6 font-weight-light">
-            Insira o código de segurança recebido
-          </div>
+        <div class="signin-content mb-5">
+          <SignInHeader title="Validação" subtitle="Insira o código de segurança recebido" />
 
           <v-otp-input
             v-model="validationCodeInput"
@@ -51,20 +48,19 @@
           <v-btn
             v-if="!showCountdown"
             @click="handleSendAnotherCodeClick"
-            class="text-subtitle-1 font-weight-regular mt-4 mb-2"
-            color="primary"
+            class="text-subtitle-1 font-weight-regular button-color button-black mt-4 mb-2"
+            color="#111111"
             height="45px"
             width="100%"
             variant="flat"
             :ripple="false"
           >
-            Solicitar Código
+            Solicitar Novo Código
           </v-btn>
 
           <v-btn
             @click="handleValidationClick"
-            class="text-subtitle-1 font-weight-regular mb-4"
-            color="primary"
+            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
             height="45px"
             width="100%"
             variant="flat"
@@ -84,6 +80,8 @@ import { ref, watch, onUnmounted } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "vue-router";
+
+import SignInHeader from "./SignInHeader.vue";
 
 import { Motion, Presence } from "motion/vue";
 

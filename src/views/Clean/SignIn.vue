@@ -7,6 +7,8 @@
 <script setup></script>
 
 <style lang="scss">
+@import "@/styles/global.scss";
+
 .signin-view {
   display: flex;
   justify-content: center;

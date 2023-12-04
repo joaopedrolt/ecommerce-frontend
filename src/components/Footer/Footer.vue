@@ -1,12 +1,20 @@
 <template>
   <footer
-    class="footer-component black-theme"
-    :class="{ 'regular-footer': cleanFooter, 'footer-hide-top': !cleanFooter }"
+    class="footer-component py-0"
+    :class="{
+      'regular-footer': cleanFooter,
+      'footer-hide-top': !cleanFooter,
+      'footer-white-theme': !cleanFooter,
+    }"
   >
     <div v-if="cleanFooter" class="container-limit container-size-padding">
       <top-side />
     </div>
-    <v-divider thickness="1"></v-divider>
+    <v-divider
+      class="w-100"
+      :thickness="1"
+      :color="cleanFooter ? '#fff' : '#111111'"
+    ></v-divider>
     <bottom-side :cleanFooter="cleanFooter" />
   </footer>
 </template>
@@ -31,8 +39,10 @@ const cleanFooter = ref(props.cleanFooter);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 14px;
-  padding-bottom: 8px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background-color: $color-black;
+  color: $color-white !important;
 
   @media (max-width: $tablet) {
     padding-top: 27px;
@@ -54,6 +64,15 @@ const cleanFooter = ref(props.cleanFooter);
 
   &.footer-hide-top {
     padding-top: 0 !important;
+  }
+}
+
+.footer-white-theme {
+  background-color: $color-white;
+  color: $color-black !important;
+
+  .footer-breadcrumbs {
+    color: $color-black !important;
   }
 }
 </style>

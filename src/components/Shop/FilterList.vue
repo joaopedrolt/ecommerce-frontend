@@ -6,23 +6,33 @@
         :key="i"
         elevation="0"
         style="margin: 0"
+        variant="accordion"
       >
         <v-expansion-panel-title eager> Categorias </v-expansion-panel-title>
         <v-expansion-panel-text eager>
-          <v-radio-group v-model="radios" hide-details>
-            <v-radio label="Categoria 1" value="1"></v-radio>
-            <v-radio label="Categoria 2" value="2"></v-radio>
-            <v-radio label="Categoria 3" value="3"></v-radio>
-          </v-radio-group>
+          <v-checkbox density="compact" hide-details>
+            <template v-slot:label>
+              <div class="text-subtitle-2">Roupa</div>
+            </template>
+          </v-checkbox>
+          <v-checkbox density="compact" hide-details>
+            <template v-slot:label>
+              <div class="text-subtitle-2">Caderno</div>
+            </template>
+          </v-checkbox>
+          <v-checkbox density="compact" hide-details>
+            <template v-slot:label>
+              <div class="text-subtitle-2">Garrafinha</div>
+            </template>
+          </v-checkbox>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-    <div class="px-2">
+    <div class="pr-2">
       <v-btn
-        class="text-subtitle-1 font-weight-regular mt-5"
-        color="primary"
-        height="45px"
+        class="text-subtitle-1 font-weight-regular mt-5 button-color button-black"
         width="100%"
+        height="35px"
         variant="flat"
         :ripple="false"
       >
@@ -44,9 +54,27 @@ const radios = ref("1");
 .filter-list-container {
   border-right: $border-small-line;
   width: 240px;
-}
 
-.v-expansion-panel-text__wrapper {
-  padding-bottom: 8px !important;
+  .v-expansion-panel-title {
+    padding: 16px 24px 16px 0 !important;
+  }
+
+  .v-expansion-panel-title:hover > .v-expansion-panel-title__overlay {
+    opacity: 0 !important;
+  }
+
+  .v-expansion-panel-title--active > .v-expansion-panel-title__overlay,
+  .v-expansion-panel-title[aria-haspopup="menu"][aria-expanded="true"]
+    > .v-expansion-panel-title__overlay {
+    opacity: 0 !important;
+  }
+
+  .v-expansion-panel-text__wrapper {
+    padding: 0 5px 8px !important;
+  }
+
+  .v-checkbox .v-selection-control {
+    min-height: auto;
+  }
 }
 </style>

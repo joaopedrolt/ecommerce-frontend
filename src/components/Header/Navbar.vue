@@ -188,8 +188,10 @@ const handleSignInClick = () => {
       width: 295px;
     }
 
-    .nav-mobile-icon-container {
-      padding: 0 7px;
+    @media (max-width: $tablet) {
+      &.container-size-padding {
+        padding: 0 !important;
+      }
     }
   }
 

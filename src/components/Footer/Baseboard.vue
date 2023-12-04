@@ -8,8 +8,8 @@
       />
     </div>
     <template v-if="cleanFooter">
-      <div class="text-caption">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
-      <div class="text-caption">
+      <div class="text-caption footer-copyright">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
+      <div class="text-caption footer-copyright">
         CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim,
         Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
       </div>
@@ -51,11 +51,16 @@ const itemsBaseboardLinks = [
 .footer-bottom-side-container {
   text-align: center;
   color: $color-gray;
+  padding: 20px 0 10px 0;
 
   .footer-breadcrumbs {
     justify-content: center !important;
-    padding: 10px 0 9px 0 !important;
+    padding: 0px 0 9px 0 !important;
     color: $color-white !important;
+  }
+
+  .footer-copyright{
+    font-size: 0.6rem !important;
   }
 }
 </style>

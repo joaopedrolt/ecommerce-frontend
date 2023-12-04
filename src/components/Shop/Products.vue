@@ -1,23 +1,7 @@
 <template>
-  <div class="w-100 px-5">
-    <div class="products-search-container w-100 mb-3 d-flex justify-center">
-      <div class="search-input-wrapper">
-        <v-text-field
-          v-model="searchInputValue"
-          @click:append="search"
-          @keyup.enter="search"
-          clearable
-          hide-details="auto"
-          variant="outlined"
-          placeholder="O que deseja?"
-          :append-icon="'mdi-magnify'"
-          density="compact"
-        >
-        </v-text-field>
-      </div>
-    </div>
+  <div class="w-100">
     <div
-      class="products-container"
+      class="products-container pl-5"
       :class="i.length > 2 ? 'container-grid' : 'container-flex'"
     >
       <v-card

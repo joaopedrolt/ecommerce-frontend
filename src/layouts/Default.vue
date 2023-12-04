@@ -1,7 +1,7 @@
 <template>
   <navbar />
   <navigation-drawer />
-  <v-main>
+  <v-main style="margin-top: 75px;">
     <router-view />
   </v-main>
   <footer-area :cleanFooter="true"/>

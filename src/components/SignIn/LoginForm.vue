@@ -7,14 +7,9 @@
       :exit="{ opacity: 0, scale: 0.6 }"
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
-      <v-form
-        ref="loginForm"
-        validate-on="layz"
-        class="signin-form-container"
-      >
-        <div class="signin-content mb-16">
-          <div class="text-h3 font-weight-light">Credenciais</div>
-          <div class="text-h6 mb-7 font-weight-light">Insira sua senha</div>
+      <v-form ref="loginForm" validate-on="layz" class="signin-form-container">
+        <div class="signin-content mb-5">
+          <SignInHeader title="Credenciais" subtitle="Insira sua senha" />
 
           <v-text-field
             v-model="signInEmailInput"
@@ -50,8 +45,7 @@
 
           <v-btn
             @click="handleLogInClick"
-            class="text-subtitle-1 font-weight-regular mb-4"
-            color="primary"
+            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
             height="45px"
             width="100%"
             variant="flat"
@@ -60,12 +54,11 @@
             Entrar
           </v-btn>
 
-          <div class="d-flex flex-column">
-            Esqueceu sua senha?
+          <div>
+            <div class="text-subtitle-1" style="height: 24px;">Esqueceu sua senha?</div>
             <router-link
-              class="text-decoration-none"
-              style="color: #0d47a1"
-              :to="{ name: 'EmailCodeValidation', query: {type: 'recover'} }"
+              class="text-decoration-none recover-link"
+              :to="{ name: 'EmailCodeValidation', query: { type: 'recover' } }"
             >
               Clique aqui para recuperar sua senha!</router-link
             >
@@ -83,7 +76,9 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { sha256 } from "js-sha256";
 
+import SignInHeader from "./SignInHeader.vue";
 import ValidationFiller from "../ValidationFiller.vue";
+
 import { passwordRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
@@ -160,5 +155,9 @@ onMounted(() => {
     --v-field-border-opacity: 0.38 !important;
     --v-field-border-width: 1px !important;
   }
+}
+
+.recover-link {
+  color: $color-gold !important;
 }
 </style>

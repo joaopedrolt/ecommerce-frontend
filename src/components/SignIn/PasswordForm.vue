@@ -7,16 +7,9 @@
       :exit="{ opacity: 0, scale: 0.6 }"
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
-      <v-form
-        ref="passwordForm"
-        class="signin-form-container"
-        @submit.prevent
-      >
-        <div class="signin-content mb-16">
-          <div class="text-h3 font-weight-light">Criar Senha</div>
-          <div class="text-h6 mb-7 font-weight-light">
-            Insira uma senha para sua conta
-          </div>
+      <v-form ref="passwordForm" class="signin-form-container" @submit.prevent>
+        <div class="signin-content mb-5">
+          <SignInHeader title="Criar Senha" subtitle="Insira uma senha para sua conta" />
 
           <v-text-field
             v-model="passwordInputValue"
@@ -61,8 +54,7 @@
 
           <v-btn
             @click="handleCreateAccountClick"
-            class="text-subtitle-1 font-weight-regular mb-4"
-            color="primary"
+            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
             height="45px"
             width="100%"
             variant="flat"
@@ -96,6 +88,7 @@ import { Motion, Presence } from "motion/vue";
 import { passwordRules } from "@/utils/rules";
 
 import ValidationFiller from "../ValidationFiller.vue";
+import SignInHeader from "./SignInHeader.vue";
 
 const passwordForm = ref();
 

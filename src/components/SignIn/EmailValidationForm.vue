@@ -12,9 +12,8 @@
         validate-on="layz"
         class="signin-form-container"
       >
-        <div class="signin-content mb-16">
-          <div class="text-h3 font-weight-light">Bem-vindo</div>
-          <div class="text-h6 mb-7 font-weight-light">Digite seu e-mail</div>
+        <div class="signin-content mb-5">
+          <SignInHeader title="Bem-vindo" subtitle="Digite seu e-mail" />
 
           <v-text-field
             class="mt-4"
@@ -31,8 +30,7 @@
 
           <v-btn
             @click="handleContinueClick"
-            class="text-subtitle-1 font-weight-regular mb-4"
-            color="primary"
+            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
             height="45px"
             width="100%"
             variant="flat"
@@ -61,6 +59,8 @@ import { storeToRefs } from "pinia";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 
 import ValidationFiller from "../ValidationFiller.vue";
+import SignInHeader from "./SignInHeader.vue";
+
 import { emailRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
