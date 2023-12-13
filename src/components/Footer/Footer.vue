@@ -1,21 +1,14 @@
 <template>
-  <footer
-    class="footer-component py-0"
-    :class="{
-      'regular-footer': cleanFooter,
-      'footer-hide-top': !cleanFooter,
-      'footer-white-theme': !cleanFooter,
-    }"
-  >
-    <div v-if="cleanFooter" class="container-limit container-size-padding">
+  <footer v-if="cleanFooter" class="footer-component py-0" :class="{
+    'regular-footer': cleanFooter,
+    'footer-hide-top': !cleanFooter,
+    'footer-white-theme': !cleanFooter,
+  }">
+    <div class="container-limit container-size-padding">
       <top-side />
+      <v-divider class="w-100" :thickness="1" :color="cleanFooter ? '#fff' : '#111111'"></v-divider>
     </div>
-    <v-divider
-      class="w-100"
-      :thickness="1"
-      :color="cleanFooter ? '#fff' : '#111111'"
-    ></v-divider>
-    <bottom-side :cleanFooter="cleanFooter" />
+    <bottom-side />
   </footer>
 </template>
 

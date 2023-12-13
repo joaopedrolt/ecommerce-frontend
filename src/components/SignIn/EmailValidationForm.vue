@@ -12,8 +12,8 @@
         validate-on="layz"
         class="signin-form-container"
       >
-        <div class="signin-content mb-5">
-          <SignInHeader title="Bem-vindo" subtitle="Digite seu e-mail" />
+        <div class="signin-content">
+          <SignInHeader title="Bem-Vindo" subtitle="Digite seu e-mail" />
 
           <v-text-field
             class="mt-4"
@@ -115,17 +115,4 @@ onBeforeRouteLeave((to, from) => {
 </script>
 
 <style lang="scss">
-@import "@/styles/global.scss";
-
-.signin-form-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .signin-content {
-    width: 400px;
-    text-align: center;
-  }
-}
 </style>

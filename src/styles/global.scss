@@ -1,5 +1,10 @@
 @import './partials/typography.scss';
 @import './partials/variables.scss';
-@import './partials/vuetify.scss';
 @import './partials/shared.scss';
 @import './partials/mixins.scss';
+
+html {
+    @media (max-width: $phone) {
+        font-size: 88% !important;
+    }
+}

@@ -1,30 +1,19 @@
 <template>
   <div class="footer-bottom-side-container">
     <div class="text-caption">
-      <v-breadcrumbs
-        class="footer-breadcrumbs"
-        :items="itemsBaseboardLinks"
-        divider="-"
-      />
+      <v-breadcrumbs class="footer-breadcrumbs" :items="itemsBaseboardLinks" divider="-" />
     </div>
-    <template v-if="cleanFooter">
-      <div class="text-caption footer-copyright">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
-      <div class="text-caption footer-copyright">
-        CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim,
-        Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
-      </div>
-    </template>
+
+    <div class="text-caption footer-copyright">Copyright © 1999-2023 Ebazar.com.br LTDA.</div>
+    <div class="text-caption footer-copyright">
+      CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim,
+      Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
-const props = defineProps({
-  cleanFooter: Boolean,
-});
-
-const cleanFooter = ref(props.cleanFooter);
 
 const itemsBaseboardLinks = [
   {
@@ -59,7 +48,7 @@ const itemsBaseboardLinks = [
     color: $color-white !important;
   }
 
-  .footer-copyright{
+  .footer-copyright {
     font-size: 0.6rem !important;
   }
 }

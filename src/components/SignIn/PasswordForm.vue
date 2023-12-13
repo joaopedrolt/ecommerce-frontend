@@ -8,7 +8,7 @@
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
       <v-form ref="passwordForm" class="signin-form-container" @submit.prevent>
-        <div class="signin-content mb-5">
+        <div class="signin-content">
           <SignInHeader title="Criar Senha" subtitle="Insira uma senha para sua conta" />
 
           <v-text-field
@@ -148,17 +148,4 @@ watch(passwordInputValue, () => {
 </script>
 
 <style lang="scss">
-@import "@/styles/global.scss";
-
-.signin-form-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .signin-content {
-    width: 400px;
-    text-align: center;
-  }
-}
 </style>

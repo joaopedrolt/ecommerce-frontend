@@ -8,7 +8,7 @@
       :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
     >
       <v-form ref="loginForm" validate-on="layz" class="signin-form-container">
-        <div class="signin-content mb-5">
+        <div class="signin-content">
           <SignInHeader title="Credenciais" subtitle="Insira sua senha" />
 
           <v-text-field
@@ -123,18 +123,6 @@ onMounted(() => {
 
 <style lang="scss">
 @import "@/styles/global.scss";
-
-.signin-form-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .signin-content {
-    width: 400px;
-    text-align: center;
-  }
-}
 
 .signin-password-area {
   .v-messages__message {

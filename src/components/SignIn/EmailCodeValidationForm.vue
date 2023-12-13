@@ -12,7 +12,7 @@
         validate-on="layz"
         class="signin-form-container"
       >
-        <div class="signin-content mb-5">
+        <div class="signin-content">
           <SignInHeader title="Validação" subtitle="Insira o código de segurança recebido" />
 
           <v-otp-input
@@ -151,20 +151,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-@import "@/styles/global.scss";
-
-.signin-form-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .signin-content {
-    width: 400px;
-    text-align: center;
-  }
-}
-
 .signin-password-area {
   .v-messages__message {
     height: 24px !important;

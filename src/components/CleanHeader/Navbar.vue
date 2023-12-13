@@ -33,7 +33,7 @@ const handleHomeClick = () => {
 <style lang="scss">
 .clean-navbar-container {
   height: 75px;
-  border-bottom: $border-small-line !important;
+
 
   .v-toolbar__content {
     height: 75px !important;
