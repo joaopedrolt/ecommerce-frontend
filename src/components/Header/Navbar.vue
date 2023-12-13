@@ -130,9 +130,8 @@
         </div>
 
         <!-- Meta -->
-        <v-overlay v-model="displaySearch">
-          <search />
-        </v-overlay>
+
+        <search />
       </div>
     </div>
   </v-app-bar>
@@ -140,27 +139,26 @@
 
 <script setup>
 import { ref } from "vue";
-import { useDrawerStore } from "@/store/store";
+import { useNavbarStore } from "@/store/store";
+
 import { useRouter } from "vue-router";
 
 import Dropdown from "./Dropdown.vue";
 import Search from "./Search.vue";
 
-const drawerStore = useDrawerStore();
+const navbarStore = useNavbarStore();
 const router = useRouter();
 
 const firstMenu = ref(false);
 const secondMenu = ref(false);
 const thirdMenu = ref(false);
 
-const displaySearch = ref(false);
-
 const displayNavigationDrawer = () => {
-  drawerStore.displayNavigationDrawer();
+  navbarStore.displayNavigationDrawer();
 };
 
 const displaySearchOverlay = () => {
-  displaySearch.value = true;
+  navbarStore.displaySearchOverlay();
 };
 
 const handleSignInClick = () => {

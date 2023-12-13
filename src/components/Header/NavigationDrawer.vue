@@ -40,11 +40,11 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { useDrawerStore } from "@/store/store.js";
+import { useNavbarStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 
-const drawerStore = useDrawerStore();
-const { displayDrawer } = storeToRefs(drawerStore);
+const navbarStore = useNavbarStore();
+const { displayDrawer } = storeToRefs(navbarStore);
 
 const open = ref([]);
 
@@ -55,7 +55,7 @@ watch(displayDrawer, (newValue) => {
 });
 
 const hideNavigationDrawer = () => {
-  drawerStore.hideNavigationDrawer();
+  navbarStore.hideNavigationDrawer();
 };
 </script>
 

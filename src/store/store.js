@@ -2,9 +2,10 @@
 import { defineStore } from "pinia";
 
 /* Drawer */
-export const useDrawerStore = defineStore("drawer", {
+export const useNavbarStore = defineStore("navbar", {
   state: () => ({
     displayDrawer: false,
+    displaySearch: false,
   }),
   actions: {
     displayNavigationDrawer() {
@@ -13,6 +14,9 @@ export const useDrawerStore = defineStore("drawer", {
     hideNavigationDrawer() {
       this.displayDrawer = false;
     },
+    displaySearchOverlay() {
+      this.displaySearch = true;
+    }
   },
 });
 
@@ -27,3 +31,14 @@ export const useSignInStore = defineStore("signin", {
     },
   },
 });
+
+/* export const useSearchStore = defineStore("search", {
+  state: () => ({
+    displaySearch: false,
+  }),
+  actions: {
+    setDisplaySearch(value) {
+      this.displaySearch = value;
+    },
+  },
+}); */
