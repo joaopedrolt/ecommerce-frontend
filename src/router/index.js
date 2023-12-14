@@ -85,6 +85,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/produto",
+    component: DefaultLayout,
+    children: [
+      {
+        path: ":produtoId",
+        name: "Product",
+        component: () => import("@/views/Default/Product.vue"),
+      },
+    ],
+  },
   //Home
   {
     path: "/",
