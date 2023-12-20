@@ -9,6 +9,7 @@
           arrows: false,
           autoplay: true,
           interval: 5000,
+          speed: 1000,
           pauseOnHover: true,
         }"
       >
