@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div
-      class="products-container pl-5"
+      class="products-container"
       :class="i.length > 2 ? 'container-grid' : 'container-flex'"
     >
       <v-card

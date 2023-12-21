@@ -1,28 +1,40 @@
 <template>
   <div class="shop-view">
     <div class="shop-container h-100">
-      <div class="d-flex flex-column container-limit height-limit" style="">
-        <div
-          class="products-search-container w-100 mb-3 pt-8 pb-5 d-flex justify-center"
-        >
-          <!--     @click:append="search"
-              @keyup.enter="search" -->
-          <div class="search-input-wrapper">
-            <v-text-field
-              v-model="searchQuery"
-              @input="handleSearch"
-              clearable
-              hide-details="auto"
-              variant="outlined"
-              placeholder="O que deseja?"
-              :append-icon="'mdi-magnify'"
-              density="compact"
-            >
-            </v-text-field>
+      <div
+        class="d-flex flex-column container-limit height-limit container-size-padding"
+        style=""
+      >
+        <search />
+
+        <div>
+          <div class="search-details-container d-flex flex-column text-center">
+            <div class="search text-subtitle-2 font-weight-light">
+              Resultados da sua pesquisa
+            </div>
+            <div class="text-h5 font-weight-bold">'capuz'</div>
           </div>
         </div>
-        <div class="d-flex container-limit container-size-padding">
-          <filter-list />
+
+        <div class="search-options-row d-flex justify-space-between pb-2">
+          <button
+            class="filter-button-container d-flex align-end text-subtitle-2 font-weight-regular"
+            style="width: 295px"
+          >
+            Filtrar
+            <v-icon>mdi-chevron-right</v-icon>
+          </button>
+
+          <button
+            class="filter-button-container d-flex justify-end align-end text-subtitle-2 font-weight-regular"
+            style="width: 295px"
+          >
+            <v-icon>mdi-chevron-down</v-icon>
+            Ordernar por
+          </button>
+        </div>
+        <div class="d-flex">
+          <!-- <filter-list /> -->
           <products />
         </div>
       </div>
@@ -36,6 +48,7 @@ import { ref } from "vue";
 
 import FilterList from "@/components/Shop/FilterList.vue";
 import Products from "@/components/Shop/Products.vue";
+import Search from "@/components/Shop/Search.vue";
 
 const searchQuery = ref("");
 
