@@ -1,40 +1,135 @@
 <template>
   <div class="w-100">
-    <div
-      class="products-container"
-      :class="i.length > 2 ? 'container-grid' : 'container-flex'"
-    >
+    <div class="products-container">
       <v-card
         v-for="i in i"
         class="product-card d-flex flex-column"
         elevation="0"
       >
-        <img
-          src="https://http2.mlstatic.com/D_Q_NP_2X_919127-MLA54983207567_052023-T.webp"
-          alt=""
-        />
+        <div class="product-card-top">
+          <img
+            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
+            alt=""
+          />
+        </div>
+
         <div class="product-card-bottom">
-          <div class="text-subtitle-1 font-weight-medium">Macbook Air Pro</div>
+          <div class="font-weight-bold">Macbook Air Pro</div>
+          <p
+            class="text-subtitle-2 font-weight-light"
+            style="margin-bottom: 1px"
+          >
+            Some small description for the product
+          </p>
           <div class="product-card-price d-flex">
             <div class="text-subtitle-2 font-weight-regular">R$589</div>
-            <div class="text-caption price-cents">99</div>
+            <!--             <div class="text-caption price-cents">99</div> -->
           </div>
         </div>
       </v-card>
+
       <v-card
         v-for="i in i"
         class="product-card d-flex flex-column"
         elevation="0"
       >
-        <img
-          src="https://down-br.img.susercontent.com/file/br-11134207-7r98o-lnlsez95d8encb_tn"
-          alt=""
-        />
+        <div class="product-card-top">
+          <img
+            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
+            alt=""
+          />
+        </div>
+
         <div class="product-card-bottom">
-          <div class="text-subtitle-1 font-weight-medium">Macbook Air Pro</div>
+          <div class="font-weight-bold">Macbook Air Pro</div>
+          <p
+            class="text-subtitle-2 font-weight-light"
+            style="margin-bottom: 1px"
+          >
+            Some small description for the product
+          </p>
           <div class="product-card-price d-flex">
             <div class="text-subtitle-2 font-weight-regular">R$589</div>
-            <div class="text-caption price-cents">99</div>
+            <!--             <div class="text-caption price-cents">99</div> -->
+          </div>
+        </div>
+      </v-card>
+
+      <v-card
+        v-for="i in i"
+        class="product-card d-flex flex-column"
+        elevation="0"
+      >
+        <div class="product-card-top">
+          <img
+            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
+            alt=""
+          />
+        </div>
+
+        <div class="product-card-bottom">
+          <div class="font-weight-bold">Macbook Air Pro</div>
+          <p
+            class="text-subtitle-2 font-weight-light"
+            style="margin-bottom: 1px"
+          >
+            Some small description for the product
+          </p>
+          <div class="product-card-price d-flex">
+            <div class="text-subtitle-2 font-weight-regular">R$589</div>
+            <!--             <div class="text-caption price-cents">99</div> -->
+          </div>
+        </div>
+      </v-card>
+
+      <v-card
+        v-for="i in i"
+        class="product-card d-flex flex-column"
+        elevation="0"
+      >
+        <div class="product-card-top">
+          <img
+            src="https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533"
+            alt=""
+          />
+        </div>
+        <div class="product-card-bottom">
+          <div class="font-weight-bold">Macbook Air Pro</div>
+          <p
+            class="text-subtitle-2 font-weight-light"
+            style="margin-bottom: 1px"
+          >
+            Some small description for the product
+          </p>
+          <div class="product-card-price d-flex">
+            <div class="text-subtitle-2 font-weight-regular">R$589.99</div>
+            <!--      <div class="text-caption price-cents">99</div> -->
+          </div>
+        </div>
+      </v-card>
+
+      <v-card
+        v-for="i in i"
+        class="product-card d-flex flex-column"
+        elevation="0"
+      >
+        <div class="product-card-top">
+          <img
+            src="https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533"
+            alt=""
+          />
+        </div>
+        <div class="product-card-bottom">
+          <div class="font-weight-bold">Macbook Air Pro</div>
+          <p
+            class="text-subtitle-2 font-weight-light"
+            style="margin-bottom: 1px"
+          >
+            Some small description for the product
+          </p>
+          <div class="product-card-price d-flex">
+            <div class="text-subtitle-2 font-weight-regular">R$589.99</div>
+            <!--      <div class="text-caption price-cents">99</div> -->
           </div>
         </div>
       </v-card>
@@ -45,7 +140,7 @@
 <script setup>
 import { ref } from "vue";
 
-const i = ref([``, ``, ``, ``]);
+const i = ref([``]);
 const searchInputValue = ref("");
 
 const search = () => {
@@ -67,30 +162,39 @@ const search = () => {
 }
 
 .products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
   .product-card {
     cursor: pointer;
-    max-width: 302px;
-    max-height: 374px;
-    border: $border-small-line;
-    border-radius: 10px;
-    flex: 1;
+    width: calc(25% - 20px);
+
+    .product-card-top {
+      width: 310px;
+      height: 310px;
+
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
 
     .product-card-bottom {
       flex-shrink: 0;
       justify-content: center;
-      border-top: $border-small-line;
-      padding: 10px 20px;
+      padding: 12px 0;
     }
   }
 
-  &.container-grid {
-    @include grid(200px);
-  }
+  /*  &.container-grid {
+    @include grid(330px);
+  } */
 
-  &.container-flex {
+  /*  &.container-flex {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-  }
+  } */
 }
 </style>
