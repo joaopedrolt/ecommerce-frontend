@@ -1,6 +1,6 @@
 <template>
   <div
-    class="products-search-container w-100  pt-9 pb-12 d-flex justify-center"
+    class="products-search-container w-100 pt-7 pb-10 d-flex justify-center"
   >
     <div class="search-input-wrapper">
       <v-text-field

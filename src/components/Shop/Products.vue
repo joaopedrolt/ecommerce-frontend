@@ -1,24 +1,14 @@
 <template>
   <div class="w-100">
     <div class="products-container">
-      <v-card
-        v-for="i in i"
-        class="product-card d-flex flex-column"
-        elevation="0"
-      >
+      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
         <div class="product-card-top">
-          <img
-            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
-            alt=""
-          />
+          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
         </div>
 
         <div class="product-card-bottom">
           <div class="font-weight-bold">Macbook Air Pro</div>
-          <p
-            class="text-subtitle-2 font-weight-light"
-            style="margin-bottom: 1px"
-          >
+          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
             Some small description for the product
           </p>
           <div class="product-card-price d-flex">
@@ -28,24 +18,14 @@
         </div>
       </v-card>
 
-      <v-card
-        v-for="i in i"
-        class="product-card d-flex flex-column"
-        elevation="0"
-      >
+      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
         <div class="product-card-top">
-          <img
-            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
-            alt=""
-          />
+          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
         </div>
 
         <div class="product-card-bottom">
           <div class="font-weight-bold">Macbook Air Pro</div>
-          <p
-            class="text-subtitle-2 font-weight-light"
-            style="margin-bottom: 1px"
-          >
+          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
             Some small description for the product
           </p>
           <div class="product-card-price d-flex">
@@ -55,24 +35,14 @@
         </div>
       </v-card>
 
-      <v-card
-        v-for="i in i"
-        class="product-card d-flex flex-column"
-        elevation="0"
-      >
+      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
         <div class="product-card-top">
-          <img
-            src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533"
-            alt=""
-          />
+          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
         </div>
 
         <div class="product-card-bottom">
           <div class="font-weight-bold">Macbook Air Pro</div>
-          <p
-            class="text-subtitle-2 font-weight-light"
-            style="margin-bottom: 1px"
-          >
+          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
             Some small description for the product
           </p>
           <div class="product-card-price d-flex">
@@ -82,23 +52,13 @@
         </div>
       </v-card>
 
-      <v-card
-        v-for="i in i"
-        class="product-card d-flex flex-column"
-        elevation="0"
-      >
+      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
         <div class="product-card-top">
-          <img
-            src="https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533"
-            alt=""
-          />
+          <img src="https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533" alt="" />
         </div>
         <div class="product-card-bottom">
           <div class="font-weight-bold">Macbook Air Pro</div>
-          <p
-            class="text-subtitle-2 font-weight-light"
-            style="margin-bottom: 1px"
-          >
+          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
             Some small description for the product
           </p>
           <div class="product-card-price d-flex">
@@ -142,7 +102,7 @@ const search = () => {
 
   .product-card {
     cursor: pointer;
-    width: calc(25% - 15px);
+    width: calc(33.33333% - 14px);
 
     .product-card-top {
       width: 100%;
