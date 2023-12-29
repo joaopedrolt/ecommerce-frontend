@@ -3,29 +3,13 @@
     <v-card v-if="displaySearch">
       <div class="search-container">
         <div class="search-input-wrapper">
-          <v-menu
-            v-model="menu"
-            transition="slide-y-transition"
-            :close-on-content-click="false"
-          >
+          <v-menu v-model="menu" transition="slide-y-transition" :close-on-content-click="false">
             <template v-slot:activator="{ props }">
               <div class="d-flex">
-                <v-text-field
-                  v-model="searchQuery"
-                  @input="handleSearch"
-                  v-bind="props"
-                  hide-details="auto"
-                  variant="outlined"
-                  placeholder="O que deseja?"
-                  append-inner-icon="mdi-magnify"
-                >
+                <v-text-field v-model="searchQuery" @input="handleSearch" v-bind="props" hide-details="auto"
+                  variant="outlined" placeholder="O que deseja?" append-inner-icon="mdi-magnify">
                 </v-text-field>
-                <v-btn
-                  class="custom-btn"
-                  :ripple="false"
-                  @click="hideSearchOverlay()"
-                  icon="mdi-close"
-                />
+                <v-btn class="custom-btn" :ripple="false" @click="hideSearchOverlay()" icon="mdi-close" />
               </div>
             </template>
 
@@ -60,7 +44,7 @@ const { displaySearch } = storeToRefs(navbarStore);
 const searchQuery = ref("");
 const menu = ref(false);
 
-const search = () => {};
+const search = () => { };
 
 let timer = null;
 
