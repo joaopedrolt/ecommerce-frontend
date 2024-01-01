@@ -139,14 +139,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { useNavbarStore } from "@/store/store";
+import { useDrawerStore, useSearchStore } from "@/store/store";
 
 import { useRouter } from "vue-router";
 
 import Dropdown from "./Dropdown.vue";
 import Search from "./Search.vue";
 
-const navbarStore = useNavbarStore();
+const drawerStore = useDrawerStore();
+const searchStore = useSearchStore();
 const router = useRouter();
 
 const firstMenu = ref(false);
@@ -154,11 +155,11 @@ const secondMenu = ref(false);
 const thirdMenu = ref(false);
 
 const displayNavigationDrawer = () => {
-  navbarStore.displayNavigationDrawer();
+  drawerStore.displayNavigationDrawerx();
 };
 
 const displaySearchOverlay = () => {
-  navbarStore.displaySearchOverlay();
+  searchStore.displaySearchOverlayx();
 };
 
 const handleSignInClick = () => {

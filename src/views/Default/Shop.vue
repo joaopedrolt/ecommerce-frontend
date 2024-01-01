@@ -8,14 +8,24 @@
             <div class="search text-subtitle-2 font-weight-light">
               Resultados da sua pesquisa
             </div>
-            <div class="text-h5 font-weight-bold">'capuz'</div>
+            <div class="text-h5 font-weight-bold" style="overflow-wrap: break-word;">'{{ searchQuery }}'</div>
           </div>
         </div>
 
         <div class="search-options-row d-flex justify-space-between pb-2">
-          <button class="filter-button-container d-flex align-end text-subtitle-2 font-weight-regular"
-            style="width: 150px" @click="handleFilterClick()">
+          <!-- Desktop -->
+          <button class="filter-desktop filter-button-container d-flex align-end text-subtitle-2 font-weight-regular"
+            style="width: 150px" @click="handleFilterDesktopClick()">
             Filtrar
+            <div class="filter-chevron-left" :class="{ 'active': showFilters }">
+              <v-icon>mdi-chevron-right</v-icon>
+            </div>
+          </button>
+
+          <!-- Mobile -->
+          <button class="filter-mobile filter-button-container d-flex align-end text-subtitle-2 font-weight-regular"
+            style="width: 200px" @click="handleFilterMobileClick()">
+            Filtrar e Organizar por
             <div class="filter-chevron-left" :class="{ 'active': showFilters }">
               <v-icon>mdi-chevron-right</v-icon>
             </div>
@@ -23,16 +33,14 @@
 
           <v-menu v-model="showOrderByDropdown" offset="5" transition="slide-x-transition">
             <template v-slot:activator="{ props }">
-              <button class="filter-button-container d-flex justify-end align-end text-subtitle-2 font-weight-regular"
+              <button class="filter-desktop filter-button-container d-flex justify-end align-end text-subtitle-2 font-weight-regular"
                 style="width: 150px; position: relative;">
                 Ordernar por
                 <div class="filter-chevron-right" :class="{ 'active': showOrderByDropdown }">
                   <v-icon>mdi-chevron-down</v-icon>
                 </div>
 
-                <div class="h-100" style="position: absolute; width: 148px; left: 0;" v-bind="props">
-
-                </div>
+                <div class="h-100" style="position: absolute; width: 148px; left: 0;" v-bind="props"></div>
               </button>
 
             </template>
@@ -58,16 +66,29 @@
     </div>
     <div style="height: 300px; width: 100%"></div>
   </div>
+  <filter-drawer />
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
+import { useRoute } from 'vue-router';
 
 import FilterList from "@/components/Shop/FilterList.vue";
 import Products from "@/components/Shop/Products.vue";
 import Search from "@/components/Shop/Search.vue";
+import FilterDrawer from "@/components/Shop/FilterDrawer.vue";
 
-const searchQuery = ref("");
+import { storeToRefs } from "pinia";
+import { useSearchStore, useDrawerStore } from "@/store/store";
+
+const route = useRoute();
+
+const searchStore = useSearchStore();
+const drawerStore = useDrawerStore();
+
+const { searchQuery } = storeToRefs(searchStore);
+const { displayFilterDrawer } = storeToRefs(drawerStore);
+
 const showFilters = ref(false);
 const showOrderByDropdown = ref(false);
 
@@ -91,27 +112,22 @@ const items = [`Maior Preço`, `Menor Preço`, `Nossa Seleção`];
 
 const selectedItem = ref(0);
 
-let timer = null;
-
-const handleFilterClick = () => {
-  console.log("oi")
+const handleFilterDesktopClick = () => {
   showFilters.value = !showFilters.value;
 };
 
-const handleOrderByClick = () => {
-  showOrderByDropdown.value = !showOrderByDropdown.value;
+const handleFilterMobileClick = () => {
+  displayFilterDrawer.value = true;
 };
 
-const handleSearch = () => {
-  clearTimeout(timer);
-
-  timer = setTimeout(() => {
-    console.log(`Make API request with query: ${searchQuery.value}`);
-  }, 500);
-};
+onMounted(() => {
+  searchQuery.value = route.query.q;
+})
 </script>
 
 <style lang="scss">
+@import "@/styles/global.scss";
+
 .shop-container {
   .height-limit {
     min-height: 500px;
@@ -141,6 +157,18 @@ const handleSearch = () => {
         &.active {
           transform: rotate(180deg) translateY(-1.5px);
         }
+      }
+    }
+
+    .filter-desktop {
+      @media (max-width: $tablet) {
+        display: none !important;
+      }
+    }
+
+    .filter-mobile {
+      @media (min-width: $tablet) {
+        display: none !important;
       }
     }
   }

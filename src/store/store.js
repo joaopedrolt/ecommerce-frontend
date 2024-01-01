@@ -2,21 +2,19 @@
 import { defineStore } from "pinia";
 
 /* Drawer */
-export const useNavbarStore = defineStore("navbar", {
+export const useDrawerStore = defineStore("navbar", {
   state: () => ({
-    displayDrawer: false,
-    displaySearch: false,
+    displayNavigationDrawer: false,
+    displayFilterDrawer: false,
+    displayCartDrawer: false
   }),
   actions: {
-    displayNavigationDrawer() {
-      this.displayDrawer = true;
+    displayNavigationDrawerx() {
+      this.displayNavigationDrawer = true;
     },
     hideNavigationDrawer() {
-      this.displayDrawer = false;
+      this.displayNavigationDrawer = false;
     },
-    displaySearchOverlay() {
-      this.displaySearch = true;
-    }
   },
 });
 
@@ -32,13 +30,19 @@ export const useSignInStore = defineStore("signin", {
   },
 });
 
-/* export const useSearchStore = defineStore("search", {
+/* Search */
+export const useSearchStore = defineStore("signin", {
   state: () => ({
-    displaySearch: false,
+    searchInput: "",
+    searchQuery: "",
+    displaySearchOverlay: false,
   }),
   actions: {
-    setDisplaySearch(value) {
-      this.displaySearch = value;
+    setSignInEmail(value) {
+      this.signInEmailInput = value;
     },
+    displaySearchOverlayx() {
+      this.displaySearchOverlay = true;
+    }
   },
-}); */
+});

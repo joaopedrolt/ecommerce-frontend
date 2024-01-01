@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-model="displayNavigationDrawer"
+    v-model="displayFilterDrawer"
     width="320"
     style="top: 0; height: 100%"
     absolute
@@ -44,18 +44,18 @@ import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 
 const drawerStore = useDrawerStore();
-const { displayNavigationDrawer } = storeToRefs(drawerStore);
+const { displayFilterDrawer } = storeToRefs(drawerStore);
 
 const open = ref([]);
 
-watch(displayNavigationDrawer, (newValue) => {
+watch(displayFilterDrawer, (newValue) => {
   if (!newValue) {
     open.value = [];
   }
 });
 
 const hideNavigationDrawer = () => {
-  drawerStore.hideNavigationDrawer();
+  displayFilterDrawer.value = false;
 };
 </script>
 

@@ -1,84 +1,65 @@
 <template>
   <div class="w-100">
     <div class="products-container">
-      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
+      <div v-for="p in products" class="product-card d-flex flex-column" elevation="0"
+        @click="handleProductClick(p.id)">
         <div class="product-card-top">
-          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
+          <img :src="p.image" alt="" />
         </div>
 
         <div class="product-card-bottom">
-          <div class="font-weight-bold">Macbook Air Pro</div>
+          <div class="font-weight-bold">{{ p.title }}</div>
           <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            Some small description for the product
+            {{ p.subtitle }}
           </p>
           <div class="product-card-price d-flex">
-            <div class="text-subtitle-2 font-weight-regular">R$589</div>
+            <div class="text-subtitle-2 font-weight-regular"> {{ p.price }} </div>
             <!--             <div class="text-caption price-cents">99</div> -->
           </div>
         </div>
-      </v-card>
-
-      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
-        <div class="product-card-top">
-          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
-        </div>
-
-        <div class="product-card-bottom">
-          <div class="font-weight-bold">Macbook Air Pro</div>
-          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            Some small description for the product
-          </p>
-          <div class="product-card-price d-flex">
-            <div class="text-subtitle-2 font-weight-regular">R$589</div>
-            <!--             <div class="text-caption price-cents">99</div> -->
-          </div>
-        </div>
-      </v-card>
-
-      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
-        <div class="product-card-top">
-          <img src="https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533" alt="" />
-        </div>
-
-        <div class="product-card-bottom">
-          <div class="font-weight-bold">Macbook Air Pro</div>
-          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            Some small description for the product
-          </p>
-          <div class="product-card-price d-flex">
-            <div class="text-subtitle-2 font-weight-regular">R$589</div>
-            <!--             <div class="text-caption price-cents">99</div> -->
-          </div>
-        </div>
-      </v-card>
-
-      <v-card v-for="i in i" class="product-card d-flex flex-column" elevation="0">
-        <div class="product-card-top">
-          <img src="https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533" alt="" />
-        </div>
-        <div class="product-card-bottom">
-          <div class="font-weight-bold">Macbook Air Pro</div>
-          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            Some small description for the product
-          </p>
-          <div class="product-card-price d-flex">
-            <div class="text-subtitle-2 font-weight-regular">R$589.99</div>
-            <!--      <div class="text-caption price-cents">99</div> -->
-          </div>
-        </div>
-      </v-card>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
-const i = ref([``]);
-const searchInputValue = ref("");
+const router = useRouter();
 
-const search = () => {
-  console.log("pesquisou");
+const products = [
+  {
+    id: 1,
+    image: "https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533",
+    title: "Macbook Air Pro",
+    subtitle: "Some small description for the product",
+    price: "R$589",
+  },
+  {
+    id: 2,
+    image: "https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533",
+    title: "Macbook Air Pro",
+    subtitle: "Some small description for the product",
+    price: "R$600",
+  },
+  {
+    id: 3,
+    image: "https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533",
+    title: "Macbook Air Pro",
+    subtitle: "Some small description for the product",
+    price: "R$600",
+  },
+  {
+    id: 4,
+    image: "https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533",
+    title: "Macbook Air Pro",
+    subtitle: "Some small description for the product",
+    price: "R$600",
+  },
+];
+
+const handleProductClick = (productId) => {
+  router.push({ name: "Product", params: { produtoId: productId } });
 };
 </script>
 

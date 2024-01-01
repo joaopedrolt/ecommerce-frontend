@@ -9,6 +9,7 @@ import CleanLayout from "@/layouts/Clean.vue";
 // Stores
 
 import { useSignInStore } from "@/store/store";
+import { useSearchStore } from "@/store/store";
 
 // Views
 
@@ -85,17 +86,6 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/produto",
-    component: DefaultLayout,
-    children: [
-      {
-        path: ":produtoId",
-        name: "Product",
-        component: () => import("@/views/Default/Product.vue"),
-      },
-    ],
-  },
   //Home
   {
     path: "/",
@@ -110,6 +100,16 @@ const routes = [
         path: "/loja",
         name: "Shop",
         component: () => import("@/views/Default/Shop.vue"),
+      },
+      {
+        path: "/produto",
+        children: [
+          {
+            path: ":produtoId",
+            name: "Product",
+            component: () => import("@/views/Default/Product.vue"),
+          },
+        ],
       },
     ],
   },
