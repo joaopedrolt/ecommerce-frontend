@@ -12,6 +12,9 @@ export const useDrawerStore = defineStore("navbar", {
     displayNavigationDrawerx() {
       this.displayNavigationDrawer = true;
     },
+    displayCartDrawerx() {
+      this.displayCartDrawer = true;
+    },
     hideNavigationDrawer() {
       this.displayNavigationDrawer = false;
     },

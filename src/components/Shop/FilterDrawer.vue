@@ -6,7 +6,7 @@
     absolute
     temporary
   >
-    <div class="nav-mobile-header">
+    <div class="drawer-header">
       <v-btn @click="hideNavigationDrawer()" elevation="0" icon :ripple="false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -59,12 +59,6 @@ const hideNavigationDrawer = () => {
 };
 </script>
 
-<style lang="scss">
-.nav-mobile-header {
-  height: 50px;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 0 4px;
-}
+<style>
+
 </style>

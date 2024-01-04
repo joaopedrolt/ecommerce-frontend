@@ -103,7 +103,7 @@
             <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
           </v-btn>
 
-          <v-btn class="nav-btn-custom h-100" :ripple="false" variant="plain">
+          <v-btn @click="displayCartDrawer" class="nav-btn-custom h-100" :ripple="false" variant="plain">
             Carrinho
             <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
           </v-btn>
@@ -121,7 +121,7 @@
 
         <!-- Mobile -->
         <div class="d-md-none nav-mobile-icon-container">
-          <v-btn icon size="small">
+          <v-btn @click="displayCartDrawer" icon size="small">
             <v-icon>mdi-cart</v-icon>
           </v-btn>
           <v-btn @click="handleSignInClick" icon size="small">
@@ -156,6 +156,10 @@ const thirdMenu = ref(false);
 
 const displayNavigationDrawer = () => {
   drawerStore.displayNavigationDrawerx();
+};
+
+const displayCartDrawer = () => {
+  drawerStore.displayCartDrawerx();
 };
 
 const displaySearchOverlay = () => {
