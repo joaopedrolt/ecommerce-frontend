@@ -1,11 +1,11 @@
 <template>
-  <navbar />
-  <navigation-drawer />
-  <cart-drawer />
-  <v-main style="margin-top: 75px;">
-    <router-view />
-  </v-main>
-  <footer-area :cleanFooter="true"/>
+      <navbar />
+      <navigation-drawer />
+      <cart-drawer />
+      <v-main style="margin-top: 75px;">
+        <router-view />
+      </v-main>
+      <footer-area :cleanFooter="true" />
 </template>
 
 <script setup>

@@ -3,6 +3,8 @@
 @import "./partials/mixins.scss";
 
 html {
+  overflow-x: hidden;
+
   @media (max-width: $phone) {
     font-size: 85% !important;
   }
@@ -72,5 +74,23 @@ html {
   display: flex;
   justify-content: end;
   align-items: center;
-  padding: 0 4px;
+}
+
+.counter-component {
+  display: flex;
+  height: 28px !important;
+
+  .button-plus-minus {
+    min-width: 30px !important;
+    height: 100%;
+    padding: 0 0;
+  }
+
+  .counter-input {
+    display: flex;
+    width: 25px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
 }
