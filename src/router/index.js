@@ -111,6 +111,11 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/conta",
+        name: "Account",
+        component: () => import("@/views/Default/Account.vue"),
+      },
     ],
   },
 ];

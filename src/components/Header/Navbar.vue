@@ -1,28 +1,12 @@
 <template>
-  <v-app-bar
-    class="nav-component"
-    style="z-index: 1003 !important"
-    :elevation="0"
-    height="75px"
-  >
+  <v-app-bar class="nav-component" style="z-index: 1003 !important" :elevation="0" height="75px">
     <div class="container-limit container-size-padding nav-container">
       <div class="h-100 w-100 d-flex justify-space-between align-center">
         <!-- Desktop -->
         <div class="hidden-sm-and-down nav-side-container side-left h-100">
-          <v-menu
-            v-model="firstMenu"
-            open-on-hover
-            :close-on-content-click="false"
-            close-delay="0"
-            open-delay="0"
-          >
+          <v-menu v-model="firstMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
             <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                class="nav-btn-custom h-100"
-                :ripple="false"
-                variant="plain"
-              >
+              <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
                 Masculino
               </v-btn>
             </template>
@@ -30,20 +14,9 @@
             <dropdown :menu="1" />
           </v-menu>
 
-          <v-menu
-            v-model="secondMenu"
-            open-on-hover
-            :close-on-content-click="false"
-            close-delay="0"
-            open-delay="0"
-          >
+          <v-menu v-model="secondMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
             <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                class="nav-btn-custom h-100"
-                :ripple="false"
-                variant="plain"
-              >
+              <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
                 Roupas
               </v-btn>
             </template>
@@ -51,21 +24,9 @@
             <dropdown :menu="2" />
           </v-menu>
 
-          <v-menu
-            v-model="thirdMenu"
-            open-on-hover
-            :close-on-content-click="false"
-            close-delay="0"
-            open-delay="0"
-          >
+          <v-menu v-model="thirdMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
             <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                class="nav-btn-custom h-100"
-                style="margin: 0"
-                :ripple="false"
-                variant="plain"
-              >
+              <v-btn v-bind="props" class="nav-btn-custom h-100" style="margin: 0" :ripple="false" variant="plain">
                 Acessorios
               </v-btn>
             </template>
@@ -92,28 +53,18 @@
 
         <!-- Desktop -->
         <div class="hidden-sm-and-down nav-side-container side-right h-100">
-          <v-btn
-            @click="displaySearchOverlay"
-            class="nav-btn-custom h-100"
-            style="margin: 0"
-            :ripple="false"
-            variant="plain"
-          >
+          <v-btn @click="displaySearchOverlay" class="nav-btn-custom h-100" style="margin: 0" :ripple="false"
+            variant="plain">
             Pesquisar
             <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
           </v-btn>
 
-          <v-btn @click="displayCartDrawer" class="nav-btn-custom h-100" :ripple="false" variant="plain">
+          <v-btn @click="displayCartDrawerr" class="nav-btn-custom h-100" :ripple="false" variant="plain">
             Carrinho
             <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
           </v-btn>
 
-          <v-btn
-            @click="handleSignInClick"
-            class="nav-btn-custom h-100"
-            :ripple="false"
-            variant="plain"
-          >
+          <v-btn @click="handleSignInClick" class="nav-btn-custom h-100" :ripple="false" variant="plain">
             Entrar
             <v-icon style="margin: 0 0 2px 3px">mdi-account</v-icon>
           </v-btn>
@@ -121,7 +72,7 @@
 
         <!-- Mobile -->
         <div class="d-md-none nav-mobile-icon-container">
-          <v-btn @click="displayCartDrawer" icon size="small">
+          <v-btn @click="displayCartDrawerr" icon size="small">
             <v-icon>mdi-cart</v-icon>
           </v-btn>
           <v-btn @click="handleSignInClick" icon size="small">
@@ -134,12 +85,14 @@
         <search />
       </div>
     </div>
+    <div v-show="displayCartDrawer" style="width: 19px;">displayCartDrawer</div>
   </v-app-bar>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useDrawerStore, useSearchStore } from "@/store/store";
+import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
 
@@ -154,11 +107,13 @@ const firstMenu = ref(false);
 const secondMenu = ref(false);
 const thirdMenu = ref(false);
 
+const { displayCartDrawer } = storeToRefs(drawerStore);
+
 const displayNavigationDrawer = () => {
   drawerStore.displayNavigationDrawerx();
 };
 
-const displayCartDrawer = () => {
+const displayCartDrawerr = () => {
   drawerStore.displayCartDrawerx();
 };
 

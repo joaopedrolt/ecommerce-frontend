@@ -26,7 +26,7 @@
     </template>
     <template v-else>
       <div class="empty-cart-container justify-space-between flex-column w-100 d-flex">
-        <div class="d-flex flex-column w-100  pl-4" style="overflow-y: scroll;">
+        <div class="d-flex flex-column w-100 pl-4 h-100" style="overflow-y: scroll;">
           <div class="w-100 h-100">
             <div class="cart-products d-flex flex-column py-4">
               <div v-for="p in products" class="cart-product d-flex">
@@ -107,7 +107,7 @@ watch(displayCartDrawer, (newValue) => {
 
   if (!newValue) {
     open.value = [];
-    htmlElement[0].style.overflow = "auto";
+    htmlElement[0].style.overflow = "";
   } else {
     htmlElement[0].style.overflow = "hidden";
   }
@@ -135,7 +135,13 @@ const products = reactive([
     title: "Calça Wide Leg",
     price: "R$ 399.00",
     amount: 0
-  }
+  },
+  {
+    image: "https://www.insiderstore.com.br/cdn/shop/files/WideLegOffWhite2_cropar.jpg?v=1698680349&width=300",
+    title: "Calça Wide Leg",
+    price: "R$ 399.00",
+    amount: 0
+  },
 ]);
 </script>
 
