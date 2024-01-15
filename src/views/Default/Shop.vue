@@ -33,7 +33,8 @@
 
           <v-menu v-model="showOrderByDropdown" offset="5" transition="slide-x-transition">
             <template v-slot:activator="{ props }">
-              <button class="filter-desktop filter-button-container d-flex justify-end align-end text-subtitle-2 font-weight-regular"
+              <button
+                class="filter-desktop filter-button-container d-flex justify-end align-end text-subtitle-2 font-weight-regular"
                 style="width: 150px; position: relative;">
                 Ordernar por
                 <div class="filter-chevron-right" :class="{ 'active': showOrderByDropdown }">
