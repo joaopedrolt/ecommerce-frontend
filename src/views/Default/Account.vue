@@ -10,17 +10,20 @@
         <!-- Esquerda -->
         <div style="flex: 1; padding: 0 !important;" elevation="0">
           <div>
-            <div class="text-center text-overline" style="font-size: 0.9rem !important;">
-              Endereços
+            <div class="text-title text-center text-overline mb-5" style="font-size: 0.95rem !important;">
+              <span>
+                Endereços
+              </span>
             </div>
 
             <v-card elevation="0">
               <v-list class="addresses-card-list">
                 <template v-for="(a, index) in addresses" :key="index">
                   <v-list-item>
-                    <v-card-item class="px-0">
-                      <div v-if="a.isDefaultAddress" class="v-card-subtitle" style="margin-top: 3px; padding: 0;">
-                        <v-icon>mdi-home</v-icon> Endereço Principal
+                    <v-card-item class="adress-card-item px-0">
+                      <div v-if="a.isDefaultAddress" class="text-subtitle-2"
+                        style="margin-top: 3px; margin-right: 3px; opacity: .65; transform: translateX(-2px);">
+                        <v-icon style="transform: translateY(-2px);">mdi-home</v-icon> Endereço Principal
                       </div>
 
                       <template v-slot:append>
@@ -37,11 +40,12 @@
                         </div>
                       </template>
 
-                      <div class="v-card-title" style="font-size: 1rem;">
+                      <div class="v-card-title"
+                        style="font-size: 1rem; white-space: break-spaces; word-break: break-word;">
                         {{ a.rua }}{{ a.numero.length > 0 ? `, ${a.numero}` : "" }}
                       </div>
 
-                      <v-card-subtitle>
+                      <v-card-subtitle style="white-space: break-spaces; word-break: break-word;">
                         {{ a.bairro }}, {{ a.cidade }}, {{ a.uf }} - {{ a.cep }}
                       </v-card-subtitle>
                     </v-card-item>
@@ -52,21 +56,24 @@
             </v-card>
           </div>
           <div class="w-100 mt-2">
-            <v-btn class="text-subtitle-1 font-weight-regular button-color button-black mb-4" height="37px" width="100%"
-              variant="flat">
+            <v-btn class="font-weight-regular button-color button-black mb-4" height="37px" width="100%" variant="flat"
+              style="font-size: 0.8rem !important;">
               Adicionar Endereço
             </v-btn>
           </div>
         </div>
 
         <!-- Direita -->
-        <div style="flex: 1; padding: 0 !important; min-height: 420px;" elevation="0">
+        <div class="order-hist-container" style="flex: 1; padding: 0 !important;" elevation="0">
           <div>
-            <div class="text-overline text-center" style="font-size: 0.9rem !important;">
-              Histórico de Pedidos
+            <div class="text-title text-overline text-center mb-5" style="font-size: 0.95rem !important;">
+              <span>
+                Histórico de Pedidos
+              </span>
             </div>
 
-            <v-data-table :headers="headers" :items="orders" class="elevation-0" items-per-page="4">
+            <v-data-table :class="{ 'keep-height': orders.length >= 4 }" :headers="headers" :items="orders"
+              class="elevation-0" items-per-page="4">
               <template v-slot:headers="props">
                 <tr>
                   <template v-for="(item, index) in props.headers[0]">
@@ -190,9 +197,9 @@ const addresses = [{
 },
 {
   cep: "09260-840",
-  rua: "Rua Júlio Atlas",
+  rua: "Rua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua J",
   numero: "171",
-  bairro: "Jardim Itapoan",
+  bairro: "Jardim Itapoancccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
   cidade: "Santo André",
   uf: "SP",
   isDefaultAddress: false
@@ -374,6 +381,48 @@ thead {
     flex-direction: column;
     width: 100%;
     height: 100%;
+  }
+}
+
+.adress-card-item {
+  @media (max-width: $tablet) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    text-align: center !important;
+    padding-top: 14px !important;
+
+    .v-card-subtitle {
+      transform: translateY(-4px);
+      padding: 0 !important;
+    }
+
+    .v-card-item__append {
+      padding: 0 !important;
+    }
+  }
+}
+
+.order-hist-container {}
+
+.keep-height {
+  min-height: 327px;
+
+  @media (max-width: $tablet) {
+    min-height: 856px !important;
+  }
+}
+
+.text-title {
+  width: 100%;
+  border-bottom: 1px solid #111111;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+
+  span {
+    background: #fff;
+    padding: 0 10px;
   }
 }
 </style>
