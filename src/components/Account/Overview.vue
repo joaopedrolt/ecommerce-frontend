@@ -81,7 +81,7 @@
                       {{ item.title }}
                     </th>
                     <th v-else-if="index === props.headers[0].length - 1" class="pr-0 text-end d-flex justify-end">
-                      <v-menu v-model="showOrderByDropdown" offset="2">
+                      <v-menu scroll-strategy="close" v-model="showOrderByDropdown" offset="2">
                         <template v-slot:activator="{ props }">
                           <button
                             class="filter-desktop filter-button-container d-flex justify-end align-center w-100 h-100"
@@ -151,12 +151,12 @@ const handleScroll = () => {
 };
 
 watch(showOrderByDropdown, (newValue) => {
-  if (newValue) {
-    window.addEventListener('scroll', handleScroll);
-  }
-  else {
-    window.removeEventListener('scroll', handleScroll);
-  }
+  /*  if (newValue) {
+     window.addEventListener('scroll', handleScroll);
+   }
+   else {
+     window.removeEventListener('scroll', handleScroll);
+   } */
 });
 
 const addresses = [{
@@ -281,7 +281,7 @@ const items = [`Maior Preço`, `Menor Preço`, `Nossa Seleção`];
   display: none !important;
 }
 
-.v-data-table-column--align-start {
+s .v-data-table-column--align-start {
   padding-left: 0 !important;
   text-align: start !important;
 }
