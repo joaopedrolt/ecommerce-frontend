@@ -1,10 +1,14 @@
 <template>
-  <div class="validation-filler" :class="active ? 'validation-active' : ''"></div>
+  <div class="validation-filler" :class="{
+    'active-default': active && density == undefined || density == 'default',
+    'active-compact': active && density == 'compact'
+  }"></div>
 </template>
 
 <script setup>
 const props = defineProps({
   active: Boolean,
+  density: String,
 });
 </script>
 
@@ -13,8 +17,12 @@ const props = defineProps({
   height: 0;
   transition: height 0.2s ease-in-out;
 
-  &.validation-active {
-    height: 20px !important;
+  &.active-default {
+    height: 22px !important;
+  }
+
+  &.active-compact {
+    height: 18px !important;
   }
 }
 </style>
