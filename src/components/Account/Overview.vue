@@ -28,7 +28,7 @@
 
                       <template v-slot:append>
                         <div class="d-flex">
-                          <v-btn elevation="0" icon size="small">
+                          <v-btn @click="handleAddAddress(a)" elevation="0" icon size="small">
                             <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                           <v-btn v-if="!a.isDefaultAddress" elevation="0" icon size="small">
@@ -56,8 +56,8 @@
             </v-card>
           </div>
           <div class="w-100 mt-2">
-            <v-btn class="font-weight-regular button-color button-black mb-4" height="37px" width="100%" variant="flat"
-              style="font-size: 0.8rem !important;">
+            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-black mb-4" height="37px"
+              width="100%" variant="flat" style="font-size: 0.8rem !important;">
               Adicionar Endereço
             </v-btn>
           </div>
@@ -125,7 +125,7 @@
                     <!--  <v-btn elevation="0">
                       Ver Detalhes
                     </v-btn> -->
-                    <v-btn elevation="0" class="font-weight-regular button-color button-black" variant="flat"
+                    <v-btn @click="handleOrderDetails(item)" elevation="0" class="font-weight-regular button-color button-black" variant="flat"
                       style="font-size: 0.72rem;">
                       Ver Detalhes
                     </v-btn>
@@ -142,6 +142,9 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const showOrderByDropdown = ref(false);
 const selectedItem = ref(0);
@@ -264,6 +267,17 @@ const headers = [
 
 const items = [`Maior Preço`, `Menor Preço`, `Nossa Seleção`];
 
+const handleAddAddress = (address) => {
+  router.push({
+    name: "NewAddress",
+  });
+}
+
+const handleOrderDetails = (order) => {
+  router.push({
+    name: "OrderDetails",
+  });
+}
 </script>
 
 <style lang="scss">
@@ -416,7 +430,7 @@ thead {
 
 .text-title {
   width: 100%;
-  border-bottom: 1px solid #111111;
+  border-bottom: 1px solid $color-border;
   line-height: 0.1em;
   margin: 10px 0 20px;
 
