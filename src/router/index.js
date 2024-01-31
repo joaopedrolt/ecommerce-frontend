@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import DefaultLayout from "@/layouts/Default.vue";
 import CleanLayout from "@/layouts/Clean.vue";
+import CheckoutLayout from "@/layouts/Checkout.vue";
 
 // Stores
 
@@ -131,6 +132,17 @@ const routes = [
           }
         ]
       },
+    ],
+  },
+  {
+    path: "/checkout",
+    component: CheckoutLayout,
+    children: [
+      {
+        path: "",
+        name: "Checkout",
+        component: () => import("@/views/Checkout/Checkout.vue"),
+      }
     ],
   },
 ];
