@@ -1,162 +1,224 @@
 <template>
   <div class="h-100 w-100">
-    <div class="h-100 w-100 d-flex">
+    <div class="h-100 w-100 container-size-padding ">
 
       <!-- Left side -->
-      <div class="h-100 w-100 py-10 px-10" style="flex: 3; background-color: #f1f1f1;">
+      <div class="d-flex justify-end h-100 pt-12 pb-1 border-right" style="width: 55%;">
 
-        <!-- Header Left -->
-        <div class="mb-7">
-          <div style="height: 29px; width: 160px;">
-            <v-img class="h-100 w-100"
-              src="//cdn.shopify.com/s/files/1/0526/4123/5093/files/Insider_Logotipo.png?90413"></v-img>
-          </div>
-          <div>
-            <v-breadcrumbs class="pl-0" :items="items">
-              <template v-slot:divider>
-                <v-icon icon="mdi-chevron-right"></v-icon>
-              </template>
-            </v-breadcrumbs>
-          </div>
-        </div>
-
-        <!-- Form -->
-        <v-form style="padding-bottom: 70px;">
-          <!-- Form Top -->
-          <div class="mb-7">
-            <!-- Form Top - Top -->
-            <div class="d-flex justify-space-between mb-5">
-              <div>
-                Conta
-              </div>
-              <div>
-                Tem uma conta? Fazer login!
-              </div>
-            </div>
-
-            <v-text-field label="E-mail" variant="outlined" density="comfortable">
-            </v-text-field>
-
-            <!-- Form Top - Bottom  -->
-            <div>
-              <div>
-                <v-checkbox label="Enviar novidades e ofertas para mim por e-mail" density="compact" hide-details>
-                </v-checkbox>
-              </div>
-              <div>
-                <v-checkbox label="Quero receber descontos e novidades por WhatsApp" density="compact" hide-details>
-                </v-checkbox>
-              </div>
-            </div>
-          </div>
-
-          <!-- Form mid -->
-          <div>
-            <div class="mb-5">
-              Endereço de entrega
-            </div>
-
+        <div class="d-flex flex-column w-100" style="max-width: 732px;">
+          <div class="pr-10">
+            <!-- Header Left -->
             <div class="mb-6">
-              <div class="d-flex" style="gap: 15px">
-                <v-text-field style="flex 1" label="Nome" variant="outlined" density="comfortable">
+              <div style="height: 33px; width: 160px;">
+                <v-img class="h-100 w-100" src="/logo.svg"></v-img>
+              </div>
+              <div>
+                <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
+                  <template v-slot:divider>
+                    <v-icon icon="mdi-chevron-right"></v-icon>
+                  </template>
+                </v-breadcrumbs>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <v-form>
+              <!-- Form Top -->
+              <div class="mb-4">
+                <!-- Form Top - Top -->
+                <div class="mb-5">
+                  <div class="text-h6 font-weight-regular">
+                    Informações para Contato
+                  </div>
+                  <div class="d-flex align-center">
+                    <div class="text-subtitle-2 font-weight-light mr-1">
+                      Já é nosso cliente? Pule esta etapa!
+                    </div>
+                    <a class="font-weight-regular text-subtitle-2 text-decoration-underline">
+                      Clique aqui para fazer login agora!
+                    </a>
+                  </div>
+                </div>
+                <!-- class="mb-3" hide-details-->
+                <v-text-field label="E-mail" variant="outlined" density="comfortable">
+                </v-text-field>
+                <!-- class="mb-5" hide-details-->
+                <v-text-field label="Telefone" variant="outlined" density="comfortable">
                 </v-text-field>
 
-                <v-text-field style="flex 1" label="Sobrenome" variant="outlined" density="comfortable">
-                </v-text-field>
+                <!-- Form Top - Bottom  -->
+                <div style="font-size: 0.9rem !important;">
+                  <div>
+                    <v-checkbox density="compact" hide-details>
+                      <template v-slot:label>
+                        <div class="text-subtitle-2 font-weight-regular mr-1">
+                          Enviar novidades e ofertas para mim por e-mail
+                        </div>
+                      </template>
+                    </v-checkbox>
+                  </div>
+                  <div>
+                    <v-checkbox density="compact" hide-details>
+                      <template v-slot:label>
+                        <div class="text-subtitle-2 font-weight-regular mr-1">
+                          Quero receber descontos e novidades por WhatsApp
+                        </div>
+                      </template>
+                    </v-checkbox>
+                  </div>
+                </div>
               </div>
 
-              <v-text-field label="CPF" variant="outlined" density="comfortable">
-              </v-text-field>
+              <!-- Form mid -->
+              <div>
+                <div class="text-h6 font-weight-regular mb-4">
+                  Endereço de Entrega
+                </div>
 
-              <v-text-field label="Telefone" variant="outlined" density="comfortable">
-              </v-text-field>
+                <div class="mb-6">
+                  <div class="d-flex" style="gap: 15px">
+                    <v-text-field label="Nome" variant="outlined" density="comfortable">
+                    </v-text-field>
 
-              <v-text-field label="CEP" variant="outlined" density="comfortable">
-              </v-text-field>
+                    <v-text-field label="Sobrenome" variant="outlined" density="comfortable">
+                    </v-text-field>
+                  </div>
 
-              <v-checkbox label="Salvar minhas informações para a próxima vez" density="compact" hide-details>
-              </v-checkbox>
+                  <v-text-field label="CPF" variant="outlined" density="comfortable">
+                  </v-text-field>
+
+                  <template v-if="displayAddress">
+
+                    <div class="d-flex" style="gap: 15px">
+                      <v-text-field style="flex: 2" label="Rua" variant="outlined" density="comfortable">
+                      </v-text-field>
+
+                      <v-text-field style="flex: 1" label="Número" variant="outlined" density="comfortable">
+                      </v-text-field>
+                    </div>
+
+                    <div class="d-flex" style="gap: 15px">
+                      <v-text-field label="Bairro" variant="outlined" density="comfortable">
+                      </v-text-field>
+
+                      <v-text-field label="Complemento" variant="outlined" density="comfortable">
+                      </v-text-field>
+                    </div>
+
+                    <div class="d-flex" style="gap: 15px">
+                      <v-text-field style="flex: 3" label="Cidade" variant="outlined" density="comfortable">
+                      </v-text-field>
+
+                      <v-text-field style="flex: 2" label="Estado" variant="outlined" density="comfortable">
+                      </v-text-field>
+                    </div>
+                  </template>
+
+                  <v-text-field label="CEP" variant="outlined" density="comfortable">
+                  </v-text-field>
+
+                  <v-checkbox density="compact" hide-details>
+                    <template v-slot:label>
+                      <div class="text-subtitle-2 font-weight-regular mr-1">
+                        Salvar minhas informações para a próxima vez
+                      </div>
+                    </template>
+                  </v-checkbox>
+                </div>
+              </div>
+
+              <!-- Form Bottom -->
+              <div class="d-flex justify-space-between align-center">
+                <!-- <div><v-icon icon="mdi-chevron-left"></v-icon>Voltar ao carrinho</div> -->
+                <!--  <div>Continuar com o frete</div> -->
+
+                <v-btn @click="displayAddress = true"
+                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
+                  width="100%" variant="flat" :ripple="false">
+                  Continuar com o frete
+                </v-btn>
+              </div>
+            </v-form>
+
+            <!-- Footer Left -->
+            <div class="mt-15">
+              <v-divider color="#111111"></v-divider>
+
+              <div class="text-caption pr-10 justify-center">
+                <v-breadcrumbs style="justify-content: center !important;" :items="itemsBaseboardLinks" divider="-" />
+              </div>
             </div>
           </div>
 
-          <!-- Form Bottom -->
-          <div class="d-flex justify-space-between">
-            <div><v-icon icon="mdi-chevron-left"></v-icon>Voltar ao carrinho</div>
-            <div>Continuar com o frete</div>
-          </div>
-        </v-form>
 
-        <v-divider color="#111111"></v-divider>
-
-        <!-- Footer Left -->
-        <div>
-          <div class="text-caption">
-            <v-breadcrumbs class="footer-breadcrumbs" :items="itemsBaseboardLinks" divider="-" />
-          </div>
         </div>
-
       </div>
 
       <!-- Right Side -->
-      <div class="h-100 w-100 py-10 px-10" style="flex: 2;">
+      <div class="d-flex justify-start pl-10 h-100 py-12" style="position: fixed; width: 45%; right: 0; top: 0;">
 
         <!-- Edit Cart - Top -->
-        <div class="w-100 d-flex justify-end mb-5">
-          <div>
-            Editar carrinho
-          </div>
-        </div>
-
-        <!-- Cart Itens -->
-        <div class="d-flex" style="padding-bottom: 24px;">
-          <div style="height: 90px; width: 90px;">
-            <v-img class="h-100 w-100" style="border-radius: 8px;"
-              src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-          </div>
-
-          <div class="d-flex w-100 justify-space-between">
-            <div class="d-flex align-center ml-4">
-              Tech T-Shirt<br>
-              Preta / PP
-            </div>
-
-            <div class="d-flex align-center">
-              R$ 159,00
+        <div class="h-100 w-100" style="max-width: 488px;">
+          <div class="w-100 d-flex justify-end mb-5">
+            <div>
+              Editar carrinho
             </div>
           </div>
-        </div>
 
-        <v-divider color="#111111"></v-divider>
+          <!-- Cart Itens -->
+          <div class="d-flex pb-4">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 8px;"
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+            </div>
 
-        <div class="mt-5">
-          <div class="d-flex justify-end text-subtitle-2 font-weight-regular px-5" style="gap: 20px;">
-            <div>Total Items: (+)</div>
-            <div class="font-weight-medium">R$3600</div>
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex align-center ml-4">
+                Tech T-Shirt<br>
+                Preta / PP
+              </div>
+
+              <div class="d-flex align-center">
+                R$ 159,00
+              </div>
+            </div>
           </div>
 
-          <div class="d-flex justify-end text-subtitle-2 font-weight-regular px-5" style="gap: 20px;">
-            <div>Frete: (+)</div>
-            <div class="font-weight-medium">R$40</div>
+          <v-divider color="#111111"></v-divider>
+
+          <div class="py-6">
+            <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1" style="gap: 20px;">
+              <div>Total Items: (+)</div>
+              <div class="font-weight-medium">R$3600</div>
+            </div>
+
+            <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1" style="gap: 20px;">
+              <div>Frete: (+)</div>
+              <div class="font-weight-medium">R$40</div>
+            </div>
+
+            <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1" style="gap: 20px;">
+              <div>Desconto: (--)</div>
+              <div class="font-weight-medium">R$300</div>
+            </div>
           </div>
 
-          <div class="d-flex justify-end text-subtitle-2 font-weight-regular px-5" style="gap: 20px;">
-            <div>Desconto: (--)</div>
-            <div class="font-weight-medium">R$300</div>
-          </div>
+          <v-divider color="#111111"></v-divider>
 
-          <div class="d-flex justify-end align-center text-subtitle-1 font-weight-medium px-5 mt-2 pb-2"
+          <div class="d-flex justify-space-between align-center text-subtitle-1 font-weight-medium px-1 pt-4"
             style="gap: 20px;">
             <div>Valor Final do Pedido: </div>
             <div>R$3340</div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
 const items = [
   {
     title: 'Carrinho',
@@ -202,11 +264,38 @@ const itemsBaseboardLinks = [
     href: "breadcrumbs_dashboard",
   }
 ];
+
+const displayAddress = ref(false);
 </script>
 
 <style lang="scss">
+@import "@/styles/global.scss";
+
+/* .v-label .v-field-label .v-field-label--floating {
+  font-size: 0.9rem !important;
+} */
+
+/* .v-field__field {
+  .v-label.v-field-label {
+    font-size: 0.9rem !important;
+  }
+} */
+
+.v-checkbox .v-selection-control {
+  min-height: 31px !important;
+  height: 31px !important;
+}
+
+.v-text-field input {
+  font-size: 0.9rem;
+}
+
 .v-breadcrumbs-item {
   padding-left: 0 !important;
+}
+
+.border-right {
+  border-right: 1px solid $color-border;
 }
 </style>
   
