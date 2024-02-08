@@ -4,7 +4,7 @@
       <div class="footer-column side-field brand-field">
         <div class="brand-column-wrapper">
           <div class="column-title logo-white">
-            <v-img src="/logo.svg" width="120px" height="40px"></v-img>
+            <img style="width:120px; height:40px;" src="/logo.svg" />
           </div>
           <div class="column-components">
             <div class="text-caption opacity-text">
@@ -15,24 +15,9 @@
               rcado, rcado, rcado,
             </div>
             <div style="display: flex; margin-left: -8px">
-              <v-btn
-                size="x-small"
-                variant="text"
-                icon="mdi-instagram"
-                :ripple="false"
-              />
-              <v-btn
-                size="x-small"
-                variant="text"
-                icon="mdi-facebook"
-                :ripple="false"
-              />
-              <v-btn
-                size="x-small"
-                variant="text"
-                icon="mdi-twitter"
-                :ripple="false"
-              />
+              <v-btn size="x-small" variant="text" icon="mdi-instagram" :ripple="false" />
+              <v-btn size="x-small" variant="text" icon="mdi-facebook" :ripple="false" />
+              <v-btn size="x-small" variant="text" icon="mdi-twitter" :ripple="false" />
             </div>
           </div>
         </div>
@@ -48,23 +33,11 @@
               novidades e promoções!
             </div>
 
-            <v-text-field
-              v-model="newsletterEmailInputValue"
-              class="newsletter-email-input mb-1"
-              density="compact"
-              hide-details="auto"
-              variant="outlined"
-              placeholder="Digite seu E-mail"
-            >
+            <v-text-field v-model="newsletterEmailInputValue" class="newsletter-email-input mb-1" density="compact"
+              hide-details="auto" variant="outlined" placeholder="Digite seu E-mail">
             </v-text-field>
 
-            <v-btn
-              color="white"
-              height="30px"
-              width="100%"
-              size="x-small"
-              variant="outlined"
-            >
+            <v-btn color="white" height="30px" width="100%" size="x-small" variant="outlined">
               Fique por Dentro!
             </v-btn>
           </div>
