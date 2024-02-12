@@ -1,11 +1,11 @@
 <template>
-  <div class="h-100 w-100">
+  <div class="h-100 w-100 checkout">
     <!-- Left side -->
-    <div class="d-flex justify-end h-100 pt-12 pb-1 px-9 border-right" style="width: 55%;">
-      <div class="d-flex flex-column w-100" style="max-width: 700px;">
+    <div class="left-side border-right">
+      <div class="wrapper">
         <div>
           <!-- Header Left -->
-          <div class="mb-6">
+          <div class="payment-header desktop mb-6">
             <div style="height: 33px; width: 160px;">
               <v-img class="h-100 w-100" src="/logo.svg"></v-img>
             </div>
@@ -21,16 +21,16 @@
           <!-- Form -->
           <v-form>
             <!-- Form Top -->
-            <div class="mb-5">
+            <div class="mb-6">
               <!-- Form Top - Top -->
               <div class="mb-5">
-                <div class="text-h6 font-weight-regular">
-                  Informações para Contato
+                <div class="text-h5 font-weight-regular">
+                  Contato
                 </div>
-                <div class="d-flex align-center">
-                  <div class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
+                <div style="word-break: break-word;">
+                  <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
                     Já é nosso cliente? Pule esta etapa!
-                  </div>
+                  </span>
                   <a class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
                     Clique aqui para fazer login agora!
                   </a>
@@ -48,7 +48,8 @@
                 <div>
                   <v-checkbox density="compact" hide-details>
                     <template v-slot:label>
-                      <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1" style="margin-top: 0.04rem; opacity: 1 !important;">
+                      <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
+                        style="margin-top: 0.04rem; opacity: 1 !important;">
                         Enviar novidades e ofertas para mim por e-mail
                       </div>
                     </template>
@@ -68,7 +69,7 @@
 
             <!-- Form mid -->
             <div>
-              <div class="text-h6 font-weight-regular mb-4">
+              <div class="text-h5 font-weight-regular mb-4">
                 Endereço de Entrega
               </div>
 
@@ -137,31 +138,44 @@
           </v-form>
 
           <!-- Footer Left -->
-          <div class="mt-15">
+          <div class="payment-footer mt-13">
             <v-divider color="#111111"></v-divider>
-
-            <div class="text-caption pr-10 justify-center">
-              <v-breadcrumbs style="justify-content: center !important;" :items="itemsBaseboardLinks" divider="-" />
-            </div>
+            <v-breadcrumbs class="text-caption text-center justify-center" style="justify-content: center !important;"
+              :items="itemsBaseboardLinks" divider="-" />
           </div>
         </div>
-
-
       </div>
     </div>
 
     <!-- Right Side -->
-    <div class="d-flex justify-start px-9 h-100 py-12" style="position: fixed; width: 45%; right: 0; top: 0;">
+    <div class="right-side">
       <!-- Edit Cart - Top -->
-      <div class="h-100 w-100" style="max-width: 513px;">
-        <div class="w-100 d-flex justify-end">
-          <div class="text-caption text-end text-decoration-underline font-weight-regular">
+      <div class="wrapper">
+        <div class="payment-header mobile mb-7">
+          <div style="height: 33px; width: 160px;">
+            <v-img class="h-100 w-100" src="/logo.svg"></v-img>
+          </div>
+          <div>
+            <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
+              <template v-slot:divider>
+                <v-icon icon="mdi-chevron-right"></v-icon>
+              </template>
+            </v-breadcrumbs>
+          </div>
+        </div>
+
+        <div class="top-summary w-100">
+          <div class="order-summery text-h5 font-weight-regular mb-2">
+            Resumo do Pedido
+          </div>
+
+          <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular">
             Editar carrinho
           </div>
         </div>
 
         <!-- Cart Itens -->
-        <div class="d-flex pb-4 pt-3">
+        <div class="cart-itens">
           <div style="height: 90px; width: 90px;">
             <v-img class="h-100 w-100" style="border-radius: 10px;"
               src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
@@ -185,29 +199,37 @@
 
         <v-divider color="#111111"></v-divider>
 
-        <div class="d-flex flex-column py-6" style="gap: 4px;">
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1">
+        <div class="order-sum d-flex flex-column" style="gap: 4px;">
+          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Subtotal:</div>
             <div class="font-weight-regular">R$3600</div>
           </div>
 
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1">
+          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Frete:</div>
             <div class="font-weight-regular">R$40</div>
           </div>
 
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular px-1">
+          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Desconto:</div>
-            <div class="font-weight-regular">-- R$300</div>
+            <div class="font-weight-regular">-R$300</div>
           </div>
         </div>
 
         <v-divider color="#111111"></v-divider>
 
-        <div class="d-flex align-center justify-space-between px-1 pt-4">
+        <div class="d-flex align-center justify-space-between pt-4">
           <div style="margin-top: 1px;">Total:</div>
           <div class="text-h6 font-weight-regular ">R$ 3340,00</div>
         </div>
+
+        <!--  <div class="payment-footer mobile" style="position: absolute; bottom: 0; right: 0; left: 0;">
+          <v-divider color="#111111"></v-divider>
+
+          <div class="text-caption justify-center text-center">
+            <v-breadcrumbs style="justify-content: center !important;" :items="itemsBaseboardLinks" divider="-" />
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -293,6 +315,138 @@ const displayAddress = ref(false);
 
 .border-right {
   border-right: 1px solid $color-border;
+}
+
+.checkout {
+  display: flex;
+
+  .left-side {
+    display: flex;
+    width: 55%;
+    justify-content: end;
+    height: 100%;
+    padding-top: 40px;
+    padding-right: 36px;
+    padding-left: 36px;
+    padding-bottom: 4px;
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      max-width: 700px;
+    }
+  }
+
+  .right-side {
+    display: flex;
+    justify-content: start;
+    height: 100%;
+    position: fixed;
+    width: 45%;
+    right: 0;
+    top: 0;
+    padding-top: 40px;
+    padding-bottom: 36px;
+    padding-right: 36px;
+    padding-left: 36px;
+
+    .wrapper {
+      height: 100%;
+      width: 100%;
+      max-width: 513px;
+
+      .cart-itens {
+        display: flex;
+        padding-top: 13px;
+        padding-bottom: 16px;
+      }
+
+      .order-sum {
+        padding: 18px 0;
+      }
+
+      .order-summery {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: $tablet) {
+    flex-direction: column-reverse;
+
+    .left-side {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+      padding-top: 32px !important;
+
+      .wrapper {
+        max-width: none !important;
+
+        /*       .payment-footer {
+          .v-breadcrumbs {
+            padding-right: 12px !important;
+          }
+        } */
+      }
+    }
+
+    .right-side {
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      position: relative;
+      right: auto;
+      top: auto;
+      padding-bottom: 0 !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+
+      .wrapper {
+        max-width: none !important;
+
+        .order-summery {
+          display: block !important;
+        }
+
+        .order-sum {
+          padding: 13px 0 !important;
+        }
+
+        .edit-cart {
+          display: none !important;
+        }
+
+        .cart-itens {
+          padding-top: 0 !important;
+          padding-bottom: 13px !important;
+        }
+      }
+    }
+  }
+
+  .payment-header {
+    &.desktop {
+      display: block !important;
+
+      @media (max-width: $tablet) {
+        display: none !important;
+      }
+    }
+
+    &.mobile {
+      display: block !important;
+
+      @media (min-width: $tablet) {
+        display: none !important;
+      }
+    }
+  }
 }
 </style>
   
