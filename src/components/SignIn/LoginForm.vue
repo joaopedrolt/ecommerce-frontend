@@ -77,7 +77,7 @@ import { useRouter } from "vue-router";
 import { sha256 } from "js-sha256";
 
 import SignInHeader from "./SignInHeader.vue";
-import ValidationFiller from "../ValidationFiller.vue";
+import ValidationFiller from '@/components/ValidationFiller.vue';
 
 import { passwordRules } from "@/utils/rules";
 

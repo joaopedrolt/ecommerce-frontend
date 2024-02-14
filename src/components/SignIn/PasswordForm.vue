@@ -87,7 +87,7 @@ import { Motion, Presence } from "motion/vue";
 
 import { passwordRules } from "@/utils/rules";
 
-import ValidationFiller from "../ValidationFiller.vue";
+import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
 
 const passwordForm = ref();

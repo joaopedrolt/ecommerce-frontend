@@ -58,7 +58,7 @@ import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 
-import ValidationFiller from "../ValidationFiller.vue";
+import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
 
 import { emailRules } from "@/utils/rules";

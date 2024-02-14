@@ -3,146 +3,153 @@
     <!-- Left side -->
     <div class="left-side border-right">
       <div class="wrapper">
-        <div>
-          <!-- Header Left -->
-          <div class="payment-header desktop mb-6">
-            <div style="height: 33px; width: 160px;">
-              <v-img class="h-100 w-100" src="/logo.svg"></v-img>
-            </div>
-            <div>
-              <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
-                <template v-slot:divider>
-                  <v-icon icon="mdi-chevron-right"></v-icon>
-                </template>
-              </v-breadcrumbs>
-            </div>
+        <!-- Header Left -->
+        <div class="payment-header desktop mb-6">
+          <div style="height: 33px; width: 160px;">
+            <v-img class="h-100 w-100" src="/logo.svg"></v-img>
           </div>
+          <div>
+            <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
+              <template v-slot:divider>
+                <v-icon icon="mdi-chevron-right"></v-icon>
+              </template>
+            </v-breadcrumbs>
+          </div>
+        </div>
 
-          <!-- Form -->
-          <v-form>
-            <!-- Form Top -->
-            <div class="mb-6">
-              <!-- Form Top - Top -->
-              <div class="mb-5">
-                <div class="text-h5 font-weight-regular">
-                  Contato
-                </div>
-                <div style="word-break: break-word;">
-                  <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
-                    Já é nosso cliente? Pule esta etapa!
-                  </span>
-                  <a class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
-                    Clique aqui para fazer login agora!
-                  </a>
-                </div>
+        <v-form ref="shippingForm" validate-on="layz" :disabled="isLoading">
+          <div class="mb-6">
+            <div class="mb-5">
+              <div class="text-h5 font-weight-regular">
+                Contato
               </div>
-              <!-- class="mb-3" hide-details-->
-              <v-text-field label="E-mail" variant="outlined" density="comfortable">
-              </v-text-field>
-              <!-- class="mb-5" hide-details-->
-              <v-text-field label="Telefone" variant="outlined" density="comfortable">
-              </v-text-field>
-
-              <!-- Form Top - Bottom  -->
-              <div class="mb-1" style="font-size: 0.9rem !important;">
-                <div>
-                  <v-checkbox density="compact" hide-details>
-                    <template v-slot:label>
-                      <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
-                        style="margin-top: 0.04rem; opacity: 1 !important;">
-                        Enviar novidades e ofertas para mim por e-mail
-                      </div>
-                    </template>
-                  </v-checkbox>
-                </div>
-                <div>
-                  <v-checkbox density="compact" hide-details>
-                    <template v-slot:label>
-                      <div class="text-subtitle-2 font-weight-regular pl-1" style="margin-top: 0.04rem;">
-                        Quero receber descontos e novidades por WhatsApp
-                      </div>
-                    </template>
-                  </v-checkbox>
-                </div>
+              <div style="word-break: break-word;">
+                <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
+                  Já é nosso cliente? Pule esta etapa!
+                </span>
+                <a class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
+                  Clique aqui para fazer login agora!
+                </a>
               </div>
             </div>
+            <v-text-field :model="shipping.email" :rules="emailRules" label="E-mail" variant="outlined"
+              density="comfortable">
+            </v-text-field>
+            <validation-filler :active="!shippingFormValidation.email" density="compact" />
 
-            <!-- Form mid -->
-            <div>
-              <div class="text-h5 font-weight-regular mb-4">
-                Endereço de Entrega
+            <v-text-field :model="shipping.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone" variant="outlined"
+              density="comfortable">
+            </v-text-field>
+            <validation-filler :active="!shippingFormValidation.telefone" density="compact" />
+
+            <div class="mb-1" style="font-size: 0.9rem !important;">
+              <div>
+                <v-checkbox :model="shipping.newsletter" density="compact" hide-details>
+                  <template v-slot:label>
+                    <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
+                      style="margin-top: 0.04rem; opacity: 1 !important;">
+                      Enviar novidades e ofertas para mim por e-mail
+                    </div>
+                  </template>
+                </v-checkbox>
               </div>
-
-              <div class="mb-5">
-                <div class="d-flex" style="gap: 15px">
-                  <v-text-field label="Nome" variant="outlined" density="comfortable">
-                  </v-text-field>
-
-                  <v-text-field label="Sobrenome" variant="outlined" density="comfortable">
-                  </v-text-field>
-                </div>
-
-                <v-text-field label="CPF" variant="outlined" density="comfortable">
-                </v-text-field>
-
-                <template v-if="displayAddress">
-
-                  <div class="d-flex" style="gap: 15px">
-                    <v-text-field style="flex: 2" label="Rua" variant="outlined" density="comfortable">
-                    </v-text-field>
-
-                    <v-text-field style="flex: 1" label="Número" variant="outlined" density="comfortable">
-                    </v-text-field>
-                  </div>
-
-                  <div class="d-flex" style="gap: 15px">
-                    <v-text-field label="Bairro" variant="outlined" density="comfortable">
-                    </v-text-field>
-
-                    <v-text-field label="Complemento" variant="outlined" density="comfortable">
-                    </v-text-field>
-                  </div>
-
-                  <div class="d-flex" style="gap: 15px">
-                    <v-text-field style="flex: 3" label="Cidade" variant="outlined" density="comfortable">
-                    </v-text-field>
-
-                    <v-text-field style="flex: 2" label="Estado" variant="outlined" density="comfortable">
-                    </v-text-field>
-                  </div>
-                </template>
-
-                <v-text-field label="CEP" variant="outlined" density="comfortable">
-                </v-text-field>
-
-                <v-checkbox density="compact" hide-details>
+              <div>
+                <v-checkbox :model="shipping.wpp" density="compact" hide-details>
                   <template v-slot:label>
                     <div class="text-subtitle-2 font-weight-regular pl-1" style="margin-top: 0.04rem;">
-                      Salvar minhas informações para a próxima vez
+                      Quero receber descontos e novidades por WhatsApp
                     </div>
                   </template>
                 </v-checkbox>
               </div>
             </div>
-
-            <!-- Form Bottom -->
-            <div class="d-flex justify-space-between align-center">
-              <!-- <div><v-icon icon="mdi-chevron-left"></v-icon>Voltar ao carrinho</div> -->
-              <!--  <div>Continuar com o frete</div> -->
-
-              <v-btn @click="displayAddress = true" class="text-subtitle-1 font-weight-regular button-color button-black"
-                color="#111111" height="45px" width="100%" variant="flat" :ripple="false">
-                Continuar com o frete
-              </v-btn>
-            </div>
-          </v-form>
-
-          <!-- Footer Left -->
-          <div class="payment-footer mt-13">
-            <v-divider color="#111111"></v-divider>
-            <v-breadcrumbs class="text-caption text-center justify-center" style="justify-content: center !important;"
-              :items="itemsBaseboardLinks" divider="-" />
           </div>
+          <div>
+            <div class="text-h5 font-weight-regular mb-4">
+              Endereço de Entrega
+            </div>
+
+            <div class="mb-5">
+              <div class="d-flex" style="gap: 15px">
+                <div class="d-flex flex-column" style="flex: 1;">
+                  <v-text-field :model="shipping.nome" :rules="nomeRules" label="Nome" variant="outlined"
+                    density="comfortable" style="max-height: 70px;">
+                  </v-text-field>
+                  <validation-filler :active="!shippingFormValidation.nome" density="compact" />
+                </div>
+
+                <div class="d-flex flex-column" style="flex: 1;">
+                  <v-text-field :model="shipping.sobrenome" :rules="sobrenomeRules" label="Sobrenome" variant="outlined"
+                    density="comfortable" style="max-height: 70px;">
+                  </v-text-field>
+                  <validation-filler :active="!shippingFormValidation.sobrenome" density="compact" />
+                </div>
+              </div>
+
+              <v-text-field :model="shipping.cpf" v-maska:[cpfMask] :rules="cpfRules" label="CPF" variant="outlined"
+                density="comfortable">
+              </v-text-field>
+              <validation-filler :active="!shippingFormValidation.cpf" density="compact" />
+
+              <template v-if="displayAdressForm">
+                <div class="d-flex" style="gap: 15px">
+                  <v-text-field :model="shipping.rua" :rules="enderecoRules" style="flex: 2" label="Rua"
+                    variant="outlined" density="comfortable">
+                  </v-text-field>
+
+                  <v-text-field :model="shipping.numero" style="flex: 1" label="Número" variant="outlined"
+                    density="comfortable">
+                  </v-text-field>
+                </div>
+
+                <div class="d-flex" style="gap: 15px">
+                  <v-text-field :model="shipping.bairro" label="Bairro" variant="outlined" density="comfortable">
+                  </v-text-field>
+
+                  <v-text-field :model="shipping.complemento" label="Complemento" variant="outlined"
+                    density="comfortable">
+                  </v-text-field>
+                </div>
+
+                <div class="d-flex" style="gap: 15px">
+                  <v-text-field :model="shipping.cidade" style="flex: 3" label="Cidade" variant="outlined"
+                    density="comfortable">
+                  </v-text-field>
+
+                  <v-text-field :model="shipping.estado" style="flex: 2" label="Estado" variant="outlined"
+                    density="comfortable">
+                  </v-text-field>
+                </div>
+              </template>
+
+              <v-text-field :model="shipping.cep" v-maska:[cepMask] numberMask :rules="cepRules" label="CEP"
+                variant="outlined" density="comfortable">
+              </v-text-field>
+              <validation-filler :active="!shippingFormValidation.cep" density="compact" />
+
+              <v-checkbox :model="shipping.save" density="compact" hide-details>
+                <template v-slot:label>
+                  <div class="text-subtitle-2 font-weight-regular pl-1" style="margin-top: 0.04rem;">
+                    Salvar minhas informações para a próxima vez
+                  </div>
+                </template>
+              </v-checkbox>
+            </div>
+          </div>
+
+          <div class="d-flex justify-space-between align-center">
+            <v-btn @click="calculateShippingCost()" class="text-subtitle-1 font-weight-regular button-color button-black"
+              color="#111111" height="45px" width="100%" variant="flat" :ripple="false" :loading="isLoading">
+              Continuar com o frete
+            </v-btn>
+          </div>
+        </v-form>
+
+        <!-- Footer Left -->
+        <div class="payment-footer mt-13">
+          <v-divider color="#111111"></v-divider>
+          <v-breadcrumbs class="text-caption text-center justify-center" style="justify-content: center !important;"
+            :items="itemsBaseboardLinks" divider="-" />
         </div>
       </div>
     </div>
@@ -236,7 +243,54 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+import { vMaska } from "maska"
+
+import {
+  nomeRules,
+  sobrenomeRules,
+  emailRules,
+  cpfRules,
+  cepRules,
+  telefoneRules,
+  enderecoRules,
+} from "@/utils/rules";
+
+import {
+  cpfMask,
+  cepMask,
+  telefoneMask
+} from "@/utils/masks";
+
+import ValidationFiller from '@/components/ValidationFiller.vue';
+
+const isLoading = ref(false);
+const shippingForm = ref();
+const displayAdressForm = ref(false);
+
+const shipping = reactive({
+  email: "",
+  telefone: "",
+  newsletter: true,
+  wpp: true,
+  nome: "",
+  sobrenome: "",
+  cpf: "",
+  cep: "",
+  save: true
+});
+
+const shippingFormValidation = reactive({
+  email: true,
+  telefone: true,
+  newsletter: true,
+  wpp: true,
+  nome: true,
+  sobrenome: true,
+  cpf: true,
+  cep: true,
+  save: true
+});
 
 const items = [
   {
@@ -284,7 +338,33 @@ const itemsBaseboardLinks = [
   }
 ];
 
-const displayAddress = ref(false);
+const setLoading = (load) => {
+  isLoading.value = load;
+}
+
+const calculateShippingCost = async () => {
+  setLoading(true);
+
+  let valid = true;
+  let keys = Object.keys(shipping);
+
+  for (let i = 0; i < shippingForm.value.items.length; i++) {
+    let mensagemErro = await shippingForm.value.items[i].validate()
+
+    if (mensagemErro.length > 0) {
+      shippingFormValidation[keys[i]] = false;
+      if (valid)
+        valid = false;
+    }
+    else
+      shippingFormValidation[keys[i]] = true;
+  }
+
+  if (valid)
+    displayAdressForm.value = true;
+
+  setLoading(false);
+}
 </script>
 
 <style lang="scss">

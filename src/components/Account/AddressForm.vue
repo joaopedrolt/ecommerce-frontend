@@ -9,12 +9,22 @@
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.nome" />
 
+                <v-text-field v-model="address.sobrenome" label="Sobrenome do Destinatário" variant="outlined"
+                    :rules="sobrenomeRules" density="comfortable">
+                </v-text-field>
+                <validation-filler :active="!addressFormValidation.sobrenome" />
+
                 <v-text-field v-model="address.cpf" v-maska:[cpfMask] label="CPF do Destinatário" variant="outlined"
-                    :rules="CPFRules" density="comfortable">
+                    :rules="cpfRules" density="comfortable">
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.cpf" density="compact" />
 
-                <v-text-field v-model="address.cep" v-maska:[cepMask] label="CEP" variant="outlined" :rules="CEPRules"
+                <v-text-field :model="address.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone"
+                    variant="outlined" density="comfortable">
+                </v-text-field>
+                <validation-filler :active="!addressFormValidation.telefone" density="compact" />
+
+                <v-text-field v-model="address.cep" v-maska:[cepMask] label="CEP" variant="outlined" :rules="cepRules"
                     density="comfortable">
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.cep" density="compact" />
@@ -24,7 +34,7 @@
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.endereco" density="compact" />
 
-                <v-text-field v-model="address.numero" v-maska:[numberMask] label="Numero" variant="outlined"
+                <v-text-field v-model="address.numero" v-maska:[numeroMask] label="Numero" variant="outlined"
                     :rules="numeroRules" density="comfortable">
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.numero" density="compact" />
@@ -53,25 +63,32 @@
 import { ref, reactive } from "vue";
 import {
     nomeRules,
-    CPFRules,
-    CEPRules,
+    sobrenomeRules,
+    cpfRules,
+    telefoneRules,
+    cepRules,
     bairroRules,
     enderecoRules,
     numeroRules,
     complementoRules,
 } from "@/utils/rules";
-import ValidationFiller from "../ValidationFiller.vue";
+import ValidationFiller from '@/components/ValidationFiller.vue';
 import { vMaska } from "maska"
 
-const cpfMask = { mask: '###.###.###-##' };
-const cepMask = { mask: '#####-###' };
-const numberMask = { mask: '#####' };
+import {
+    cpfMask,
+    cepMask,
+    numeroMask,
+    telefoneMask
+} from "@/utils/masks";
 
 const addressForm = ref();
 
 const address = reactive({
     nome: "",
+    sobrenome: "",
     cpf: "",
+    telefone: "",
     cep: "",
     endereco: "",
     numero: "",
@@ -81,7 +98,9 @@ const address = reactive({
 
 const addressFormValidation = reactive({
     nome: true,
+    sobrenome: true,
     cpf: true,
+    telefone: true,
     cep: true,
     endereco: true,
     numero: true,
