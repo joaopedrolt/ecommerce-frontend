@@ -69,6 +69,7 @@ import {
     cepRules,
     bairroRules,
     enderecoRules,
+    cidadeRules,
     numeroRules,
     complementoRules,
 } from "@/utils/rules";

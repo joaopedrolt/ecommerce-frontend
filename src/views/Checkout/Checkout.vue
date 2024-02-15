@@ -37,8 +37,8 @@
             </v-text-field>
             <validation-filler :active="!shippingFormValidation.email" density="compact" />
 
-            <v-text-field :model="shipping.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone" variant="outlined"
-              density="comfortable">
+            <v-text-field :model="shipping.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone"
+              variant="outlined" density="comfortable">
             </v-text-field>
             <validation-filler :active="!shippingFormValidation.telefone" density="compact" />
 
@@ -70,17 +70,17 @@
             </div>
 
             <div class="mb-5">
-              <div class="d-flex" style="gap: 15px">
+              <div class="parent-input-container">
                 <div class="d-flex flex-column" style="flex: 1;">
-                  <v-text-field :model="shipping.nome" :rules="nomeRules" label="Nome" variant="outlined"
-                    density="comfortable" style="max-height: 70px;">
+                  <v-text-field class="sibling-input" :model="shipping.nome" :rules="nomeRules" label="Nome"
+                    variant="outlined" density="comfortable">
                   </v-text-field>
                   <validation-filler :active="!shippingFormValidation.nome" density="compact" />
                 </div>
 
                 <div class="d-flex flex-column" style="flex: 1;">
-                  <v-text-field :model="shipping.sobrenome" :rules="sobrenomeRules" label="Sobrenome" variant="outlined"
-                    density="comfortable" style="max-height: 70px;">
+                  <v-text-field class="sibling-input" :model="shipping.sobrenome" :rules="sobrenomeRules"
+                    label="Sobrenome" variant="outlined" density="comfortable">
                   </v-text-field>
                   <validation-filler :active="!shippingFormValidation.sobrenome" density="compact" />
                 </div>
@@ -91,34 +91,53 @@
               </v-text-field>
               <validation-filler :active="!shippingFormValidation.cpf" density="compact" />
 
-              <template v-if="displayAdressForm">
-                <div class="d-flex" style="gap: 15px">
-                  <v-text-field :model="shipping.rua" :rules="enderecoRules" style="flex: 2" label="Rua"
-                    variant="outlined" density="comfortable">
-                  </v-text-field>
+              <template v-if="!displayAdressForm">
+                <div class="parent-input-container">
+                  <div class="d-flex flex-column" style="flex: 2;">
+                    <v-text-field class="sibling-input" :model="shipping.endereco" :rules="enderecoRules" label="Endereco"
+                      variant="outlined" density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.endereco" density="compact" />
+                  </div>
 
-                  <v-text-field :model="shipping.numero" style="flex: 1" label="Número" variant="outlined"
-                    density="comfortable">
-                  </v-text-field>
+                  <div class="d-flex flex-column" style="flex: 1;">
+                    <v-text-field class="sibling-input" :model="shipping.numero" :rules="numeroRules" label="Número"
+                      variant="outlined" density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.numero" density="compact" />
+                  </div>
                 </div>
 
-                <div class="d-flex" style="gap: 15px">
-                  <v-text-field :model="shipping.bairro" label="Bairro" variant="outlined" density="comfortable">
-                  </v-text-field>
+                <div class="parent-input-container">
+                  <div class="d-flex flex-column" style="flex: 2;">
+                    <v-text-field class="sibling-input" :model="shipping.bairro" label="Bairro" :rules="bairroRules"
+                      variant="outlined" density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.bairro" density="compact" />
+                  </div>
 
-                  <v-text-field :model="shipping.complemento" label="Complemento" variant="outlined"
-                    density="comfortable">
-                  </v-text-field>
+                  <div class="d-flex flex-column" style="flex: 1;">
+                    <v-text-field class="sibling-input" :model="shipping.complemento" label="Complemento"
+                      variant="outlined" density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.complemento" density="compact" />
+                  </div>
                 </div>
 
-                <div class="d-flex" style="gap: 15px">
-                  <v-text-field :model="shipping.cidade" style="flex: 3" label="Cidade" variant="outlined"
-                    density="comfortable">
-                  </v-text-field>
+                <div class="parent-input-container">
+                  <div class="d-flex flex-column" style="flex: 3;">
+                    <v-text-field class="sibling-input" :model="shipping.cidade" label="Cidade" :rules="cidadeRules"
+                      variant="outlined" density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.cidade" density="compact" />
+                  </div>
 
-                  <v-text-field :model="shipping.estado" style="flex: 2" label="Estado" variant="outlined"
-                    density="comfortable">
-                  </v-text-field>
+                  <div class="d-flex flex-column" style="flex: 2;">
+                    <v-text-field class="sibling-input" :model="shipping.estado" label="Estado" variant="outlined"
+                      density="comfortable">
+                    </v-text-field>
+                    <validation-filler :active="!shippingFormValidation.estado" density="compact" />
+                  </div>
                 </div>
               </template>
 
@@ -253,7 +272,11 @@ import {
   cpfRules,
   cepRules,
   telefoneRules,
+  bairroRules,
+  cidadeRules,
   enderecoRules,
+  numeroRules,
+  complementoRules,
 } from "@/utils/rules";
 
 import {
@@ -276,6 +299,12 @@ const shipping = reactive({
   nome: "",
   sobrenome: "",
   cpf: "",
+  endereco: "",
+  numero: "",
+  bairro: "",
+  complemento: "",
+  cidade: "",
+  estado: "",
   cep: "",
   save: true
 });
@@ -288,6 +317,12 @@ const shippingFormValidation = reactive({
   nome: true,
   sobrenome: true,
   cpf: true,
+  endereco: true,
+  numero: true,
+  bairro: true,
+  complemento: true,
+  cidade: true,
+  estado: true,
   cep: true,
   save: true
 });
@@ -348,6 +383,8 @@ const calculateShippingCost = async () => {
   let valid = true;
   let keys = Object.keys(shipping);
 
+  console.log(shippingForm.value.items)
+
   for (let i = 0; i < shippingForm.value.items.length; i++) {
     let mensagemErro = await shippingForm.value.items[i].validate()
 
@@ -362,6 +399,8 @@ const calculateShippingCost = async () => {
 
   if (valid)
     displayAdressForm.value = true;
+
+  console.log(shippingFormValidation)
 
   setLoading(false);
 }
@@ -416,6 +455,21 @@ const calculateShippingCost = async () => {
       width: 100%;
       height: 100%;
       max-width: 700px;
+
+      .parent-input-container {
+        display: flex;
+        gap: 10px;
+
+        .sibling-input {
+          max-height: 70px !important;
+          min-width: 223px !important;
+        }
+
+        @media (max-width: $phone) {
+          flex-direction: column;
+          gap: 0 !important;
+        }
+      }
     }
   }
 
