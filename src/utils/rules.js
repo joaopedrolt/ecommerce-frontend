@@ -148,6 +148,25 @@ export const enderecoRules = [
   },
 ];
 
+export const estadoRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  /*   (value) => {
+      if (value.length == 0)
+        return EMPTY_FIELD_MESSAGE;
+      return true
+    }, */
+  /*   (value) => {
+      let maxCharacters = 70;
+      if (value.length > maxCharacters)
+        return maxCharactersMessage(maxCharacters);
+      return true
+    }, */
+];
+
 export const cidadeRules = [
   (value) => {
     if (value == undefined || value == null)
@@ -236,5 +255,3 @@ export const cepRules = [
     return true;
   },
 ];
-
-36

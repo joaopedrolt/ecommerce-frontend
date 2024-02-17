@@ -10,7 +10,7 @@
         <!-- Esquerda -->
         <div style="flex: 1; padding: 0 !important;" elevation="0">
           <div>
-            <div class="text-title text-center text-overline mb-5" style="font-size: 0.95rem !important;">
+            <div class="text-title text-center text-overline mb-3" style="font-size: 0.95rem !important;">
               <span>
                 Endereços
               </span>
@@ -55,8 +55,8 @@
               </v-list>
             </v-card>
           </div>
-          <div class="w-100 mt-2">
-            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-black mb-4" height="37px"
+          <div class="w-100 mt-3 mb-4">
+            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-black" height="37px"
               width="100%" variant="flat" style="font-size: 0.8rem !important;">
               Adicionar Endereço
             </v-btn>
@@ -125,8 +125,8 @@
                     <!--  <v-btn elevation="0">
                       Ver Detalhes
                     </v-btn> -->
-                    <v-btn @click="handleOrderDetails(item)" elevation="0" class="font-weight-regular button-color button-black" variant="flat"
-                      style="font-size: 0.72rem;">
+                    <v-btn @click="handleOrderDetails(item)" elevation="0"
+                      class="font-weight-regular button-color button-black" variant="flat" style="font-size: 0.72rem;">
                       Ver Detalhes
                     </v-btn>
                   </td>
@@ -200,9 +200,9 @@ const addresses = [{
 },
 {
   cep: "09260-840",
-  rua: "Rua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua Júlio AtlasRua J",
+  rua: "Rua Júlio Atlas",
   numero: "171",
-  bairro: "Jardim Itapoancccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  bairro: "Jardim Itapoanccc",
   cidade: "Santo André",
   uf: "SP",
   isDefaultAddress: false
@@ -436,7 +436,7 @@ thead {
 
   span {
     background: #fff;
-    padding: 0 10px;
+    padding: 0 25px;
   }
 }
 </style>
