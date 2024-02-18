@@ -172,27 +172,64 @@
 
           <v-window-item :value="1">
             <div>
-              <div class="text-h5 font-weight-regular mb-4">
-                Escolha o Frete
+              <div>
+                <div class="text-h5 font-weight-regular mb-4">
+                  Destinatário
+                </div>
+
+                <div class="mb-10">
+                  <div class="d-flex flex-column">
+                      <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+                        <div>
+                          <v-icon class="mr-2">mdi-account</v-icon> João Pedro<br>
+                          <v-icon class="mr-2">mdi-id-card</v-icon> 571.421.538-90<br>
+                          <v-icon class="mr-2">mdi-phone</v-icon>(11) 97694-1524<br>
+                          <v-icon class="mr-2">mdi-email</v-icon>jpltgamer@gmail.com<br>
+                          <v-icon class="mr-2">mdi-map-marker</v-icon>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620<br>
+                        </div>
+                        <div class="d-flex align-center justify-end" style="width: 100px;">
+                          Alterar
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- <v-divider color="#111111"></v-divider> -->
+
+                  <!-- <div class="d-flex flex-column py-2">
+                    <div class="mb-3 mr-1 w-100" style="width: 70px;">
+                      Enviar
+                    </div>
+                    <div class="px-3">
+                      <v-icon class="mr-2">mdi-map-marker</v-icon>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620<br>
+                    </div>
+                  </div> -->
+                </div>
               </div>
-              <v-radio-group class="frete-ratio" v-model="freteOption">
-                <v-radio value="one">
-                  <template v-slot:label="{ items }">
-                    <div class="w-100 d-flex justify-space-between">
-                      <span>Loggi Express</span>
-                      <span>gratis</span>
-                    </div>
-                  </template>
-                </v-radio>
-                <v-radio value="2">
-                  <template v-slot:label="{ items }">
-                    <div class="w-100 d-flex justify-space-between">
-                      <span>Total Express</span>
-                      <span>16</span>
-                    </div>
-                  </template>
-                </v-radio>
-              </v-radio-group>
+
+              <div>
+                <div class="text-h5 font-weight-regular mb-4">
+                  Escolha o Frete
+                </div>
+
+                <v-radio-group class="frete-ratio" v-model="freteOption">
+                  <v-radio value="one">
+                    <template v-slot:label="{ items }">
+                      <div class="w-100 d-flex justify-space-between">
+                        <span>Loggi Express</span>
+                        <span>gratis</span>
+                      </div>
+                    </template>
+                  </v-radio>
+                  <v-radio value="2">
+                    <template v-slot:label="{ items }">
+                      <div class="w-100 d-flex justify-space-between">
+                        <span>Total Express</span>
+                        <span>16</span>
+                      </div>
+                    </template>
+                  </v-radio>
+                </v-radio-group>
+              </div>
             </div>
           </v-window-item>
         </v-window>
