@@ -179,30 +179,36 @@
 
                 <div class="mb-10">
                   <div class="d-flex flex-column">
-                      <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-                        <div>
-                          <v-icon class="mr-2">mdi-account</v-icon> João Pedro<br>
-                          <v-icon class="mr-2">mdi-id-card</v-icon> 571.421.538-90<br>
-                          <v-icon class="mr-2">mdi-phone</v-icon>(11) 97694-1524<br>
-                          <v-icon class="mr-2">mdi-email</v-icon>jpltgamer@gmail.com<br>
-                          <v-icon class="mr-2">mdi-map-marker</v-icon>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620<br>
+                    <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular pl-3 py-2"
+                      style="border-left: 2px solid rgba(0, 0, 0, 0.5);">
+                      <div class="d-flex flex-column" style="gap: 8px">
+                        <div class="d-flex align-center">
+                          <v-icon class="mr-3">mdi-account</v-icon>
+                          <div>João Pedro</div>
                         </div>
-                        <div class="d-flex align-center justify-end" style="width: 100px;">
-                          Alterar
+                        <div class="d-flex align-center">
+                          <v-icon class="mr-3">mdi-id-card</v-icon>
+                          <div>571.421.538-90</div>
                         </div>
+                        <div class="d-flex align-center">
+                          <v-icon class="mr-3">mdi-phone</v-icon>
+                          <div>(11) 97694-1524</div>
+                        </div>
+                        <div class="d-flex align-center">
+                          <v-icon class="mr-3">mdi-email</v-icon>
+                          <div>jpltgamer@gmail.com</div>
+                        </div>
+                        <div class="d-flex align-center">
+                          <v-icon class="mr-3">mdi-map-marker</v-icon>
+                          <div>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620</div>
+                        </div>
+                      </div>
+                      <div class="d-flex align-center justify-end text-decoration-underline pb-7"
+                        style="width: 100px; cursor: pointer;">
+                        Alterar
+                      </div>
                     </div>
                   </div>
-
-                  <!-- <v-divider color="#111111"></v-divider> -->
-
-                  <!-- <div class="d-flex flex-column py-2">
-                    <div class="mb-3 mr-1 w-100" style="width: 70px;">
-                      Enviar
-                    </div>
-                    <div class="px-3">
-                      <v-icon class="mr-2">mdi-map-marker</v-icon>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620<br>
-                    </div>
-                  </div> -->
                 </div>
               </div>
 
@@ -211,20 +217,38 @@
                   Escolha o Frete
                 </div>
 
-                <v-radio-group class="frete-ratio" v-model="freteOption">
+                <v-radio-group class="frete-ratio pr-3" hide-details v-model="freteOption" density="compact"
+                  style="border-right: 2px solid rgba(0, 0, 0, 0.5);">
                   <v-radio value="one">
                     <template v-slot:label="{ items }">
-                      <div class="w-100 d-flex justify-space-between">
-                        <span>Loggi Express</span>
-                        <span>gratis</span>
+                      <div class="d-flex flex-column w-100 h-100 ml-2">
+                        <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
+                          <div>Sedex</div>
+                        </div>
+                        <div class="w-100 text-subtitle-2 font-weight-regular">
+                          7 dias úteis
+                        </div>
+                      </div>
+
+                      <div class="d-flex text-subtitle-2 align-flex font-weight-regular" style="word-break: keep-all;">
+                        GRATIS
                       </div>
                     </template>
                   </v-radio>
                   <v-radio value="2">
                     <template v-slot:label="{ items }">
-                      <div class="w-100 d-flex justify-space-between">
-                        <span>Total Express</span>
-                        <span>16</span>
+                      <div class="d-flex flex-column w-100 h-100 ml-2">
+                        <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
+                          <div>Total Express</div>
+                        </div>
+                        <div class="w-100 text-subtitle-2 font-weight-regular">
+                          7 dias úteis
+                        </div>
+                      </div>
+
+                      <div class="d-flex text-subtitle-2 align-flex font-weight-regular"
+                        style="word-break: keep-all; white-space: unset;">
+                        R$ 16,00
                       </div>
                     </template>
                   </v-radio>
@@ -265,7 +289,8 @@
             Resumo do Pedido
           </div>
 
-          <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular">
+          <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
+            style="cursor: pointer;">
             Editar carrinho
           </div>
         </div>
@@ -529,6 +554,23 @@ const estados = [
 .frete-ratio {
   .v-label {
     width: 100% !important;
+    opacity: 1 !important;
+    align-items: center !important;
+    padding: 12px 0;
+  }
+
+  .v-selection-control {
+    margin-bottom: 4px;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .mdi-radiobox-blank,
+  .mdi-radiobox-marked {
+    font-size: 1.36rem;
   }
 }
 
