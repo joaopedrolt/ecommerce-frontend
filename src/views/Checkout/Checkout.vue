@@ -4,7 +4,7 @@
     <div class="left-side border-right">
       <div class="wrapper">
         <!-- Header Left -->
-        <div class="payment-header desktop">
+        <div class="payment-header desktop mb-6">
           <div style="height: 33px; width: 160px;">
             <v-img class="h-100 w-100" src="/logo.svg"></v-img>
           </div>
@@ -269,7 +269,7 @@
     <div class="right-side">
       <!-- Edit Cart - Top -->
 
-      <div class="payment-header mobile mb-4">
+      <div class="payment-header mobile mb-2">
         <div style="height: 33px; width: 160px;">
           <v-img class="h-100 w-100" src="/logo.svg"></v-img>
         </div>
@@ -286,11 +286,28 @@
         <v-expansion-panels v-model="panel" :flat="true">
           <v-expansion-panel elevation="0" height="40">
             <v-expansion-panel-title>
-              <div class="order-summery text-h5 font-weight-regular mb-2">
-                Resumo do Pedido
+              <div class="order-summery">
+                <div class="text-h5 font-weight-regular">
+                  Resumo do Pedido
+                </div>
+
+                <div class="edit-cart text-caption text-end font-weight-regular"
+                  style="cursor: pointer; opacity: 0.5; padding-left: 1px;">
+                  Clique para {{ panel != 0 ? 'exibir' : 'ocultar' }} todos os Detalhes
+                </div>
               </div>
+
+              <template v-slot:actions="{ expanded }">
+                <div class="d-flex align-center" style="height: 45px;">
+                  <div class="d-flex align-center">
+                    <div class="text-h6 font-weight-regular mr-1">{{ expanded ? '' : 'R$ 3340,00' }}</div>
+                    <v-icon> {{ expanded ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
+                  </div>
+                </div>
+              </template>
+
             </v-expansion-panel-title>
-            <v-expansion-panel-text>
+            <v-expansion-panel-text style="margin-top: -8px;">
               <!-- Cart Itens -->
               <div class="cart-itens">
                 <div style="height: 90px; width: 90px;">
@@ -335,31 +352,23 @@
 
               <v-divider color="#111111"></v-divider>
 
-              <div class="d-flex align-center justify-space-between pt-4">
+              <div class="d-flex align-center justify-space-between py-4">
                 <div style="margin-top: 1px;">Total:</div>
                 <div class="text-h6 font-weight-regular ">R$ 3340,00</div>
               </div>
-
-              <div class="top-summary w-100 mt-3">
-                <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
-                  style="cursor: pointer;">
-                  Editar carrinho
-                </div>
-              </div>
             </v-expansion-panel-text>
+
+            <div class="top-summary w-100">
+              <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
+                style="cursor: pointer;">
+                Editar carrinho
+              </div>
+            </div>
           </v-expansion-panel>
         </v-expansion-panels>
-
-        <!--         <div class="top-summary w-100">
-          <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
-            style="cursor: pointer;">
-            Editar carrinho
-          </div>
-        </div> -->
       </div>
 
-
-      <!--       <div class="wrapper">
+      <div class="wrapper">
         <div class="payment-header mobile mb-7">
           <div style="height: 33px; width: 160px;">
             <v-img class="h-100 w-100" src="/logo.svg"></v-img>
@@ -431,13 +440,13 @@
           <div style="margin-top: 1px;">Total:</div>
           <div class="text-h6 font-weight-regular ">R$ 3340,00</div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { vMaska } from "maska"
 
 import {
@@ -468,7 +477,7 @@ const shippingForm = ref();
 const displayAdressForm = ref(false);
 const displayShipping = ref(false);
 
-const panel = ref(false);
+const panel = ref();
 const step = ref(0);
 const length = 3;
 
@@ -618,6 +627,10 @@ const estados = [
   { id: 26, nome: 'Sergipe' },
   { id: 27, nome: 'Tocantins' }
 ];
+
+watch(panel, (newval) => {
+  console.log(newval)
+})
 </script>
 
 <style lang="scss">
@@ -729,6 +742,10 @@ const estados = [
     padding-right: 36px;
     padding-left: 36px;
 
+    .mobile-expansion-summary {
+      display: none;
+    }
+
     .wrapper {
       height: 100%;
       width: 100%;
@@ -759,7 +776,7 @@ const estados = [
       justify-content: center;
       padding-left: 10px !important;
       padding-right: 10px !important;
-      padding-top: 32px !important;
+      padding-top: 20px !important;
 
       .wrapper {
         max-width: none !important;
@@ -790,12 +807,36 @@ const estados = [
       padding-left: 10px !important;
       padding-right: 10px !important;
 
+      .mobile-expansion-summary {
+        display: block;
+        width: 100%;
+
+        .v-expansion-panel-title {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .v-expansion-panel-text__wrapper {
+          padding: 2px 0 !important;
+        }
+
+        .v-expansion-panel-title__overlay {
+          opacity: 0 !important;
+        }
+      }
+
       .wrapper {
+        display: none;
         max-width: none !important;
       }
 
       .order-summery {
         display: block !important;
+        margin-left: -2px;
+      }
+
+      .v-expansion-panel-title__icon {
+        margin-right: -3px;
       }
 
       .order-sum {
@@ -829,23 +870,6 @@ const estados = [
         display: none !important;
       }
     }
-  }
-}
-
-.mobile-expansion-summary {
-  width: 100%;
-
-  .v-expansion-panel-title {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .v-expansion-panel-text__wrapper {
-    padding: 2px 0 !important;
-  }
-
-  .v-expansion-panel-title__overlay {
-    opacity: 0 !important;
   }
 }
 </style>
