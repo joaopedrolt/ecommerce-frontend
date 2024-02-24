@@ -1,6 +1,7 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+import svgLoader from 'vite-svg-loader';
 
 // Utilities
 import { defineConfig } from "vite";
@@ -16,6 +17,7 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
+    svgLoader()
   ],
   define: { "process.env": {} },
   resolve: {

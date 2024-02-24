@@ -17,6 +17,68 @@
           </div>
         </div>
 
+        <!-- SE FRETE / PAGAMENTO -->
+        <div v-if="step == 1 || step == 2" class="mb-8">
+          <div class="text-h5 font-weight-regular mb-4">
+            Destinatário
+          </div>
+
+          <div>
+            <div class="d-flex flex-column">
+              <div class="shipping-sumery d-flex flex-column text-subtitle-2 font-weight-regular">
+                <div class="d-flex justify-center-between w-100 pb-3">
+                  <div class="d-flex flex-column w-100" style="gap: 8px">
+                    <div class="d-flex align-center">
+                      <v-icon class="mr-3">mdi-account</v-icon>
+                      <div>João Pedro</div>
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon class="mr-3">mdi-id-card</v-icon>
+                      <div>571.421.538-90</div>
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon class="mr-3">mdi-phone</v-icon>
+                      <div>(11) 97694-1524</div>
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon class="mr-3">mdi-email</v-icon>
+                      <div>jpltgamer@gmail.com</div>
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-icon class="mr-3">mdi-map-marker</v-icon>
+                      <div>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-center justify-end text-decoration-underline pb-7"
+                    style="width: 100px; cursor: pointer;">
+                    Alterar
+                  </div>
+                </div>
+
+                <template v-if="step == 2">
+                  <v-divider color="111111"></v-divider>
+
+                  <div class="d-flex justify-center-between w-100 pt-3">
+                    <div class="d-flex flex-column w-100" style="gap: 8px">
+                      <div class="d-flex align-center" style="padding-left: 2px;">
+                        <v-icon class="mr-3">mdi-truck</v-icon>
+                        <div style="margin-left: -2px;">Sedex - <span>RS20,00</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="d-flex align-center justify-end text-decoration-underline"
+                      style="width: 100px; cursor: pointer;">
+                      Alterar
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <v-window v-model="step">
           <v-window-item :value="0">
             <v-form ref="shippingForm" validate-on="layz" :disabled="isLoading">
@@ -172,45 +234,7 @@
 
           <v-window-item :value="1">
             <div>
-              <div class="mb-8">
-                <div class="text-h5 font-weight-regular mb-4">
-                  Destinatário
-                </div>
-
-                <div>
-                  <div class="d-flex flex-column">
-                    <div class="shipping-sumery d-flex justify-space-between text-subtitle-2 font-weight-regular py-2">
-                      <div class="d-flex flex-column" style="gap: 8px">
-                        <div class="d-flex align-center">
-                          <v-icon class="mr-3">mdi-account</v-icon>
-                          <div>João Pedro</div>
-                        </div>
-                        <div class="d-flex align-center">
-                          <v-icon class="mr-3">mdi-id-card</v-icon>
-                          <div>571.421.538-90</div>
-                        </div>
-                        <div class="d-flex align-center">
-                          <v-icon class="mr-3">mdi-phone</v-icon>
-                          <div>(11) 97694-1524</div>
-                        </div>
-                        <div class="d-flex align-center">
-                          <v-icon class="mr-3">mdi-email</v-icon>
-                          <div>jpltgamer@gmail.com</div>
-                        </div>
-                        <div class="d-flex align-center">
-                          <v-icon class="mr-3">mdi-map-marker</v-icon>
-                          <div>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620</div>
-                        </div>
-                      </div>
-                      <div class="d-flex align-center justify-end text-decoration-underline pb-7"
-                        style="width: 100px; cursor: pointer;">
-                        Alterar
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              <!-- Destinatario -->
               <div>
                 <div class="text-h5 font-weight-regular mb-4">
                   Escolha o Frete
@@ -252,6 +276,42 @@
                   </v-radio>
                 </v-radio-group>
               </div>
+            </div>
+          </v-window-item>
+
+          <v-window-item :value="2">
+            <!-- Destinatario -->
+            <div class="text-h5 font-weight-regular mb-4">
+              Pagamento
+            </div>
+            <div>
+
+              <v-radio-group class="frete-ratio" hide-details v-model="freteOption" density="compact">
+                <v-radio value="one">
+                  <template v-slot:label="{ items }">
+                    <div class="d-flex flex-column w-100 h-100 ml-2">
+                      <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
+                        <div><v-icon>mdi-credit-card</v-icon> Cartão de Credito</div>
+                      </div>
+                      <div class="w-100 text-subtitle-2 font-weight-regular">
+                        You will be redirected to PayPal website to complete your purchase securely.
+                      </div>
+                    </div>
+                  </template>
+                </v-radio>
+                <v-radio value="2">
+                  <template v-slot:label="{ items }">
+                    <div class="d-flex flex-column w-100 h-100 ml-2">
+                      <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
+                        <div>Pix</div>
+                      </div>
+                      <div class="w-100 text-subtitle-2 font-weight-regular">
+                        Pay with cash when your order is delivered.
+                      </div>
+                    </div>
+                  </template>
+                </v-radio>
+              </v-radio-group>
             </div>
           </v-window-item>
         </v-window>
@@ -310,23 +370,91 @@
             <v-expansion-panel-text style="margin-top: -8px;">
               <!-- Cart Itens -->
               <div class="cart-itens">
-                <div style="height: 90px; width: 90px;">
-                  <v-img class="h-100 w-100" style="border-radius: 10px;"
-                    src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                </div>
-
-                <div class="d-flex w-100 justify-space-between">
-                  <div class="d-flex flex-column justify-center ml-4">
-                    <div class="font-weight-bold">
-                      Tech T-Shirt
-                    </div>
-                    <div class="text-subtitle-2 font-weight-light">
-                      Preta / PP
-                    </div>
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
                   </div>
 
-                  <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                    R$ 159,00
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
                   </div>
                 </div>
               </div>
@@ -394,23 +522,91 @@
         </div>
 
         <div class="cart-itens">
-          <div style="height: 90px; width: 90px;">
-            <v-img class="h-100 w-100" style="border-radius: 10px;"
-              src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-          </div>
-
-          <div class="d-flex w-100 justify-space-between">
-            <div class="d-flex flex-column justify-center ml-4">
-              <div class="font-weight-bold">
-                Tech T-Shirt
-              </div>
-              <div class="text-subtitle-2 font-weight-light">
-                Preta / PP
-              </div>
+          <div class="d-flex justify-space-between w-100">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 10px;"
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
             </div>
 
-            <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-              R$ 159,00
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex flex-column justify-center ml-4">
+                <div class="font-weight-bold">
+                  Tech T-Shirt
+                </div>
+                <div class="text-subtitle-2 font-weight-light">
+                  Preta / PP
+                </div>
+              </div>
+
+              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                R$ 159,00
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-space-between w-100">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 10px;"
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+            </div>
+
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex flex-column justify-center ml-4">
+                <div class="font-weight-bold">
+                  Tech T-Shirt
+                </div>
+                <div class="text-subtitle-2 font-weight-light">
+                  Preta / PP
+                </div>
+              </div>
+
+              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                R$ 159,00
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-space-between w-100">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 10px;"
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+            </div>
+
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex flex-column justify-center ml-4">
+                <div class="font-weight-bold">
+                  Tech T-Shirt
+                </div>
+                <div class="text-subtitle-2 font-weight-light">
+                  Preta / PP
+                </div>
+              </div>
+
+              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                R$ 159,00
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-space-between w-100">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 10px;"
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+            </div>
+
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex flex-column justify-center ml-4">
+                <div class="font-weight-bold">
+                  Tech T-Shirt
+                </div>
+                <div class="text-subtitle-2 font-weight-light">
+                  Preta / PP
+                </div>
+              </div>
+
+              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                R$ 159,00
+              </div>
             </div>
           </div>
         </div>
@@ -478,7 +674,7 @@ const displayAdressForm = ref(false);
 const displayShipping = ref(false);
 
 const panel = ref();
-const step = ref(0);
+const step = ref(2);
 const length = 3;
 
 const freteOption = ref('one');
@@ -723,8 +919,7 @@ watch(panel, (newval) => {
       }
 
       .shipping-sumery {
-        padding-left: 12px !important;
-        border-left: 1px solid rgba(0, 0, 0, 0.12);
+        padding-left: 1px !important;
       }
     }
   }
@@ -754,6 +949,8 @@ watch(panel, (newval) => {
 
     .cart-itens {
       display: flex;
+      flex-direction: column;
+
       padding-top: 13px;
       padding-bottom: 16px;
     }
@@ -781,10 +978,7 @@ watch(panel, (newval) => {
       .wrapper {
         max-width: none !important;
 
-        .shipping-sumery {
-          padding-left: 3px !important;
-          border-left: none;
-        }
+        .shipping-sumery {}
 
         /*       .payment-footer {
           .v-breadcrumbs {
