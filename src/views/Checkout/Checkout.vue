@@ -19,33 +19,33 @@
 
         <!-- SE FRETE / PAGAMENTO -->
         <div v-if="step == 1 || step == 2" class="mb-8">
-          <div class="text-h5 font-weight-regular mb-4">
+          <div class="text-h5 font-weight-regular mb-5">
             Destinatário
           </div>
 
           <div>
             <div class="d-flex flex-column">
               <div class="shipping-sumery d-flex flex-column text-subtitle-2 font-weight-regular">
-                <div class="d-flex justify-center-between w-100 pb-3">
+                <div class="d-flex justify-center-between w-100 pb-4">
                   <div class="d-flex flex-column w-100" style="gap: 8px">
                     <div class="d-flex align-center">
-                      <v-icon class="mr-3">mdi-account</v-icon>
+                      <v-icon class="mr-4">mdi-account</v-icon>
                       <div>João Pedro</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-3">mdi-id-card</v-icon>
+                      <v-icon class="mr-4">mdi-id-card</v-icon>
                       <div>571.421.538-90</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-3">mdi-phone</v-icon>
+                      <v-icon class="mr-4">mdi-phone</v-icon>
                       <div>(11) 97694-1524</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-3">mdi-email</v-icon>
+                      <v-icon class="mr-4">mdi-email</v-icon>
                       <div>jpltgamer@gmail.com</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-3">mdi-map-marker</v-icon>
+                      <v-icon class="mr-4">mdi-map-marker</v-icon>
                       <div>Rua Etore Cataruzzi 3, Jardin Rina, 09271-620</div>
                     </div>
                   </div>
@@ -59,10 +59,10 @@
                 <template v-if="step == 2">
                   <v-divider color="111111"></v-divider>
 
-                  <div class="d-flex justify-center-between w-100 pt-3">
+                  <div class="d-flex justify-center-between w-100 pt-4">
                     <div class="d-flex flex-column w-100" style="gap: 8px">
                       <div class="d-flex align-center" style="padding-left: 2px;">
-                        <v-icon class="mr-3">mdi-truck</v-icon>
+                        <v-icon class="mr-4">mdi-truck</v-icon>
                         <div style="margin-left: -2px;">Sedex - <span>RS20,00</span>
                         </div>
                       </div>
@@ -236,14 +236,14 @@
             <div>
               <!-- Destinatario -->
               <div>
-                <div class="text-h5 font-weight-regular mb-4">
+                <div class="text-h5 font-weight-regular">
                   Escolha o Frete
                 </div>
 
                 <v-radio-group class="frete-ratio" hide-details v-model="freteOption" density="compact">
                   <v-radio value="one">
                     <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-2">
+                      <div class="d-flex flex-column w-100 h-100 ml-1">
                         <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
                           <div>Sedex</div>
                         </div>
@@ -259,7 +259,7 @@
                   </v-radio>
                   <v-radio value="2">
                     <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-2">
+                      <div class="d-flex flex-column w-100 h-100 ml-1">
                         <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
                           <div>Total Express</div>
                         </div>
@@ -281,37 +281,128 @@
 
           <v-window-item :value="2">
             <!-- Destinatario -->
-            <div class="text-h5 font-weight-regular mb-4">
-              Pagamento
+            <div class="text-h5 font-weight-regular">
+              Forma de Pagamento
             </div>
             <div>
+              <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
+                <v-list-group value="card">
+                  <template v-slot:activator="{ isOpen, props }">
+                    <v-list-item :ripple="false" v-bind="props">
 
-              <v-radio-group class="frete-ratio" hide-details v-model="freteOption" density="compact">
-                <v-radio value="one">
-                  <template v-slot:label="{ items }">
-                    <div class="d-flex flex-column w-100 h-100 ml-2">
-                      <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
-                        <div><v-icon>mdi-credit-card</v-icon> Cartão de Credito</div>
-                      </div>
-                      <div class="w-100 text-subtitle-2 font-weight-regular">
-                        You will be redirected to PayPal website to complete your purchase securely.
+                      <v-list-item-title>
+                        <div class="d-flex align-center">
+                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.35rem;">
+                            <v-radio :model-value="isOpen" density="compact"></v-radio>
+                          </div>
+                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                            -webkit-user-select: none; 
+                            -ms-user-select: none; 
+                             user-select: none;">
+                            Cartão de Crédito
+                          </div>
+                        </div>
+                      </v-list-item-title>
+
+                      <template v-slot:append="{ }">
+                        <v-icon class="ml-2">mdi-credit-card-outline</v-icon>
+                      </template>
+                    </v-list-item>
+                  </template>
+                  <v-list-item>
+                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
+                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
+                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
+                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
+                        "Finalizar a compra", você verá
+                        o QR Code para fazer o pagamento instantâneo.
                       </div>
                     </div>
+                  </v-list-item>
+                </v-list-group>
+
+                <v-divider color="111111"></v-divider>
+
+                <v-list-group value="pix">
+                  <template v-slot:activator="{ isOpen, props }">
+                    <v-list-item :ripple="false" v-bind="props">
+
+                      <v-list-item-title>
+                        <div class="d-flex align-center">
+                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.4rem;">
+                            <v-radio :model-value="isOpen" density="compact"></v-radio>
+                          </div>
+                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                            -webkit-user-select: none; 
+                            -ms-user-select: none; 
+                             user-select: none;">
+                            Pix
+                          </div>
+                        </div>
+                      </v-list-item-title>
+
+                      <template v-slot:append="{ }">
+                        <v-icon class="ml-2">mdi-qrcode</v-icon>
+                      </template>
+                    </v-list-item>
                   </template>
-                </v-radio>
-                <v-radio value="2">
-                  <template v-slot:label="{ items }">
-                    <div class="d-flex flex-column w-100 h-100 ml-2">
-                      <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
-                        <div>Pix</div>
-                      </div>
-                      <div class="w-100 text-subtitle-2 font-weight-regular">
-                        Pay with cash when your order is delivered.
+                  <v-list-item>
+                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
+                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
+                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
+                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
+                        "Finalizar a compra", você verá
+                        o QR Code para fazer o pagamento instantâneo.
                       </div>
                     </div>
+                  </v-list-item>
+                </v-list-group>
+
+                <v-divider color="111111"></v-divider>
+
+                <v-list-group value="boleto">
+                  <template v-slot:activator="{ isOpen, props }">
+                    <v-list-item :ripple="false" v-bind="props">
+
+                      <v-list-item-title>
+                        <div class="d-flex align-center">
+                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.38rem;">
+                            <v-radio :model-value="isOpen" density="compact"></v-radio>
+                          </div>
+                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                            -webkit-user-select: none; 
+                            -ms-user-select: none; 
+                             user-select: none;">
+                            Boleto
+                          </div>
+                        </div>
+                      </v-list-item-title>
+
+                      <template v-slot:append="{ }">
+                        <v-icon class="ml-2">mdi-barcode</v-icon>
+                      </template>
+                    </v-list-item>
                   </template>
-                </v-radio>
-              </v-radio-group>
+                  <v-list-item>
+                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
+                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
+                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
+                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
+                        "Finalizar a compra", você verá
+                        o QR Code para fazer o pagamento instantâneo.
+                      </div>
+                    </div>
+                  </v-list-item>
+                </v-list-group>
+              </v-list>
+
+              <div class="d-flex justify-space-between align-center mt-4">
+                <v-btn @click="calculateShippingCost()"
+                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
+                  width="100%" variant="flat" :ripple="false" :loading="isLoading">
+                  Finalizar a compra
+                </v-btn>
+              </div>
             </div>
           </v-window-item>
         </v-window>
@@ -677,6 +768,8 @@ const panel = ref();
 const step = ref(2);
 const length = 3;
 
+const open = ref([]);
+
 const freteOption = ref('one');
 
 const shipping = reactive({
@@ -848,7 +941,7 @@ watch(panel, (newval) => {
     width: 100% !important;
     opacity: 1 !important;
     align-items: center !important;
-    padding: 12px 0;
+    padding: 9px 0;
   }
 
   .v-selection-control {
@@ -863,6 +956,18 @@ watch(panel, (newval) => {
   .mdi-radiobox-blank,
   .mdi-radiobox-marked {
     font-size: 1.36rem;
+  }
+
+  .v-list-item__overlay {
+    opacity: 0 !important;
+  }
+
+  .v-selection-control__input {
+    transform: translateX(-1.8px);
+  }
+
+  .v-list-item {
+    padding: 0 !important;
   }
 }
 
@@ -921,6 +1026,11 @@ watch(panel, (newval) => {
       .shipping-sumery {
         padding-left: 1px !important;
       }
+    }
+
+    .v-list-item {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 
