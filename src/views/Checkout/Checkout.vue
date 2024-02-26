@@ -765,7 +765,7 @@ const displayAdressForm = ref(false);
 const displayShipping = ref(false);
 
 const panel = ref();
-const step = ref(2);
+const step = ref(0);
 const length = 3;
 
 const open = ref([]);
