@@ -55,14 +55,14 @@
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
             Camiseta Mangas Curtas Com Estampa Medusa
           </div>
-          <div class="product-price mt-1">
+          <div class="product-price mt-2">
             <div class="main-price font-weight-regular">R$24.90</div>
             <div class="old-price font-weight-light" style="margin-top: 2.5px">
               <s>R$32</s>
             </div>
           </div>
         </div>
-        <div class="product-checkout mt-4">
+        <div class="product-checkout">
           <div class="">
             <div class="product-amount d-flex flex-column">
               <div class="text-body-2 font-weight-light mb-2">Quantidade</div>
@@ -90,94 +90,179 @@
             </div>
 
             <div>
-              <v-btn class="font-weight-regular button-color button-black mt-3" height="45px" width="100%" variant="flat"
+              <v-btn class="font-weight-regular button-color button-black mt-4" height="45px" width="100%" variant="flat"
                 :ripple="false">
                 ADICIONAR AO CARRINHO
               </v-btn>
             </div>
           </div>
 
-          <div class="small-desc" style="opacity: 0.6;">
+          <div class="text-subtitle-2 font-weight-regular mt-4" style="opacity: 0.6;">
             Verde, jacquard, fechamento frontal por botão e zíper, cordão de
             ajuste no cós, comprimento cropped, modelagem cenoura e cinco
             bolsos. Ao comprar este item unissex, considere que sua grade de
             tamanhos é masculina.
           </div>
         </div>
+
+
+        <div class="product-details-list">
+          <v-divider color="#111111"></v-divider>
+
+          <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
+            <v-list-group value="details">
+              <template v-slot:activator="{ isOpen, props }">
+                <v-list-item :ripple="false" v-bind="props">
+                  <v-list-item-title>
+                    <div class="d-flex align-center">
+                      <div class="d-flex align-center font-weight-medium py-2 text-overline" style="font-size: 1rem;
+                            -webkit-user-select: none; 
+                            -ms-user-select: none; 
+                             user-select: none;">
+                        Mais Detalhes do Produto
+                      </div>
+                    </div>
+                  </v-list-item-title>
+                </v-list-item>
+              </template>
+              <v-list-item>
+                <div
+                  class="w-100 h-100 d-flex flex-column text-center py-1 text-subtitle-2 font-weight-regular text-start"
+                  style="opacity: 0.6;">
+                  <div class="pr-1">
+                    Com detalhes refinados e um design exclusivo, a pulseira LV Bloom é um modelo icônico e marcante. O
+                    fino
+                    cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma Flor
+                    do
+                    Monogram, elaboradas em metal brilhante com acabamento dourado. Um fecho inovador permite que essa
+                    pulseira
+                    se ajuste perfeitamente em qualquer pulso.
+                  </div>
+
+                  <ul class="px-4 mt-4 mb-2" style=" list-style-type: square !important;">
+                    <li>Metal com acabamento dourado</li>
+                    <li>Cordão em couro de vitelo marrom</li>
+                    <li>Assinaturas LV Initials e Flores do Monogram</li>
+                  </ul>
+                </div>
+              </v-list-item>
+            </v-list-group>
+          </v-list>
+
+          <v-divider color="#111111"></v-divider>
+        </div>
       </div>
     </div>
 
-    <div class="d-flex mx-auto" style="margin-top: 50px;">
-
-      <div class="d-flex flex-column align-center justify-center" style="flex: 1;">
-
-        <div class="mt-7">
-          <div class="text-h5 font-weight-bold text-start">
+    <div class="showcase">
+      <div class="left-side d-flex flex-column align-center justify-center" style="flex: 7;">
+        <div class="wrapper">
+          <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
             FUNCIONALIDADES DO FUTURO
           </div>
-          <div class="text-start" style="opacity: 0.6; max-width: 400px;">
+          <div class="right-side" style="opacity: 0.6; padding-left: 2px;">
             Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a temperatura
             corporal.
           </div>
         </div>
-
       </div>
 
-      <div class="d-flex align-center justify-center" style="flex: 1;">
+      <div class="d-flex align-center justify-center" style="flex: 5;">
         <div style="width: 100%; height: 600px;">
-          <img style="width: 100%; height: 100%; object-fit: contain;"
-            src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg" />
+          <img style="width: 100%; height: 100%; object-fit: cover;"
+            src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg" />
         </div>
       </div>
-
     </div>
 
-    <div class="product-details-list">
-      <v-list class="w-100">
-        <v-list-group value="details">
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" title="Mais detalhes do produto"></v-list-item>
-          </template>
 
-          <v-list-item title="
-          Detalhes do produto
+    <v-divider color="#111111"></v-divider>
 
-          Trazer um acabamento feminino a produções casuais ficou fácil com o colar Louisette. Esta delicada peça apresenta a icônica Monogram Flower da Maison elegantemente presa a uma corrente fina ajustável. O colar pode ser usado sozinho ou com outros de diversas linhas da Louis Vuitton para criar um look impactante.
+    <div class="youmaylike flex-column">
 
-              Comprimento: ~16,5 polegadas / 42 cm ajustável para ~18,5 polegadas / 47 cm
-              Metal com acabamento dourado
-              Pingente de Monogram Flower
-              Charms LV Circle
-              Gravado com LV Initials
-              Assinatura Louis Vuitton gravada
-              Fecho metálico
+      <div class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1" style="font-size: .9rem !important;">
+        Você também pode gostar
+      </div>
 
-          "></v-list-item>
-        </v-list-group>
+      <div class="img-container d-flex" style="gap: 15px;">
+        <div class="d-flex" style="gap: 15px; flex: 1;">
+          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+            <div class="product-card-top">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                alt="" />
+            </div>
 
-        <v-list-group value="measurements">
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" title="Medidas"></v-list-item>
-          </template>
-
-          <v-list-item class="px-0">
-            <div class="w-100 h-100 d-flex" style="height: 578.983px !important">
-              <div>
-                Verde, jacquard, fechamento frontal por botão e zíper, cordão de
-                ajuste no cós, comprimento cropped, modelagem cenoura e cinco
-                bolsos. Ao comprar este item unissex, considere que sua grade de
-                tamanhos é masculina.
-              </div>
-
-              <div class="product-details-img">
-                <img class="h-100" style="object-fit: contain"
-                  src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919164_1000.jpg" />
+            <div class="product-card-bottom">
+              <div class="font-weight-bold">Macbook Air Pro</div>
+              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                Some small description for the product
+              </p>
+              <div class="product-card-price d-flex">
+                <div class="text-subtitle-2 font-weight-regular">R$600</div>
               </div>
             </div>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
+          </div>
+
+          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+            <div class="product-card-top">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                alt="" />
+            </div>
+
+            <div class="product-card-bottom">
+              <div class="font-weight-bold">Macbook Air Pro</div>
+              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                Some small description for the product
+              </p>
+              <div class="product-card-price d-flex">
+                <div class="text-subtitle-2 font-weight-regular">R$600</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex" style="gap: 15px; flex: 1;">
+          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+            <div class="product-card-top">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                alt="" />
+            </div>
+
+            <div class="product-card-bottom">
+              <div class="font-weight-bold">Macbook Air Pro</div>
+              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                Some small description for the product
+              </p>
+              <div class="product-card-price d-flex">
+                <div class="text-subtitle-2 font-weight-regular">R$600</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+            <div class="product-card-top">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/skin-cropped-long-marrom-1.jpg?v=1708091790&width=600"
+                alt="" />
+            </div>
+
+            <div class="product-card-bottom">
+              <div class="font-weight-bold">Macbook Air Pro</div>
+              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                Some small description for the product
+              </p>
+              <div class="product-card-price d-flex">
+                <div class="text-subtitle-2 font-weight-regular">R$600</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -193,6 +278,8 @@ const route = useRoute();
 const productId = computed(() => route.params.produtoId);
 
 const amount = ref(0);
+
+const open = ref([]);
 
 watch(amount, () => {
   if (amount.value < 0) {
@@ -284,6 +371,8 @@ onMounted(() => { });
       width: 40%;
 
       .product-checkout {
+        margin: 36px 0;
+
         .small-desc {
           font-size: 0.9rem;
           margin-top: 16px;
@@ -292,9 +381,7 @@ onMounted(() => { });
     }
   }
 
-  .product-details-list {
-    margin-top: 22px;
-  }
+  .product-details-list {}
 
   .v-list-item {
     padding-right: 5px !important;
@@ -303,6 +390,60 @@ onMounted(() => { });
 
   .v-list-item--active:hover {
     opacity: 1 !important;
+  }
+
+  .v-list-item__overlay {
+    opacity: 0 !important;
+  }
+
+  /*   .v-selection-control__input {
+    transform: translateX(-1.8px);
+  } */
+
+  .v-list-item {
+    padding: 0 !important;
+  }
+
+  .showcase {
+    display: flex;
+    margin: 0 auto;
+    text-align: start;
+    margin: 80px 0 80px;
+
+    .left-side {
+      border-left: 3px #111111 solid;
+
+      .wrapper {
+        max-width: 450px;
+      }
+    }
+
+    .right-side {}
+  }
+
+  .youmaylike {
+    display: flex;
+    gap: 15px;
+
+    .product-card {
+      cursor: pointer;
+      width: calc(33.33333% - 14px);
+
+      .product-card-top {
+        width: 100%;
+
+        img {
+          height: 100%;
+          width: 100%;
+        }
+      }
+
+      .product-card-bottom {
+        flex-shrink: 0;
+        justify-content: center;
+        padding: 12px 0;
+      }
+    }
   }
 
   @media (max-width: $tablet) {
@@ -346,12 +487,44 @@ onMounted(() => { });
         .product-checkout {
           display: flex;
           flex-direction: column-reverse !important;
+          margin: 10px 0 26px !important;
 
           .small-desc {
             margin-top: 0 !important;
             margin-bottom: 15px !important;
           }
         }
+      }
+    }
+
+    .showcase {
+      flex-direction: column;
+      text-align: center;
+      margin: 33px 0 38px;
+
+      .left-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-left: none;
+
+        .wrapper {
+          max-width: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          margin-bottom: 30px;
+        }
+      }
+
+      .right-side {}
+    }
+
+    .youmaylike {
+      .img-container {
+        flex-direction: column !important;
       }
     }
   }

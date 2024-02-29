@@ -1,8 +1,7 @@
 <template>
   <div class="w-100">
     <div class="products-container">
-      <div v-for="p in products" class="product-card d-flex flex-column" elevation="0"
-        @click="handleProductClick(p.id)">
+      <div v-for="p in products" class="product-card d-flex flex-column" elevation="0" @click="handleProductClick(p.id)">
         <div class="product-card-top">
           <img :src="p.image" alt="" />
         </div>
