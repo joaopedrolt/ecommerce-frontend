@@ -448,7 +448,7 @@ onMounted(() => { });
 
   @media (max-width: $tablet) {
     padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 45px;
 
     .product-main {
       flex-direction: column;
@@ -474,7 +474,7 @@ onMounted(() => { });
             margin: 0 !important;
           }
         }
-      }
+      } 
 
       .product-left {
         flex-direction: column;
