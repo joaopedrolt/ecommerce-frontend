@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 75px; background-color: red;"></div> <!-- Filler Arrumar -->
-  <div class="signin-view h-100 w-100 px-3">
+  <div style="height: 75px;"></div> <!-- Filler Arrumar -->
+  <div class="signin-view w-100 px-3">
     <router-view />
   </div>
 </template>
@@ -14,14 +14,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: calc(93% - 75px);
+  padding-bottom: 75px;
 
-  @media (orientation: landscape) {
-    height: 600px !important;
+  @media (max-width: $tablet) {
+    height: calc(100% - 60px);
   }
 }
 
 .signin-form-container {
   height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,6 +32,7 @@
   .signin-content {
     max-width: 400px;
     text-align: center;
+    width: 100%;
   }
 }
 </style>

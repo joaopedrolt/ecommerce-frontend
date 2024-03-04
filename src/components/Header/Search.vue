@@ -1,16 +1,83 @@
 <template>
   <v-overlay v-model="displaySearchOverlay">
     <v-card v-if="displaySearchOverlay">
-      <div class="search-container">
+      <div class="search-container desktop">
         <div class="search-input-wrapper">
-          <v-menu class="search-dropdown" v-model="menu" transition="slide-y-transition" :close-on-content-click="false">
+          <v-menu scroll-strategy="block" class="search-dropdown desktop" v-model="menu" transition="slide-y-transition"
+            :close-on-content-click="false" location="bottom">
+
             <template v-slot:activator="{ props }">
-              <div class="d-flex">
-                <v-text-field id="searchHeader" class="shop-text-field-desktop" v-model="searchInput"
-                  @input="handlePreSearch" maxLength="80" v-bind="props" hide-details="auto" variant="outlined"
-                  placeholder="O que deseja?" append-inner-icon="mdi-magnify" @click:append-inner="search()"
-                  @keypress.enter="search()" clearable @click:clear="handleClearSearchInput()">
-                </v-text-field>
+              <div class="d-flex h-100">
+                <div class="search-input-desktop">
+                  <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
+                    v-bind="props" hide-details="auto" variant="outlined" placeholder="O que deseja?"
+                    append-inner-icon="mdi-magnify" @click:append-inner="search()" @keypress.enter="search()" clearable
+                    @click:clear="handleClearSearchInput()">
+                  </v-text-field>
+                </div>
+              </div>
+            </template>
+
+            <v-card elevation="1">
+              <div v-if="isSearching" class="h-100 w-100 py-12 d-flex justify-center">
+                <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
+                  <div class="mb-3 text-subtitle font-weight-regular" style="opacity: 0.6">Buscando...</div>
+                  <v-progress-linear indeterminate striped></v-progress-linear>
+                </div>
+              </div>
+
+              <template v-else>
+                <v-list class="list-search" :items="items" item-props lines="three">
+                  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
+                    style="max-width: 100% !important; padding: 17px 0 15px;">
+                    <div style="overflow-wrap: anywhere;">Alguns produtos encontrados:</div>
+                  </div>
+
+                  <v-divider color="#111111"></v-divider>
+
+                  <v-list-item v-for="item in items" :key="item.title" :prepend-avatar="item.prependAvatar"
+                    @click="handleListProductClick(item.value)">
+
+                    <template v-slot:title>
+                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">x{{ item.title }}</div>
+                    </template>
+
+                    <template v-slot:subtitle>
+                      <div class="text-caption font-weight-regular">{{ item.subtitle }}</div>
+                    </template>
+                  </v-list-item>
+                </v-list>
+
+                <button
+                  class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                  style="max-width: 100% !important;" @click="search()">
+                  <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
+
+                  <div class="right-arrow ml-3 h-100">
+                    <v-icon>mdi-arrow-right</v-icon>
+                  </div>
+                </button>
+              </template>
+            </v-card>
+          </v-menu>
+        </div>
+      </div>
+
+      <div class="search-container mobile">
+        <div class="search-input-wrapper">
+          <v-menu scroll-strategy="block" class="search-dropdown mobile" v-model="menu" transition="slide-y-transition"
+            :close-on-content-click="false" location="bottom">
+
+            <template v-slot:activator="{ props }">
+              <div class="d-flex h-100">
+                <div class="search-input-mobile">
+                  <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
+                    v-bind="props" hide-details="auto" placeholder="O que você deseja?" append-inner-icon="mdi-magnify"
+                    @click:append-inner="search()" @keypress.enter="search()" clearable
+                    @click:clear="handleClearSearchInput()">
+                  </v-text-field>
+                </div>
+
                 <div class="shop-text-field-mobile" @click="displaySearchOverlay()">
                 </div>
               </div>
@@ -19,27 +86,37 @@
             <v-card elevation="1">
               <div v-if="isSearching" class="h-100 w-100 py-12 d-flex justify-center">
                 <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
-                  <div class="mb-3 text-subtitle font-weight-light">Buscando...</div>
+                  <div class="mb-3 text-subtitle font-weight-regular" style="opacity: 0.6">Buscando...</div>
                   <v-progress-linear indeterminate striped></v-progress-linear>
                 </div>
               </div>
 
               <template v-else>
-                <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
-                  style="max-width: 100% !important; height: 50px; padding-top: 7px;">
-                  <div style="overflow-wrap: anywhere;">Alguns produtos encontrados:</div>
-                </div>
-
                 <v-list class="list-search" :items="items" item-props lines="three">
-                  <v-list-item v-for="item in items" :key="item.title" :title="item.title" :subtitle="item.subtitle"
-                    :prepend-avatar="item.prependAvatar" @click="handleListProductClick(item.value)">
+                  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
+                    style="max-width: 100% !important; padding: 17px 0 15px;">
+                    <div style="overflow-wrap: anywhere;">Alguns produtos encontrados:</div>
+                  </div>
+
+                  <v-divider color="#111111"></v-divider>
+
+                  <v-list-item v-for="item in items" :key="item.title" :prepend-avatar="item.prependAvatar"
+                    @click="handleListProductClick(item.value)">
+
+                    <template v-slot:title>
+                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">x{{ item.title }}</div>
+                    </template>
+
+                    <template v-slot:subtitle>
+                      <div class="text-caption font-weight-regular">{{ item.subtitle }}</div>
+                    </template>
                   </v-list-item>
                 </v-list>
 
                 <button
-                  class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader pr-6"
-                  style="max-width: 100% !important; height: 50px;" @click="search()">
-                  <div style="overflow-wrap: anywhere;">Pesquisar todos os resuldos para : "{{ searchInput }}"</div>
+                  class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                  style="max-width: 100% !important;" @click="search()">
+                  <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
 
                   <div class="right-arrow ml-3 h-100">
                     <v-icon>mdi-arrow-right</v-icon>
@@ -192,7 +269,83 @@ const items = [
 <style lang="scss">
 @import "@/styles/global.scss";
 
+.v-field__loader {
+  display: none !important;
+}
+
+.v-card {
+  border-radius: 0 !important;
+}
+
+/* .v-divider {
+  opacity: 1 !important;
+} */
+
 .search-container {
+  height: 150px;
+  width: 100dvw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .search-input-wrapper {
+    width: 60%;
+
+    .search-input-desktop,
+    .search-input-mobile {
+      width: 100%;
+    }
+
+    .search-input-desktop {
+      display: block;
+    }
+
+    .search-input-mobile {
+      display: none;
+    }
+
+    @media (max-width: $tablet) {
+      width: 100%;
+      height: 100%;
+
+      .search-input-desktop {
+        display: none;
+      }
+
+      .search-input-mobile {
+        display: block;
+      }
+
+      .v-field__input {
+        padding-top: 26px;
+        padding-bottom: 26px;
+      }
+
+      .v-field__overlay {
+        background-color: transparent !important;
+      }
+    }
+  }
+
+  &.desktop {
+    display: flex;
+
+    @media (max-width: $tablet) {
+      display: none;
+    }
+  }
+
+  &.mobile {
+    display: none;
+    height: 75px;
+
+    @media (max-width: $tablet) {
+      display: flex;
+    }
+  }
+}
+
+/* .search-container {
   height: 150px;
   width: 100dvw;
   display: flex;
@@ -206,7 +359,7 @@ const items = [
       width: 90%;
     }
   }
-}
+} */
 
 .menu-search {
   width: calc(100% - 54px) !important;
@@ -244,9 +397,32 @@ const items = [
     max-width: 50% !important;
     position: fixed !important;
     z-index: 9999 !important;
+
+    @media (min-width: $tablet) {
+      padding: 0 1px !important;
+    }
+
+    @media (max-width: $tablet) {
+      left: 0 !important;
+    }
   }
 
-  .v-overlay {}
+  &.desktop {
+    display: flex;
+
+    @media (max-width: $tablet) {
+      display: none;
+    }
+  }
+
+  &.mobile {
+    display: none;
+
+    @media (max-width: $tablet) {
+      display: flex;
+      height: 75px !important;
+    }
+  }
 }
 
 .right-arrow {
@@ -268,10 +444,15 @@ const items = [
   padding: 0 !important;
 
   .v-list-item {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
+    padding-bottom: 13px !important;
+    padding-top: 11px !important;
     align-content: center !important;
     min-height: 70px !important;
+    border-bottom: 1px solid $color-border;
+
+    /*   &:first-child {
+      border-top: 1px solid $color-border;
+    } */
   }
 }
 

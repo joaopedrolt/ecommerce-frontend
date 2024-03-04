@@ -1,67 +1,36 @@
 <template>
   <Presence>
-    <Motion
-      v-show="showForm"
-      :initial="{ opacity: 0 }"
-      :animate="{ opacity: 1 }"
-      :exit="{ opacity: 0, scale: 0.6 }"
-      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }"
-    >
+    <Motion v-show="showForm" :initial="{ opacity: 0, width: '100%' }" :animate="{ opacity: 1, width: '100%' }"
+      :exit="{ opacity: 0, scale: 0.6 }" :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }">
       <v-form ref="loginForm" validate-on="layz" class="signin-form-container">
         <div class="signin-content">
           <SignInHeader title="Credenciais" subtitle="Insira sua senha" />
 
-          <v-text-field
-            v-model="signInEmailInput"
-            class="custom-disabled-input"
-            label="E-mail"
-            variant="outlined"
-            append-inner-icon="mdi-pencil"
-            @click:append-inner="handleEditClick"
-            readonly
-          >
+          <v-text-field v-model="signInEmailInput" class="custom-disabled-input" label="E-mail" variant="outlined"
+            append-inner-icon="mdi-pencil" @click:append-inner="handleEditClick" readonly>
           </v-text-field>
 
           <div class="signin-password-area">
-            <v-text-field
-              v-model="passwordInputValue"
-              :class="[
-                isPasswordValid ? 'default-input-color' : 'error-input-color',
-              ]"
-              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              :type="showPassword ? 'text' : 'password'"
-              label="Senha"
-              variant="outlined"
-              @click:append-inner="showPassword = !showPassword"
-              :rules="passwordRules"
-              hint="A senha requer no mínimo 8 caracteres, incluindo letras e números."
-              persistent-hint
-              @keyup.enter="handleLogInClick"
-              @keydown.enter.prevent
-            ></v-text-field>
+            <v-text-field v-model="passwordInputValue" :class="[
+      isPasswordValid ? 'default-input-color' : 'error-input-color',
+    ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
+              label="Senha" variant="outlined" @click:append-inner="showPassword = !showPassword" :rules="passwordRules"
+              hint="A senha requer no mínimo 8 caracteres, incluindo letras e números." persistent-hint
+              @keyup.enter="handleLogInClick" @keydown.enter.prevent></v-text-field>
           </div>
 
           <validation-filler :active="true" />
 
-          <v-btn
-            @click="handleLogInClick"
-            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
-            height="45px"
-            width="100%"
-            variant="flat"
-            :ripple="false"
-          >
+          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
+            height="45px" width="100%" variant="flat" :ripple="false">
             Entrar
           </v-btn>
 
           <div>
-            <div class="text-subtitle-1" style="height: 24px;">Esqueceu sua senha?</div>
-            <router-link
-              class="text-decoration-none recover-link"
-              :to="{ name: 'EmailCodeValidation', query: { type: 'recover' } }"
-            >
-              Clique aqui para recuperar sua senha!</router-link
-            >
+            <div style="height: 24px;">Esqueceu sua senha?</div>
+            <router-link class="recover-link font-weight-regular"
+              :to="{ name: 'EmailCodeValidation', query: { type: 'recover' } }">
+              Clique aqui para recuperar sua senha!</router-link>
           </div>
         </div>
       </v-form>
@@ -146,6 +115,6 @@ onMounted(() => {
 }
 
 .recover-link {
-  color: $color-gold !important;
+  color: black !important;
 }
 </style>
