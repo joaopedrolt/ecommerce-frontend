@@ -39,7 +39,7 @@
                     @click="handleListProductClick(item.value)">
 
                     <template v-slot:title>
-                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">x{{ item.title }}</div>
+                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.title }}</div>
                     </template>
 
                     <template v-slot:subtitle>
@@ -104,7 +104,7 @@
                     @click="handleListProductClick(item.value)">
 
                     <template v-slot:title>
-                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">x{{ item.title }}</div>
+                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.title }}</div>
                     </template>
 
                     <template v-slot:subtitle>

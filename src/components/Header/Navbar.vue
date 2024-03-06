@@ -1,10 +1,11 @@
 <template>
   <v-app-bar class="nav-component" style="z-index: 1003 !important" :elevation="0" height="75px">
     <div class="container-limit container-size-padding nav-container">
-      <div class="h-100 w-100 d-flex justify-space-between align-center">
+      <div id="navbar-anchor" class="h-100 w-100 d-flex justify-space-between align-center">
         <!-- Desktop -->
         <div class="hidden-sm-and-down nav-side-container side-left h-100">
-          <v-menu v-model="firstMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
+          <v-menu target="#navbar-anchor" v-model="firstMenu" persistent :close-on-content-click="false"
+            close-delay="0" open-delay="0">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
                 Masculino
@@ -14,7 +15,9 @@
             <dropdown :menu="1" />
           </v-menu>
 
-          <v-menu v-model="secondMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
+          <v-menu target="#navbar-anchor" v-model="secondMenu" open-on-hover :close-on-content-click="false"
+            close-delay="0" open-delay="0">
+
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
                 Roupas
@@ -24,7 +27,9 @@
             <dropdown :menu="2" />
           </v-menu>
 
-          <v-menu v-model="thirdMenu" open-on-hover :close-on-content-click="false" close-delay="0" open-delay="0">
+          <v-menu target="#navbar-anchor" v-model="thirdMenu" open-on-hover :close-on-content-click="false"
+            close-delay="0" open-delay="0">
+
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="nav-btn-custom h-100" style="margin: 0" :ripple="false" variant="plain">
                 Acessorios
