@@ -4,7 +4,7 @@
       <div id="navbar-anchor" class="h-100 w-100 d-flex justify-space-between align-center">
         <!-- Desktop -->
         <div class="hidden-sm-and-down nav-side-container side-left h-100">
-          <v-menu target="#navbar-anchor" v-model="firstMenu" persistent :close-on-content-click="false"
+          <v-menu target="#navbar-anchor" v-model="firstMenu" open-on-hover :close-on-content-click="false"
             close-delay="0" open-delay="0">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
