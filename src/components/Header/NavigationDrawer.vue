@@ -57,9 +57,9 @@
 
       <v-window-item :value="1">
         <div>
-          <div class="d-flex align-center px-4 pt-3 pb-1">
+          <!--   <div class="d-flex align-center px-4 pt-3 pb-1">
             <div class="text-overline font-weight-regular" style="font-size: 0.8rem;">Mais vendidos</div>
-          </div>
+          </div> -->
 
           <div>
             <v-list class="list-featured" item-props lines="three">
@@ -94,6 +94,13 @@
                 </div>
               </v-btn>
             </div>
+          </div>
+
+          <div>
+            <v-img src="https://www.insiderstore.com.br/cdn/shop/files/menu_BOXY.jpg?v=1700676161&width=450" />
+
+
+
           </div>
         </div>
       </v-window-item>

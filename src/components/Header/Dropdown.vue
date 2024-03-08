@@ -149,7 +149,7 @@
           </v-list>
         </div>
 
-        <v-divider color="black"></v-divider>
+        <!--  <v-divider color="black"></v-divider> -->
 
         <div>
           <v-btn style="height: 48px;" elevation="0" @click="seeAllCategory()"
@@ -240,9 +240,9 @@ const handleListProductClick = (productId) => {
     min-height: 70px !important;
     border-bottom: 1px solid $color-border;
 
-    &:last-child {
+    /*   &:last-child {
       border-bottom: none;
-    }
+    } */
   }
 }
 </style>
