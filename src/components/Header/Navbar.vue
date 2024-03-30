@@ -1,92 +1,24 @@
 <template>
-  <v-app-bar class="nav-component" style="z-index: 1003 !important" :elevation="0" height="75px">
-    <div class="container-limit container-size-padding nav-container">
+  <v-app-bar class="nav-component" absolute style="z-index: 1003 !important" :elevation="0" height="75px">
+    <div class="container-limit container-size-padding navbar-padding nav-container">
       <div id="navbar-anchor" class="h-100 w-100 d-flex justify-space-between align-center">
-        <!-- Desktop -->
-        <div class="hidden-sm-and-down nav-side-container side-left h-100">
-          <v-menu target="#navbar-anchor" v-model="firstMenu" open-on-hover :close-on-content-click="false"
-            close-delay="0" open-delay="0">
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
-                Masculino
-              </v-btn>
-            </template>
-
-            <dropdown :menu="1" />
-          </v-menu>
-
-          <v-menu target="#navbar-anchor" v-model="secondMenu" open-on-hover :close-on-content-click="false"
-            close-delay="0" open-delay="0">
-
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" class="nav-btn-custom h-100" :ripple="false" variant="plain">
-                Roupas
-              </v-btn>
-            </template>
-
-            <dropdown :menu="2" />
-          </v-menu>
-
-          <v-menu target="#navbar-anchor" v-model="thirdMenu" open-on-hover :close-on-content-click="false"
-            close-delay="0" open-delay="0">
-
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" class="nav-btn-custom h-100" style="margin: 0" :ripple="false" variant="plain">
-                Acessorios
-              </v-btn>
-            </template>
-
-            <dropdown :menu="3" />
-          </v-menu>
-        </div>
-
-        <!-- Mobile -->
-        <div class="d-md-none nav-mobile-icon-container">
-          <v-btn @click="displayNavigationDrawer" icon size="small">
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-          <v-btn icon size="small" @click="displaySearchOverlay">
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
-        </div>
-
-        <!-- Hybrid -->
         <div class="h-100 logo-black">
           <v-img src="/logo.svg" width="120px" height="75px"></v-img>
-          <!-- <v-btn class="h-100" :ripple="false"> ECOMMERCE </v-btn> -->
         </div>
 
-        <!-- Desktop -->
-        <div class="hidden-sm-and-down nav-side-container side-right h-100">
-          <v-btn @click="displaySearchOverlay" class="nav-btn-custom h-100" style="margin: 0" :ripple="false"
-            variant="plain">
-            Pesquisar
-            <v-icon style="margin: 0 0 0 4px">mdi-magnify</v-icon>
-          </v-btn>
-
-          <v-btn @click="displayCartDrawerr" class="nav-btn-custom h-100" :ripple="false" variant="plain">
-            Carrinho
-            <v-icon style="margin: 0 0 2px 3px">mdi-cart</v-icon>
-          </v-btn>
-
-          <v-btn @click="handleSignInClick" class="nav-btn-custom h-100" :ripple="false" variant="plain">
-            Entrar
-            <v-icon style="margin: 0 0 2px 3px">mdi-account</v-icon>
-          </v-btn>
-        </div>
-
-        <!-- Mobile -->
-        <div class="d-md-none nav-mobile-icon-container">
-          <v-btn @click="displayCartDrawerr" icon size="small">
-            <v-icon>mdi-cart</v-icon>
-          </v-btn>
+        <div class="nav-side-container h-100">
           <v-btn @click="handleSignInClick" icon size="small">
             <v-icon>mdi-account</v-icon>
           </v-btn>
+          <v-btn @click="displayCartDrawerr" icon size="small">
+            <v-icon>mdi-cart</v-icon>
+          </v-btn>
+          <!--          <v-btn icon size="small" @click="displaySearchOverlay">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn> -->
         </div>
 
         <!-- Meta -->
-
         <search />
       </div>
     </div>
@@ -101,7 +33,6 @@ import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
 
-import Dropdown from "./Dropdown.vue";
 import Search from "./Search.vue";
 
 const drawerStore = useDrawerStore();
@@ -148,25 +79,9 @@ const handleSignInClick = () => {
     z-index: 1 !important;
 
     .nav-side-container {
-      width: 295px;
-    }
-
-    @media (max-width: $tablet) {
-      &.container-size-padding {
-        padding: 0 !important;
-      }
-    }
-  }
-
-  .side-left {
-    button {
-      margin-right: 10px;
-    }
-  }
-
-  .side-right {
-    button {
-      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

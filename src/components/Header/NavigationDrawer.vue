@@ -16,7 +16,7 @@
 
       <template v-if="window == 0">
         <div class="pl-1 d-flex align-center h-100 logo-black">
-          <v-img src="/logo.svg" width="120px" @click="handleHomeClick"></v-img>
+          <v-img src="/logo.svg" width="120px"></v-img>
         </div>
       </template>
 

@@ -47,8 +47,37 @@ html {
 }
 
 .container-size-padding {
-  padding-left: 7px !important;
-  padding-right: 7px !important;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  &.navbar-padding {
+    padding-right: 2px !important;
+  }
+
+  &.mobile-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  @media (max-width: $tablet) {
+    padding-left: 11px;
+    padding-right: 11px;
+
+    &.desktop-padding {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    &.mobile-padding {
+      padding-left: 11px !important;
+      padding-right: 11px !important;
+    }
+
+    &.navbar-padding {
+      padding-right: 0px !important;
+    }
+  }
+
 }
 
 .default-input-color {

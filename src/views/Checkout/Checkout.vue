@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100 w-100 checkout">
+  <div v-if="render" class="h-100 w-100 checkout">
     <!-- Left side -->
     <div class="left-side border-right">
       <div class="wrapper">
@@ -12,6 +12,11 @@
             <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
+              </template>
+              <template v-slot:title="{ item }">
+                <div @click="updateStep(item.step)">
+                  {{ item.title }}
+                </div>
               </template>
             </v-breadcrumbs>
           </div>
@@ -156,7 +161,7 @@
                   </v-text-field>
                   <validation-filler :active="!shippingFormValidation.cpf" density="compact" />
 
-                  <template v-if="!displayAdressForm">
+                  <template>
                     <div class="parent-input-container">
                       <div class="d-flex flex-column" style="flex: 2;">
                         <v-text-field class="sibling-input" :model="shipping.endereco" :rules="enderecoRules"
@@ -578,7 +583,8 @@
             </v-expansion-panel-text>
 
             <div class="top-summary w-100">
-              <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
+              <div @click="handleCartEdit"
+                class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
                 style="cursor: pointer;">
                 Editar carrinho
               </div>
@@ -597,6 +603,10 @@
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
+
+              <template v-slot:title>
+                <div>{{ items }}</div>
+              </template>
             </v-breadcrumbs>
           </div>
         </div>
@@ -606,7 +616,8 @@
             Resumo do Pedido
           </div>
 
-          <div class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
+          <div @click="handleCartEdit"
+            class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
             style="cursor: pointer;">
             Editar carrinho
           </div>
@@ -733,7 +744,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, onMounted, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { vMaska } from "maska"
 
 import {
@@ -759,13 +771,24 @@ import {
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 
+const render = ref(false);
+const router = useRouter();
+
 const isLoading = ref(false);
 const shippingForm = ref();
-const displayAdressForm = ref(false);
-const displayShipping = ref(false);
+
+const validAddressForm = ref(false);
 
 const panel = ref();
-const step = ref(2);
+
+const step = ref(0);
+const route = useRoute();
+const queryParamCart = ref(route.query.step);
+
+watch(queryParamCart, (newValue) => {
+  alert(newValue)
+});
+
 const length = 3;
 
 const open = ref([]);
@@ -808,28 +831,28 @@ const shippingFormValidation = reactive({
   save: true
 });
 
-const items = [
+const items = ref([
   {
     title: 'Carrinho',
     disabled: false,
-    href: 'breadcrumbs_dashboard',
+    step: null
   },
   {
     title: 'Informações',
     disabled: false,
-    href: 'breadcrumbs_link_1',
+    step: 0
   },
   {
     title: 'Frete',
-    disabled: true,
-    href: 'breadcrumbs_link_2',
+    disabled: false,
+    step: 1
   },
   {
     title: 'Pagamento',
     disabled: true,
-    href: 'breadcrumbs_link_2',
+    step: 2
   },
-]
+]);
 
 const itemsBaseboardLinks = [
   {
@@ -880,11 +903,41 @@ const calculateShippingCost = async () => {
     }
 
     if (valid) {
+      const item = items.value.find(item => item.step === 1);
+      if (item) {
+        item.disabled = true;
+        validAddressForm.value = true;
+      }
+
       step.value = 1;
     }
 
     setLoading(false);
   }
+
+}
+
+const handleCartEdit = () => {
+  router.push({
+    name: "Home",
+    query: { cart: true }
+  });
+}
+
+const updateStep = (itemStep) => {
+  if (itemStep == null) {
+    router.push({
+      name: "Home",
+      query: { cart: true }
+    });
+    return;
+  }
+
+  router.push({
+    name: "Checkout",
+    query: { step: itemStep }
+  });
+  step.value = itemStep;
 }
 
 const estados = [
@@ -919,6 +972,19 @@ const estados = [
 
 watch(panel, (newval) => {
   console.log(newval)
+})
+
+onMounted(() => {
+  if (queryParamCart.value == null) {
+    router.replace({
+      name: "Checkout",
+      query: { step: 0 }
+    });
+  }
+
+  setTimeout(() => {
+    render.value = true;
+  }, 100)
 })
 </script>
 
@@ -1177,4 +1243,3 @@ watch(panel, (newval) => {
   }
 }
 </style>
-  

@@ -1,9 +1,9 @@
 <template>
-  <div class="product-view container-limit container-size-padding">
+  <div class="product-view container-limit">
 
-    <div class="product-main">
+    <div class="product-main container-size-padding desktop-padding">
       <div class="product-left">
-        <div class="product-header hide-desktop">
+        <div class="product-header hide-desktop container-size-padding">
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
             Camiseta Mangas Curtas Com Estampa Medusa
           </div>
@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="product-right">
+      <div class="product-right container-size-padding mobile-padding">
         <div class="product-header hide-mobile">
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
             Camiseta Mangas Curtas Com Estampa Medusa
@@ -90,8 +90,8 @@
             </div>
 
             <div>
-              <v-btn class="font-weight-regular button-color button-black mt-4" height="45px" width="100%" variant="flat"
-                :ripple="false">
+              <v-btn class="font-weight-regular button-color button-black mt-4" height="45px" width="100%"
+                variant="flat" :ripple="false">
                 ADICIONAR AO CARRINHO
               </v-btn>
             </div>
@@ -132,7 +132,8 @@
                   <div class="pr-1">
                     Com detalhes refinados e um design exclusivo, a pulseira LV Bloom é um modelo icônico e marcante. O
                     fino
-                    cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma Flor
+                    cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma
+                    Flor
                     do
                     Monogram, elaboradas em metal brilhante com acabamento dourado. Um fecho inovador permite que essa
                     pulseira
@@ -154,108 +155,111 @@
       </div>
     </div>
 
-    <div class="showcase">
-      <div class="left-side d-flex flex-column align-center justify-center" style="flex: 7;">
-        <div class="wrapper">
-          <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
-            FUNCIONALIDADES DO FUTURO
-          </div>
-          <div class="right-side" style="opacity: 0.6; padding-left: 2px;">
-            Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a temperatura
-            corporal.
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex align-center justify-center" style="flex: 5;">
-        <div style="width: 100%; height: 600px;">
-          <img style="width: 100%; height: 100%; object-fit: cover;"
-            src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg" />
-        </div>
-      </div>
-    </div>
-
-
-    <v-divider color="#111111"></v-divider>
-
-    <div class="youmaylike flex-column">
-
-      <div class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1" style="font-size: .9rem !important;">
-        Você também pode gostar
-      </div>
-
-      <div class="img-container d-flex" style="gap: 15px;">
-        <div class="d-flex" style="gap: 15px; flex: 1;">
-          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-            <div class="product-card-top">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                alt="" />
+    <div class="container-size-padding">
+      <div class="showcase">
+        <div class="left-side d-flex flex-column align-center justify-center" style="flex: 7;">
+          <div class="wrapper">
+            <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
+              FUNCIONALIDADES DO FUTURO
             </div>
-
-            <div class="product-card-bottom">
-              <div class="font-weight-bold">Macbook Air Pro</div>
-              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                Some small description for the product
-              </p>
-              <div class="product-card-price d-flex">
-                <div class="text-subtitle-2 font-weight-regular">R$600</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-            <div class="product-card-top">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                alt="" />
-            </div>
-
-            <div class="product-card-bottom">
-              <div class="font-weight-bold">Macbook Air Pro</div>
-              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                Some small description for the product
-              </p>
-              <div class="product-card-price d-flex">
-                <div class="text-subtitle-2 font-weight-regular">R$600</div>
-              </div>
+            <div class="right-side" style="opacity: 0.6; padding-left: 2px;">
+              Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a
+              temperatura
+              corporal.
             </div>
           </div>
         </div>
 
-        <div class="d-flex" style="gap: 15px; flex: 1;">
-          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-            <div class="product-card-top">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                alt="" />
+        <div class="d-flex align-center justify-center" style="flex: 5;">
+          <div style="width: 100%; height: 600px;">
+            <img style="width: 100%; height: 100%; object-fit: cover;"
+              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg" />
+          </div>
+        </div>
+      </div>
+
+      <v-divider color="#111111"></v-divider>
+
+      <div class="youmaylike flex-column">
+
+        <div class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1"
+          style="font-size: .9rem !important;">
+          Você também pode gostar
+        </div>
+
+        <div class="img-container d-flex" style="gap: 15px;">
+          <div class="d-flex" style="gap: 15px; flex: 1;">
+            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+              <div class="product-card-top">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                  alt="" />
+              </div>
+
+              <div class="product-card-bottom">
+                <div class="font-weight-bold">Macbook Air Pro</div>
+                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                  Some small description for the product
+                </p>
+                <div class="product-card-price d-flex">
+                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                </div>
+              </div>
             </div>
 
-            <div class="product-card-bottom">
-              <div class="font-weight-bold">Macbook Air Pro</div>
-              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                Some small description for the product
-              </p>
-              <div class="product-card-price d-flex">
-                <div class="text-subtitle-2 font-weight-regular">R$600</div>
+            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+              <div class="product-card-top">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                  alt="" />
+              </div>
+
+              <div class="product-card-bottom">
+                <div class="font-weight-bold">Macbook Air Pro</div>
+                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                  Some small description for the product
+                </p>
+                <div class="product-card-price d-flex">
+                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-            <div class="product-card-top">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/skin-cropped-long-marrom-1.jpg?v=1708091790&width=600"
-                alt="" />
+          <div class="d-flex" style="gap: 15px; flex: 1;">
+            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+              <div class="product-card-top">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
+                  alt="" />
+              </div>
+
+              <div class="product-card-bottom">
+                <div class="font-weight-bold">Macbook Air Pro</div>
+                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                  Some small description for the product
+                </p>
+                <div class="product-card-price d-flex">
+                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                </div>
+              </div>
             </div>
 
-            <div class="product-card-bottom">
-              <div class="font-weight-bold">Macbook Air Pro</div>
-              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                Some small description for the product
-              </p>
-              <div class="product-card-price d-flex">
-                <div class="text-subtitle-2 font-weight-regular">R$600</div>
+            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+              <div class="product-card-top">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/skin-cropped-long-marrom-1.jpg?v=1708091790&width=600"
+                  alt="" />
+              </div>
+
+              <div class="product-card-bottom">
+                <div class="font-weight-bold">Macbook Air Pro</div>
+                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                  Some small description for the product
+                </p>
+                <div class="product-card-price d-flex">
+                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                </div>
               </div>
             </div>
           </div>
@@ -474,7 +478,7 @@ onMounted(() => { });
             margin: 0 !important;
           }
         }
-      } 
+      }
 
       .product-left {
         flex-direction: column;

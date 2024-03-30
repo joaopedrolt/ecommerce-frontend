@@ -88,8 +88,8 @@
             <div class="text-subtitle-1">R$ 399.00</div>
           </div>
 
-          <v-btn class="text-subtitle-2 font-weight-regular button-color button-black" color="#111111" height="45px"
-            width="100%" variant="flat" :ripple="false">
+          <v-btn @click="handleCheckout" class="text-subtitle-2 font-weight-regular button-color button-black"
+            color="#111111" height="45px" width="100%" variant="flat" :ripple="false">
             FINALIZAR A COMPRA
           </v-btn>
         </div>
@@ -104,6 +104,7 @@ import { ref, watch, reactive } from "vue";
 import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 import formatPrice from "@/utils/formatPrice";
+import { useRouter } from "vue-router";
 
 const drawerStore = useDrawerStore();
 const { displayCartDrawer } = storeToRefs(drawerStore);
@@ -112,10 +113,12 @@ const open = ref([]);
 const isCartEmpty = ref(false);
 const quantity = ref(0);
 
+const router = useRouter();
+
 const updateProductQuantity = (product, operation) => {
   if (operation == 'sum') {
-    if (product.quantity < 10) 
-    product.quantity++;
+    if (product.quantity < 10)
+      product.quantity++;
   }
 
   if (operation == 'subtraction') {
@@ -137,6 +140,13 @@ watch(displayCartDrawer, (newValue) => {
 const hideNavigationDrawer = () => {
   displayCartDrawer.value = false;
 };
+
+const handleCheckout = async () => {
+  await router.push({
+    name: "Checkout"
+  });
+  router.go(0);
+}
 
 const products = reactive([
   {

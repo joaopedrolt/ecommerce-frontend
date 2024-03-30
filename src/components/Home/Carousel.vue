@@ -1,7 +1,31 @@
 <template>
   <div class="carousel-container">
-    <div class="container-limit carousel-limit carousel-height-limit">
-      <Splide
+    <div class="carousel-height-limit">
+      <v-divider color="#111111"></v-divider>
+
+      <div class="h-100 w-100 d-flex justify-center align-center container-limit container-size-padding">
+        <div class="d-flex flex-column text-center">
+          <div class="font-weight-bold" style="font-size: 2.3rem;">
+            <div>
+              SIMPLES.
+            </div>
+            <div>
+              CONFIAVEL.
+            </div>
+            <div>
+              LUCRATIVA.
+            </div>
+          </div>
+
+          <div class="text-overline" style="font-size: 0.9rem !important;">
+            para pessoas ambiciosas ...
+          </div>
+        </div>
+      </div>
+
+      <v-divider color="#111111"></v-divider>
+
+      <!-- <Splide
         :has-track="false"
         aria-label="..."
         :options="{
@@ -30,18 +54,7 @@
             />
           </SplideSlide>
         </SplideTrack>
-        <!-- 
-        <div class="splide__arrows">
-          <button
-            class="splide__arrow splide__arrow--prev"
-            style="display: none"
-          ></button>
-          <button
-            class="splide__arrow splide__arrow--next"
-            style="display: none"
-          ></button>
-        </div> -->
-      </Splide>
+      </Splide> -->
     </div>
   </div>
 </template>

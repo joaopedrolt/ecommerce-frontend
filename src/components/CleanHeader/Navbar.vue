@@ -11,7 +11,6 @@
           src="/logo.svg"
           width="120px"
           height="75px"
-          @click="handleHomeClick"
         ></v-img>
       </div>
     </div>
@@ -23,11 +22,11 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const handleHomeClick = () => {
+/* const handleHomeClick = () => {
   router.push({
     name: "Home",
   });
-};
+}; */
 </script>
 
 <style lang="scss">
