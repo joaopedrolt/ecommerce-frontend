@@ -161,7 +161,7 @@
                   </v-text-field>
                   <validation-filler :active="!shippingFormValidation.cpf" density="compact" />
 
-                  <template>
+                  <template v-if="displayAddressForm">
                     <div class="parent-input-container">
                       <div class="d-flex flex-column" style="flex: 2;">
                         <v-text-field class="sibling-input" :model="shipping.endereco" :rules="enderecoRules"
@@ -228,10 +228,15 @@
               </div>
 
               <div class="d-flex justify-space-between align-center">
-                <v-btn @click="calculateShippingCost()"
+                <v-btn v-if="!displayAddressForm" @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isLoading">
-                  Continuar com o frete
+                  Continuar
+                </v-btn>
+                <v-btn v-else @click="calculateShippingCost()"
+                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
+                  width="100%" variant="flat" :ripple="false" :loading="isLoading">
+                  Continuar
                 </v-btn>
               </div>
             </v-form>
@@ -777,13 +782,75 @@ const router = useRouter();
 const isLoading = ref(false);
 const shippingForm = ref();
 
-const validAddressForm = ref(false);
+const displayAddressForm = ref(false);
 
 const panel = ref();
 
 const step = ref(0);
 const route = useRoute();
 const queryParamCart = ref(route.query.step);
+
+watch(displayAddressForm, (newValue) => {
+  if (newValue) {
+    shipping.value = {
+      email: "",
+      telefone: "",
+      newsletter: true,
+      wpp: true,
+      nome: "",
+      sobrenome: "",
+      cpf: "",
+      endereco: "",
+      numero: "",
+      bairro: "",
+      complemento: "",
+      cidade: "",
+      estado: "",
+      cep: "",
+      save: true
+    }
+
+    shippingFormValidation.value = {
+      email: true,
+      telefone: true,
+      newsletter: true,
+      wpp: true,
+      nome: true,
+      sobrenome: true,
+      cpf: true,
+      endereco: true,
+      numero: true,
+      bairro: true,
+      complemento: true,
+      cidade: true,
+      estado: true,
+      cep: true,
+      save: true
+    }
+  } else {
+    shipping.value = {
+      email: "",
+      telefone: "",
+      newsletter: true,
+      wpp: true,
+      nome: "",
+      sobrenome: "",
+      cpf: "",
+      cep: "",
+    }
+
+    shippingFormValidation.value = {
+      email: true,
+      telefone: true,
+      newsletter: true,
+      wpp: true,
+      nome: true,
+      sobrenome: true,
+      cpf: true,
+      cep: true,
+    }
+  }
+});
 
 watch(queryParamCart, (newValue) => {
   alert(newValue)
@@ -803,14 +870,7 @@ const shipping = reactive({
   nome: "",
   sobrenome: "",
   cpf: "",
-  endereco: "",
-  numero: "",
-  bairro: "",
-  complemento: "",
-  cidade: "",
-  estado: "",
   cep: "",
-  save: true
 });
 
 const shippingFormValidation = reactive({
@@ -821,15 +881,50 @@ const shippingFormValidation = reactive({
   nome: true,
   sobrenome: true,
   cpf: true,
-  endereco: true,
-  numero: true,
-  bairro: true,
-  complemento: true,
-  cidade: true,
-  estado: true,
   cep: true,
-  save: true
 });
+
+watch(shippingFormValidation, (newValue) => {
+  if (!newValue.cep) {
+    displayAddressForm.value = false;
+  }
+});
+
+// const shipping = reactive({
+//   email: "",
+//   telefone: "",
+//   newsletter: true,
+//   wpp: true,
+//   nome: "",
+//   sobrenome: "",
+//   cpf: "",
+// /*    endereco: "",
+//    numero: "",
+//    bairro: "",
+//    complemento: "",
+//    cidade: "",
+//    estado: "", */
+//    cep: "",
+// /*    save: true */
+// });
+
+// const shippingFormValidation = reactive({
+//   email: true,
+//   telefone: true,
+//   newsletter: true,
+//   wpp: true,
+//   nome: true,
+//   sobrenome: true,
+//   cpf: true,
+//   /*  endereco: true, */
+//   /*  numero: true,
+//    bairro: true,
+//    complemento: true,
+//    cidade: true,
+//    estado: true, */
+//    cep: true,
+//   /*  save: true */
+// });
 
 const items = ref([
   {
@@ -853,6 +948,8 @@ const items = ref([
     step: 2
   },
 ]);
+
+const freteBreadcrumbs = ref();
 
 const itemsBaseboardLinks = [
   {
@@ -888,13 +985,15 @@ const calculateShippingCost = async () => {
     let valid = true;
     let keys = Object.keys(shipping);
 
-    console.log(shippingForm.value.items)
-
     for (let i = 0; i < shippingForm.value.items.length; i++) {
       let mensagemErro = await shippingForm.value.items[i].validate()
 
       if (mensagemErro.length > 0) {
         shippingFormValidation[keys[i]] = false;
+
+        if (freteBreadcrumbs.value)
+          freteBreadcrumbs.value.disabled = true;
+
         if (valid)
           valid = false;
       }
@@ -903,18 +1002,23 @@ const calculateShippingCost = async () => {
     }
 
     if (valid) {
-      const item = items.value.find(item => item.step === 1);
-      if (item) {
-        item.disabled = true;
-        validAddressForm.value = true;
+      if (displayAddressForm.value) {
+        if (freteBreadcrumbs.value)
+          freteBreadcrumbs.value.disabled = false;
+
+          router.push({
+            name: "Checkout",
+            query: { cart: true }
+          });
+        step.value = 1;
       }
 
-      step.value = 1;
+      if (!displayAddressForm.value)
+        displayAddressForm.value = true;
     }
 
     setLoading(false);
   }
-
 }
 
 const handleCartEdit = () => {
@@ -970,9 +1074,9 @@ const estados = [
   { id: 27, nome: 'Tocantins' }
 ];
 
-watch(panel, (newval) => {
+/* watch(panel, (newval) => {
   console.log(newval)
-})
+}) */
 
 onMounted(() => {
   if (queryParamCart.value == null) {
@@ -985,6 +1089,8 @@ onMounted(() => {
   setTimeout(() => {
     render.value = true;
   }, 100)
+
+  freteBreadcrumbs.value = items.value.find(item => item.step === 1);
 })
 </script>
 
@@ -1154,7 +1260,7 @@ onMounted(() => {
       .wrapper {
         max-width: none !important;
 
-        .shipping-sumery {}
+        .-sumery {}
 
         /*       .payment-footer {
           .v-breadcrumbs {
