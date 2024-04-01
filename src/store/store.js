@@ -34,7 +34,7 @@ export const useSignInStore = defineStore("signin", {
 });
 
 /* Search */
-export const useSearchStore = defineStore("signin", {
+export const useSearchStore = defineStore("search", {
   state: () => ({
     searchInput: "",
     searchQuery: "",
@@ -46,6 +46,34 @@ export const useSearchStore = defineStore("signin", {
     },
     displaySearchOverlayx() {
       this.displaySearchOverlay = true;
+    }
+  },
+});
+
+/* Cart */
+export const useCartStore = defineStore("cart", {
+  state: () => ({
+    shippingStore: {
+      email: "",
+      telefone: "",
+      newsletter: true,
+      wpp: true,
+      nome: "",
+      sobrenome: "",
+      cpf: "",
+      endereco: "",
+      numero: "",
+      bairro: "",
+      complemento: "",
+      cidade: "",
+      estado: "",
+      cep: "",
+      save: true
+    }
+  }),
+  actions: {
+    setShippingData(obj) {
+      this.shipping = obj;
     }
   },
 });

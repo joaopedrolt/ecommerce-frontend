@@ -14,7 +14,7 @@
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
               <template v-slot:title="{ item }">
-                <div @click="updateStep(item.step)">
+                <div @click="handleBreadcrumbClick(item.step)">
                   {{ item.title }}
                 </div>
               </template>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="d-flex align-center">
                       <v-icon class="mr-4">mdi-email</v-icon>
-                      <div>jpltgamer@gmail.com</div>
+                      <div>{{ shippingStore.email }}</div>
                     </div>
                     <div class="d-flex align-center">
                       <v-icon class="mr-4">mdi-map-marker</v-icon>
@@ -86,7 +86,7 @@
 
         <v-window v-model="step">
           <v-window-item :value="0">
-            <v-form ref="shippingForm" validate-on="layz" :disabled="isLoading">
+            <v-form ref="shippingForm" validate-on="layz" :disabled="isShippingFormLoading">
               <div class="mb-6">
                 <div class="mb-5">
                   <div class="text-h5 font-weight-regular">
@@ -101,19 +101,19 @@
                     </a>
                   </div>
                 </div>
-                <v-text-field :model="shipping.email" :rules="emailRules" label="E-mail" variant="outlined"
+                <v-text-field id="email" :model="shipping.email" :rules="emailRules" label="E-mail" variant="outlined"
                   density="comfortable">
                 </v-text-field>
-                <validation-filler :active="!shippingFormValidation.email" density="compact" />
+                <validation-filler :active="shippingFormValidation.email" density="compact" />
 
-                <v-text-field :model="shipping.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone"
-                  variant="outlined" density="comfortable">
+                <v-text-field id="telefone" :model="shipping.telefone" v-maska:[telefoneMask] :rules="telefoneRules"
+                  label="Telefone" variant="outlined" density="comfortable">
                 </v-text-field>
-                <validation-filler :active="!shippingFormValidation.telefone" density="compact" />
+                <validation-filler :active="shippingFormValidation.telefone" density="compact" />
 
                 <div class="mb-1" style="font-size: 0.9rem !important;">
                   <div>
-                    <v-checkbox :model="shipping.newsletter" density="compact" hide-details>
+                    <v-checkbox id="newsletter" :model="shipping.newsletter" density="compact" hide-details>
                       <template v-slot:label>
                         <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
                           style="margin-top: 0.04rem; opacity: 1 !important;">
@@ -123,7 +123,7 @@
                     </v-checkbox>
                   </div>
                   <div>
-                    <v-checkbox :model="shipping.wpp" density="compact" hide-details>
+                    <v-checkbox id="wpp" :model="shipping.wpp" density="compact" hide-details>
                       <template v-slot:label>
                         <div class="text-subtitle-2 font-weight-regular pl-1" style="margin-top: 0.04rem;">
                           Quero receber descontos e novidades por WhatsApp
@@ -142,82 +142,82 @@
 
                   <div class="parent-input-container">
                     <div class="d-flex flex-column" style="flex: 1;">
-                      <v-text-field class="sibling-input" :model="shipping.nome" :rules="nomeRules" label="Nome"
-                        variant="outlined" density="comfortable">
+                      <v-text-field id="nome" class="sibling-input" :model="shipping.nome" :rules="nomeRules"
+                        label="Nome" variant="outlined" density="comfortable">
                       </v-text-field>
-                      <validation-filler :active="!shippingFormValidation.nome" density="compact" />
+                      <validation-filler :active="shippingFormValidation.nome" density="compact" />
                     </div>
 
                     <div class="d-flex flex-column" style="flex: 1;">
-                      <v-text-field class="sibling-input" :model="shipping.sobrenome" :rules="sobrenomeRules"
-                        label="Sobrenome" variant="outlined" density="comfortable">
+                      <v-text-field id="sobrenome" class="sibling-input" :model="shipping.sobrenome"
+                        :rules="sobrenomeRules" label="Sobrenome" variant="outlined" density="comfortable">
                       </v-text-field>
-                      <validation-filler :active="!shippingFormValidation.sobrenome" density="compact" />
+                      <validation-filler :active="shippingFormValidation.sobrenome" density="compact" />
                     </div>
                   </div>
 
-                  <v-text-field :model="shipping.cpf" v-maska:[cpfMask] :rules="cpfRules" label="CPF" variant="outlined"
-                    density="comfortable">
+                  <v-text-field id="cpf" :model="shipping.cpf" v-maska:[cpfMask] :rules="cpfRules" label="CPF"
+                    variant="outlined" density="comfortable">
                   </v-text-field>
-                  <validation-filler :active="!shippingFormValidation.cpf" density="compact" />
+                  <validation-filler :active="shippingFormValidation.cpf" density="compact" />
 
-                  <template v-if="displayAddressForm">
+                  <template v-if="displayAddressPartialForm">
                     <div class="parent-input-container">
                       <div class="d-flex flex-column" style="flex: 2;">
-                        <v-text-field class="sibling-input" :model="shipping.endereco" :rules="enderecoRules"
-                          label="Endereco" variant="outlined" density="comfortable">
+                        <v-text-field id="endereco" class="sibling-input" :model="shipping.endereco"
+                          :rules="enderecoRules" label="Endereco" variant="outlined" density="comfortable">
                         </v-text-field>
-                        <validation-filler :active="!shippingFormValidation.endereco" density="compact" />
+                        <validation-filler :active="shippingFormValidation.endereco" density="compact" />
                       </div>
 
                       <div class="d-flex flex-column" style="flex: 1;">
-                        <v-text-field class="sibling-input" :model="shipping.numero" :rules="numeroRules" label="Número"
-                          variant="outlined" density="comfortable">
+                        <v-text-field id="numero" class="sibling-input" :model="shipping.numero" :rules="numeroRules"
+                          label="Número" variant="outlined" density="comfortable">
                         </v-text-field>
-                        <validation-filler :active="!shippingFormValidation.numero" density="compact" />
+                        <validation-filler :active="shippingFormValidation.numero" density="compact" />
                       </div>
                     </div>
 
                     <div class="parent-input-container">
                       <div class="d-flex flex-column" style="flex: 2;">
-                        <v-text-field class="sibling-input" :model="shipping.bairro" label="Bairro" :rules="bairroRules"
-                          variant="outlined" density="comfortable">
+                        <v-text-field id="bairro" class="sibling-input" :model="shipping.bairro" label="Bairro"
+                          :rules="bairroRules" variant="outlined" density="comfortable">
                         </v-text-field>
-                        <validation-filler :active="!shippingFormValidation.bairro" density="compact" />
+                        <validation-filler :active="shippingFormValidation.bairro" density="compact" />
                       </div>
 
                       <div class="d-flex flex-column" style="flex: 1;">
-                        <v-text-field class="sibling-input" :model="shipping.complemento" label="Complemento"
-                          variant="outlined" density="comfortable">
+                        <v-text-field id="complemento" class="sibling-input" :model="shipping.complemento"
+                          label="Complemento" variant="outlined" density="comfortable">
                         </v-text-field>
-                        <validation-filler :active="!shippingFormValidation.complemento" density="compact" />
+                        <validation-filler :active="shippingFormValidation.complemento" density="compact" />
                       </div>
                     </div>
 
                     <div class="parent-input-container">
                       <div class="d-flex flex-column" style="flex: 3;">
-                        <v-text-field class="sibling-input" :model="shipping.cidade" label="Cidade" :rules="cidadeRules"
-                          variant="outlined" density="comfortable">
+                        <v-text-field id="cidade" class="sibling-input" :model="shipping.cidade" label="Cidade"
+                          :rules="cidadeRules" variant="outlined" density="comfortable">
                         </v-text-field>
-                        <validation-filler :active="!shippingFormValidation.cidade" density="compact" />
+                        <validation-filler :active="shippingFormValidation.cidade" density="compact" />
                       </div>
 
                       <div class="d-flex flex-column" style="flex: 2;">
-                        <v-autocomplete class="sibling-input" item-title="nome" item-value="id" :rules="estadoRules"
-                          return-object :model="shipping.estado" label="Estado" :items="estados" variant="outlined"
-                          density="comfortable">
+                        <v-autocomplete id="estado" class="sibling-input" item-title="nome" item-value="id"
+                          :rules="estadoRules" return-object :model="shipping.estado" label="Estado" :items="estados"
+                          variant="outlined" density="comfortable">
                         </v-autocomplete>
-                        <validation-filler :active="!shippingFormValidation.estado" density="compact" />
+                        <validation-filler :active="shippingFormValidation.estado" density="compact" />
                       </div>
                     </div>
                   </template>
 
-                  <v-text-field :model="shipping.cep" v-maska:[cepMask] numberMask :rules="cepRules" label="CEP"
-                    variant="outlined" density="comfortable">
+                  <v-text-field id="cep" :model="shipping.cep" v-maska:[cepMask] numberMask :rules="cepRules"
+                    label="CEP" variant="outlined" density="comfortable">
                   </v-text-field>
-                  <validation-filler :active="!shippingFormValidation.cep" density="compact" />
+                  <validation-filler :active="shippingFormValidation.cep" density="compact" />
 
-                  <v-checkbox :model="shipping.save" density="compact" hide-details>
+                  <v-checkbox id="save" :model="shipping.save" density="compact" hide-details>
                     <template v-slot:label>
                       <div class="text-subtitle-2 font-weight-regular pl-1" style="margin-top: 0.04rem;">
                         Salvar minhas informações para a próxima vez
@@ -228,14 +228,14 @@
               </div>
 
               <div class="d-flex justify-space-between align-center">
-                <v-btn v-if="!displayAddressForm" @click="calculateShippingCost()"
+                <v-btn v-if="!displayAddressPartialForm" @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isLoading">
+                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar
                 </v-btn>
                 <v-btn v-else @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isLoading">
+                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar
                 </v-btn>
               </div>
@@ -295,7 +295,7 @@
               Forma de Pagamento
             </div>
             <div>
-              <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
+              <v-list class="frete-ratio" v-model:opened="paymentMethodRatio" open-strategy="single" eager>
                 <v-list-group value="card">
                   <template v-slot:activator="{ isOpen, props }">
                     <v-list-item :ripple="false" v-bind="props">
@@ -409,7 +409,7 @@
               <div class="d-flex justify-space-between align-center mt-4">
                 <v-btn @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isLoading">
+                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Finalizar a compra
                 </v-btn>
               </div>
@@ -421,7 +421,7 @@
         <div class="payment-footer mt-13">
           <v-divider color="#111111"></v-divider>
           <v-breadcrumbs class="text-caption text-center justify-center" style="justify-content: center !important;"
-            :items="itemsBaseboardLinks" divider="-" />
+            :items="baseboardLinks" divider="-" />
         </div>
       </div>
     </div>
@@ -444,7 +444,7 @@
       </div>
 
       <div class="mobile-expansion-summary">
-        <v-expansion-panels v-model="panel" :flat="true">
+        <v-expansion-panels v-model="mobileSummeryPanel" :flat="true">
           <v-expansion-panel elevation="0" height="40">
             <v-expansion-panel-title>
               <div class="order-summery">
@@ -454,7 +454,7 @@
 
                 <div class="edit-cart text-caption text-end font-weight-regular"
                   style="cursor: pointer; opacity: 0.5; padding-left: 1px;">
-                  Clique para {{ panel != 0 ? 'exibir' : 'ocultar' }} todos os Detalhes
+                  Clique para {{ mobileSummeryPanel != 0 ? 'exibir' : 'ocultar' }} todos os Detalhes
                 </div>
               </div>
 
@@ -749,8 +749,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, computed } from 'vue';
+import { ref, reactive, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from "pinia";
 import { vMaska } from "maska"
 
 import {
@@ -764,8 +765,7 @@ import {
   cidadeRules,
   enderecoRules,
   numeroRules,
-  estadoRules,
-  complementoRules,
+  estadoRules
 } from "@/utils/rules";
 
 import {
@@ -775,157 +775,16 @@ import {
 } from "@/utils/masks";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
+import { useCartStore } from "@/store/store";
 
-const render = ref(false);
+const cartStore = useCartStore();
+const { shippingStore } = storeToRefs(cartStore);
+
 const router = useRouter();
-
-const isLoading = ref(false);
-const shippingForm = ref();
-
-const displayAddressForm = ref(false);
-
-const panel = ref();
+const route = useRoute();
+const render = ref(false);
 
 const step = ref(0);
-const route = useRoute();
-const queryParamCart = ref(route.query.step);
-
-watch(displayAddressForm, (newValue) => {
-  if (newValue) {
-    shipping.value = {
-      email: "",
-      telefone: "",
-      newsletter: true,
-      wpp: true,
-      nome: "",
-      sobrenome: "",
-      cpf: "",
-      endereco: "",
-      numero: "",
-      bairro: "",
-      complemento: "",
-      cidade: "",
-      estado: "",
-      cep: "",
-      save: true
-    }
-
-    shippingFormValidation.value = {
-      email: true,
-      telefone: true,
-      newsletter: true,
-      wpp: true,
-      nome: true,
-      sobrenome: true,
-      cpf: true,
-      endereco: true,
-      numero: true,
-      bairro: true,
-      complemento: true,
-      cidade: true,
-      estado: true,
-      cep: true,
-      save: true
-    }
-  } else {
-    shipping.value = {
-      email: "",
-      telefone: "",
-      newsletter: true,
-      wpp: true,
-      nome: "",
-      sobrenome: "",
-      cpf: "",
-      cep: "",
-    }
-
-    shippingFormValidation.value = {
-      email: true,
-      telefone: true,
-      newsletter: true,
-      wpp: true,
-      nome: true,
-      sobrenome: true,
-      cpf: true,
-      cep: true,
-    }
-  }
-});
-
-watch(queryParamCart, (newValue) => {
-  alert(newValue)
-});
-
-const length = 3;
-
-const open = ref([]);
-
-const freteOption = ref('one');
-
-const shipping = reactive({
-  email: "",
-  telefone: "",
-  newsletter: true,
-  wpp: true,
-  nome: "",
-  sobrenome: "",
-  cpf: "",
-  cep: "",
-});
-
-const shippingFormValidation = reactive({
-  email: true,
-  telefone: true,
-  newsletter: true,
-  wpp: true,
-  nome: true,
-  sobrenome: true,
-  cpf: true,
-  cep: true,
-});
-
-watch(shippingFormValidation, (newValue) => {
-  if (!newValue.cep) {
-    displayAddressForm.value = false;
-  }
-});
-
-// const shipping = reactive({
-//   email: "",
-//   telefone: "",
-//   newsletter: true,
-//   wpp: true,
-//   nome: "",
-//   sobrenome: "",
-//   cpf: "",
-// /*    endereco: "",
-//    numero: "",
-//    bairro: "",
-//    complemento: "",
-//    cidade: "",
-//    estado: "", */
-//    cep: "",
-// /*    save: true */
-// });
-
-// const shippingFormValidation = reactive({
-//   email: true,
-//   telefone: true,
-//   newsletter: true,
-//   wpp: true,
-//   nome: true,
-//   sobrenome: true,
-//   cpf: true,
-//   /*  endereco: true, */
-//   /*  numero: true,
-//    bairro: true,
-//    complemento: true,
-//    cidade: true,
-//    estado: true, */
-//    cep: true,
-//   /*  save: true */
-// });
-
 const items = ref([
   {
     title: 'Carrinho',
@@ -939,7 +798,7 @@ const items = ref([
   },
   {
     title: 'Frete',
-    disabled: false,
+    disabled: true,
     step: 1
   },
   {
@@ -950,8 +809,9 @@ const items = ref([
 ]);
 
 const freteBreadcrumbs = ref();
+const paymentBreadcrumbs = ref();
 
-const itemsBaseboardLinks = [
+const baseboardLinks = [
   {
     title: "Política de reembolso",
     disabled: false,
@@ -974,61 +834,13 @@ const itemsBaseboardLinks = [
   }
 ];
 
-const setLoading = (load) => {
-  isLoading.value = load;
-}
+watch(() => route.query.step, (latestStep) => {
+  let intParsedStep = parseInt(latestStep);
+  let stepParam = items.value.find(item => item.step === parseInt(intParsedStep));
+  if (stepParam) step.value = intParsedStep;
+})
 
-const calculateShippingCost = async () => {
-  if (step.value == 0) {
-    setLoading(true);
-
-    let valid = true;
-    let keys = Object.keys(shipping);
-
-    for (let i = 0; i < shippingForm.value.items.length; i++) {
-      let mensagemErro = await shippingForm.value.items[i].validate()
-
-      if (mensagemErro.length > 0) {
-        shippingFormValidation[keys[i]] = false;
-
-        if (freteBreadcrumbs.value)
-          freteBreadcrumbs.value.disabled = true;
-
-        if (valid)
-          valid = false;
-      }
-      else
-        shippingFormValidation[keys[i]] = true;
-    }
-
-    if (valid) {
-      if (displayAddressForm.value) {
-        if (freteBreadcrumbs.value)
-          freteBreadcrumbs.value.disabled = false;
-
-          router.push({
-            name: "Checkout",
-            query: { cart: true }
-          });
-        step.value = 1;
-      }
-
-      if (!displayAddressForm.value)
-        displayAddressForm.value = true;
-    }
-
-    setLoading(false);
-  }
-}
-
-const handleCartEdit = () => {
-  router.push({
-    name: "Home",
-    query: { cart: true }
-  });
-}
-
-const updateStep = (itemStep) => {
+const handleBreadcrumbClick = (itemStep) => {
   if (itemStep == null) {
     router.push({
       name: "Home",
@@ -1041,9 +853,42 @@ const updateStep = (itemStep) => {
     name: "Checkout",
     query: { step: itemStep }
   });
-  step.value = itemStep;
 }
 
+const handleCartEdit = () => {
+  router.push({
+    name: "Home",
+    query: { cart: true }
+  });
+}
+
+onMounted(() => {
+  freteBreadcrumbs.value = items.value.find(item => item.step === 1);
+  let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
+  if (!stepParam) {
+    router.push({
+      name: "Checkout",
+      query: { step: 0 }
+    });
+  } else {
+    if (stepParam.step == 1 && freteBreadcrumbs.value.disabled) {
+      router.push({
+        name: "Checkout",
+        query: { step: 0 }
+      });
+    }
+  }
+
+  setTimeout(() => {
+    render.value = true;
+  }, 100)
+})
+
+// Shipping Form
+const shippingForm = ref();
+const displayAddressPartialForm = ref(false);
+const isShippingFormLoading = ref(false);
+const mobileSummeryPanel = ref();
 const estados = [
   { id: 1, nome: 'Acre' },
   { id: 2, nome: 'Alagoas' },
@@ -1074,29 +919,109 @@ const estados = [
   { id: 27, nome: 'Tocantins' }
 ];
 
-/* watch(panel, (newval) => {
-  console.log(newval)
-}) */
+const shipping = reactive({
+  email: "",
+  telefone: "",
+  newsletter: true,
+  wpp: true,
+  nome: "",
+  sobrenome: "",
+  cpf: "",
+  endereco: "",
+  numero: "",
+  bairro: "",
+  complemento: "",
+  cidade: "",
+  estado: "",
+  cep: "",
+  save: true
+});
 
-onMounted(() => {
-  if (queryParamCart.value == null) {
-    router.replace({
-      name: "Checkout",
-      query: { step: 0 }
-    });
+const shippingFormValidation = reactive({
+  email: false,
+  telefone: false,
+  newsletter: false,
+  wpp: false,
+  nome: false,
+  sobrenome: false,
+  cpf: false,
+  endereco: false,
+  numero: false,
+  bairro: false,
+  complemento: false,
+  cidade: false,
+  estado: false,
+  cep: false,
+  save: false
+});
+
+const setShippingFormLoading = (load) => {
+  isShippingFormLoading.value = load;
+}
+
+const calculateShippingCost = async () => {
+  setShippingFormLoading(true);
+
+  let valid = true;
+  for (const field of shippingForm.value.items) {
+    const mensagemErro = await field.validate();
+
+    let fieldValidation = '';
+    for (const key in shippingFormValidation) {
+      if (key === field.id) {
+        fieldValidation = key;
+        break;
+      }
+    }
+
+    if (mensagemErro.length > 0) {
+      if (fieldValidation === "cep") {
+        displayAddressPartialForm.value = false;
+        ["endereco", "numero", "bairro", "complemento", "cidade", "estado"]
+          .forEach(property => shippingFormValidation[property] = false);
+      }
+
+      shippingFormValidation[fieldValidation] = true;
+
+      if (freteBreadcrumbs.value)
+        freteBreadcrumbs.value.disabled = true;
+
+      valid = false;
+    } else {
+      shippingFormValidation[fieldValidation] = false;
+    }
   }
 
-  setTimeout(() => {
-    render.value = true;
-  }, 100)
+  if (valid) {
+    if (displayAddressPartialForm.value) {
+      if (freteBreadcrumbs.value)
+        freteBreadcrumbs.value.disabled = false;
 
-  freteBreadcrumbs.value = items.value.find(item => item.step === 1);
-})
+      router.push({
+        name: "Checkout",
+        query: { step: 1 }
+      });
+
+      cartStore.setShippingData(shipping.value);
+    } else {
+      displayAddressPartialForm.value = true;
+      ["endereco", "numero", "bairro", "complemento", "cidade", "estado"]
+        .forEach(property => shippingFormValidation[property] = false);
+    }
+  }
+
+  setShippingFormLoading(false);
+}
+
+// Frete Form
+const freteOption = ref('one');
+
+// Payment Form
+const paymentMethodRatio = ref([]);
 </script>
 
 <style lang="scss">
 @import "@/styles/global.scss";
-
 
 /* .v-label .v-field-label .v-field-label--floating {
   font-size: 0.9rem !important;
@@ -1108,7 +1033,7 @@ onMounted(() => {
   }
 } */
 
-.frete-ratio {
+.queryParamStep-ratio {
   .v-label {
     width: 100% !important;
     opacity: 1 !important;
