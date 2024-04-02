@@ -19,7 +19,7 @@
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.cpf" density="compact" />
 
-                <v-text-field :model="address.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone"
+                <v-text-field v-model="address.telefone" v-maska:[telefoneMask] :rules="telefoneRules" label="Telefone"
                     variant="outlined" density="comfortable">
                 </v-text-field>
                 <validation-filler :active="!addressFormValidation.telefone" density="compact" />

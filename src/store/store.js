@@ -1,5 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
+import { useStorage } from '@vueuse/core'
 
 /* Drawer */
 export const useDrawerStore = defineStore("navbar", {
@@ -53,7 +54,7 @@ export const useSearchStore = defineStore("search", {
 /* Cart */
 export const useCartStore = defineStore("cart", {
   state: () => ({
-    shippingStore: {
+    shippingData: useStorage('shippingData', {
       email: "",
       telefone: "",
       newsletter: true,
@@ -66,14 +67,21 @@ export const useCartStore = defineStore("cart", {
       bairro: "",
       complemento: "",
       cidade: "",
-      estado: "",
+      estado: null,
       cep: "",
       save: true
-    }
+    }),
+
+    isShippingDataValid: useStorage('isShippingDataValid', false)
   }),
   actions: {
     setShippingData(obj) {
-      this.shipping = obj;
+      this.setShippingDataStatus(true);
+      this.shippingData = obj;
+    },
+    setShippingDataStatus(isValid) {
+      if (!isValid) this.$reset();
+      else this.isShippingDataValid = isValid;
     }
   },
 });
