@@ -52,9 +52,10 @@ export const useSearchStore = defineStore("search", {
 });
 
 /* Cart */
+var cartlocalStorageKeys = ["shippingData", "isShippingDataValid", "freteData", "isFreteDataValid"];
 export const useCartStore = defineStore("cart", {
   state: () => ({
-    shippingData: useStorage('shippingData', {
+    shippingData: useStorage(cartlocalStorageKeys[0], {
       email: "",
       telefone: "",
       newsletter: true,
@@ -71,17 +72,42 @@ export const useCartStore = defineStore("cart", {
       cep: "",
       save: true
     }),
+    isShippingDataValid: useStorage(cartlocalStorageKeys[1], false),
 
-    isShippingDataValid: useStorage('isShippingDataValid', false)
+    freteData: useStorage(cartlocalStorageKeys[2], {
+      method: null,
+    }),
+    isFreteDataValid: useStorage(cartlocalStorageKeys[3], true),
   }),
   actions: {
+    clearCartLocalStorage() {
+      cartlocalStorageKeys.forEach(key => {
+        localStorage.removeItem(key);
+      });;
+    },
+
+    // Shipping
+    setShippingDataStatus(isValid) {
+      if (!isValid) this.clearCartLocalStorage();
+      else this.isShippingDataValid = isValid;
+    },
     setShippingData(obj) {
+      if (!obj) return;
+
       this.setShippingDataStatus(true);
       this.shippingData = obj;
     },
-    setShippingDataStatus(isValid) {
-      if (!isValid) this.$reset();
-      else this.isShippingDataValid = isValid;
+
+    // Frete
+    setFreteDataStatus(isValid) {
+      if (!isValid) this.clearCartLocalStorage();
+      else this.isFreteDataValid = isValid;
+    },
+    setFreteData(obj) {
+      if (!obj) return;
+
+      this.setFreteDataStatus(true);
+      this.freteData = obj;
     }
   },
 });

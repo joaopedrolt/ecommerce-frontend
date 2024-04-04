@@ -4,7 +4,7 @@
     <div class="left-side border-right">
       <div class="wrapper">
         <!-- Header Left -->
-        <div class="payment-header desktop mb-6">
+        <div class="payment-header desktop mb-4">
           <div style="height: 33px; width: 160px;">
             <v-img class="h-100 w-100" src="/logo.svg"></v-img>
           </div>
@@ -14,7 +14,7 @@
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
               <template v-slot:title="{ item }">
-                <div @click="handleBreadcrumbClick(item.step)">
+                <div @click="updateStep(item.step)">
                   {{ item.title }}
                 </div>
               </template>
@@ -59,7 +59,7 @@
                     </div>
                   </div>
 
-                  <div class="d-flex align-center justify-end text-decoration-underline pb-7"
+                  <div @click="updateStep(0)" class="d-flex align-center justify-end text-decoration-underline pb-8"
                     style="width: 100px; cursor: pointer;">
                     Alterar
                   </div>
@@ -77,7 +77,7 @@
                       </div>
                     </div>
 
-                    <div class="d-flex align-center justify-end text-decoration-underline"
+                    <div @click="updateStep(1)" class="d-flex align-center justify-end text-decoration-underline"
                       style="width: 100px; cursor: pointer;">
                       Alterar
                     </div>
@@ -100,7 +100,8 @@
                     <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
                       Já é nosso cliente? Pule esta etapa!
                     </span>
-                    <a class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
+                    <a @click="handleLogin()"
+                      class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
                       Clique aqui para fazer login agora!
                     </a>
                   </div>
@@ -142,7 +143,7 @@
                   Endereço de Entrega
                 </div>
 
-                <div class="mb-5">
+                <div>
 
                   <div class="parent-input-container">
                     <div class="d-flex flex-column" style="flex: 1;">
@@ -231,18 +232,18 @@
                 </div>
               </div>
 
-              <div class="d-flex justify-space-between align-center">
-                <v-btn v-if="!displayAddressPartialForm" @click="calculateShippingCost()"
+              <!-- <div class="d-flex justify-space-between align-center">
+                <v-btn v-if="step == 0" @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
-                  Continuar
+                  Continuar aaa
                 </v-btn>
                 <v-btn v-else @click="calculateShippingCost()"
                   class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
-                  Continuar
+                  Continuar bbb
                 </v-btn>
-              </div>
+              </div> -->
             </v-form>
           </v-window-item>
 
@@ -250,14 +251,14 @@
             <div>
               <!-- Destinatario -->
               <div>
-                <div class="text-h5 font-weight-regular">
+                <div class="text-h5 font-weight-regular mb-3">
                   Escolha o Frete
                 </div>
 
-                <v-radio-group class="frete-ratio" hide-details v-model="freteOption" density="compact">
-                  <v-radio value="one">
+                <v-radio-group class="frete-ratio" hide-details v-model="freteMethod" density="compact">
+                  <v-radio :value="0">
                     <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-1">
+                      <div class="d-flex flex-column w-100 h-100 ml-2">
                         <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
                           <div>Sedex</div>
                         </div>
@@ -271,9 +272,9 @@
                       </div>
                     </template>
                   </v-radio>
-                  <v-radio value="2">
+                  <v-radio :value="1">
                     <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-1">
+                      <div class="d-flex flex-column w-100 h-100 ml-2">
                         <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
                           <div>Total Express</div>
                         </div>
@@ -409,17 +410,36 @@
                   </v-list-item>
                 </v-list-group>
               </v-list>
-
-              <div class="d-flex justify-space-between align-center mt-4">
-                <v-btn @click="calculateShippingCost()"
-                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
-                  Finalizar a compra
-                </v-btn>
-              </div>
             </div>
           </v-window-item>
         </v-window>
+
+
+        <div class="checkout-navigation-container mt-7">
+          <div class="previous-section-btn" @click="handlePreviousStep()">
+            <v-icon icon="mdi-chevron-left"></v-icon>
+            <button class="d-flex align-center text-subtitle-2 font-weight-regular"
+              style="opacity: 0.65; cursor: pointer">
+              <template v-if="step == 0">
+                Voltar ao Carrinho
+              </template>
+              <template v-if="step == 1">
+                Voltar para a Entrega
+              </template>
+              <template v-if="step == 2">
+                Voltar para o Frete
+              </template>
+            </button>
+          </div>
+
+          <v-btn @click="handleNextStep()"
+            class="next-section-btn text-subtitle-1 font-weight-regular button-color button-black" color="#111111"
+            height="45px" width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
+            <template v-if="step == 0">Continuar com o Frete</template>
+            <template v-if="step == 1">Continuar Pagamento</template>
+            <template v-if="step == 2">Finalizar a compra</template>
+          </v-btn>
+        </div>
 
         <!-- Footer Left -->
         <div class="payment-footer mt-13">
@@ -442,6 +462,11 @@
           <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
             <template v-slot:divider>
               <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+            <template v-slot:title="{ item }">
+              <div @click="updateStep(item.step)">
+                {{ item.title }}
+              </div>
             </template>
           </v-breadcrumbs>
         </div>
@@ -592,7 +617,7 @@
             </v-expansion-panel-text>
 
             <div class="top-summary w-100">
-              <div @click="handleCartEdit"
+              <div @click="handleCartEdit()"
                 class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
                 style="cursor: pointer;">
                 Editar carrinho
@@ -625,7 +650,7 @@
             Resumo do Pedido
           </div>
 
-          <div @click="handleCartEdit"
+          <div @click="handleCartEdit()"
             class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
             style="cursor: pointer;">
             Editar carrinho
@@ -782,7 +807,8 @@ import ValidationFiller from '@/components/ValidationFiller.vue';
 import { useCartStore } from "@/store/store";
 
 const cartStore = useCartStore();
-const { shippingData, isShippingDataValid } = storeToRefs(cartStore);
+const { shippingData, isShippingDataValid, 
+        freteData,  isFreteDataValid } = storeToRefs(cartStore);
 
 const router = useRouter();
 const route = useRoute();
@@ -793,7 +819,7 @@ const items = ref([
   {
     title: 'Carrinho',
     disabled: false,
-    step: null
+    step: null,
   },
   {
     title: 'Informações',
@@ -812,8 +838,8 @@ const items = ref([
   },
 ]);
 
-const freteBreadcrumbs = ref();
-const paymentBreadcrumbs = ref();
+const freteBreadcrumbs = ref(items.value.find(item => item.step === 1));
+const paymentBreadcrumbs = ref(items.value.find(item => item.step === 2));
 
 const baseboardLinks = [
   {
@@ -844,12 +870,13 @@ watch(() => route.query.step, (latestStep) => {
   if (stepParam) step.value = intParsedStep;
 })
 
-const handleBreadcrumbClick = (itemStep) => {
+const updateStep = (itemStep) => {
   if (itemStep == null) {
     router.push({
       name: "Home",
       query: { cart: true }
     });
+
     return;
   }
 
@@ -859,6 +886,29 @@ const handleBreadcrumbClick = (itemStep) => {
   });
 }
 
+const setFreteSection = (isLocked) => {
+  if(isLocked) setPaymentSection(isLocked)
+  freteBreadcrumbs.value.disabled = isLocked;
+}
+
+const setPaymentSection = (isLocked) => {
+  paymentBreadcrumbs.value.disabled = isLocked;
+}
+
+const handleNextStep = () => {
+  switch (step.value) {
+    case 0:
+      calculateShippingCost();
+      break;
+    case 1:
+      paymenteee(freteMethod.value);
+      break;
+    case 2:
+      // alert("oi");
+      break;
+  }
+}
+
 const handleCartEdit = () => {
   router.push({
     name: "Home",
@@ -866,32 +916,54 @@ const handleCartEdit = () => {
   });
 }
 
-onMounted(() => {
-  if(isShippingDataValid.value){
-    displayAddressPartialForm.value = true;
-    Object.assign(shipping, shippingData.value)
+const handlePreviousStep = () => {
+  switch (step.value) {
+    case 0:
+      handleCartEdit();
+      break;
+    case 1:
+      updateStep(0);
+      break;
+    case 2:
+      updateStep(1);
+      break;
   }
+}
 
-  freteBreadcrumbs.value = items.value.find(item => item.step === 1);
+onMounted(() => {
+  if (isShippingDataValid.value) {
+    Object.assign(shipping, shippingData.value);
+    displayAddressPartialForm.value = true;
+
+    setFreteSection(false);
+  } else cartStore.setShippingDataStatus(false);
+
+  if (isFreteDataValid.value && isShippingDataValid.value) {
+    freteMethod.value = freteData.value.method;
+    setPaymentSection(false);
+  } else cartStore.setFreteDataStatus(false);
+
   let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
-  if (!stepParam) {
+  if (
+    !stepParam ||
+    (stepParam.step == 1 && !isShippingDataValid.value) ||
+    (stepParam.step == 2 && !isShippingDataValid.value)
+  ) {
     router.push({
       name: "Checkout",
       query: { step: 0 }
     });
-  } else {
-    if (stepParam.step == 1 && freteBreadcrumbs.value.disabled) {
-      router.push({
-        name: "Checkout",
-        query: { step: 0 }
-      });
-    }
-  }
+  } else if (stepParam.step == 2 && !isFreteDataValid.value) {
+    router.push({
+      name: "Checkout",
+      query: { step: 1 }
+    });
+  } else step.value = stepParam.step;
 
   setTimeout(() => {
     render.value = true;
-  }, 100)
-})
+  }, 100);
+});
 
 // Shipping Form
 const shippingForm = ref();
@@ -993,7 +1065,7 @@ const calculateShippingCost = async () => {
       shippingFormValidation[fieldValidation] = true;
 
       if (freteBreadcrumbs.value)
-        freteBreadcrumbs.value.disabled = true;
+        setFreteSection(true)
 
       valid = false;
     } else {
@@ -1004,15 +1076,14 @@ const calculateShippingCost = async () => {
   if (valid) {
     if (displayAddressPartialForm.value) {
       if (freteBreadcrumbs.value)
-        freteBreadcrumbs.value.disabled = false;
+        setFreteSection(false);
+
+      cartStore.setShippingData(JSON.parse(JSON.stringify(shipping)));
 
       router.push({
         name: "Checkout",
         query: { step: 1 }
       });
-
-      let pureShippingDataObj = JSON.parse(JSON.stringify(shipping));
-      cartStore.setShippingData(pureShippingDataObj);
     } else {
       displayAddressPartialForm.value = true;
       ["endereco", "numero", "bairro", "complemento", "cidade", "estado"]
@@ -1025,8 +1096,29 @@ const calculateShippingCost = async () => {
   setShippingFormLoading(false);
 }
 
+const handleLogin = () => {
+  router.push({
+    name: "EmailValidation",
+    query: { checkout: true }
+  });
+}
+
 // Frete Form
-const freteOption = ref('one');
+const freteMethod = ref(null);
+
+const paymenteee = (method) => {
+  if(method == null && isShippingDataValid.value) return;
+
+  if (freteBreadcrumbs.value)
+        setPaymentSection(false);
+
+  cartStore.setFreteData({method});
+
+  router.push({
+    name: "Checkout",
+    query: { step: 2 }
+  });
+}
 
 // Payment Form
 const paymentMethodRatio = ref([]);
@@ -1045,7 +1137,7 @@ const paymentMethodRatio = ref([]);
   }
 } */
 
-.queryParamStep-ratio {
+.frete-ratio {
   .v-label {
     width: 100% !important;
     opacity: 1 !important;
@@ -1282,6 +1374,37 @@ const paymentMethodRatio = ref([]);
       @media (min-width: $tablet) {
         display: none !important;
       }
+    }
+  }
+}
+
+.checkout-navigation-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .previous-section-btn {
+    display: flex;
+    justify-content: start;
+    flex: 3;
+  }
+
+  .next-section-btn {
+    flex: 4;
+  }
+
+  @media (max-width: $tablet) {
+    flex-direction: column-reverse;
+    gap: 15px;
+
+    .previous-section-btn {
+      justify-content: center;
+      align-items: center;
+      flex: auto;
+    }
+
+    .next-section-btn {
+      flex: auto;
     }
   }
 }
