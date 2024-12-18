@@ -6,9 +6,9 @@ import { createApp } from "vue";
 // Plugins
 import { registerPlugins } from "@/plugins";
 
+// Config
 const app = createApp(App);
-
-app.config.devtools = true; // producao
+app.config.devtools = true;
 
 registerPlugins(app);
 

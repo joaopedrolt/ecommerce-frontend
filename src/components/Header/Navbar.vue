@@ -13,9 +13,9 @@
           <v-btn @click="displayCartDrawerr" icon size="small">
             <v-icon>mdi-cart</v-icon>
           </v-btn>
-          <!--          <v-btn icon size="small" @click="displaySearchOverlay">
+          <v-btn icon size="small" @click="displaySearchOverlay">
             <v-icon>mdi-magnify</v-icon>
-          </v-btn> -->
+          </v-btn>
         </div>
 
         <!-- Meta -->

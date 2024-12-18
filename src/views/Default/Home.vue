@@ -1,7 +1,8 @@
 <template>
   <div class="home-view">
-    <carousel />
-    <category-cards />
+    <!-- <carousel />
+    <category-cards /> -->
+
     <div class="d-flex flex-column align-center justify-center text-center container-size-padding">
       <div class="mb-2">
         <h2 class="font-weight-bold" style="font-size: 2.3rem;">A MELHOR DE TODAS</h2>
@@ -51,7 +52,9 @@
         </v-btn>
       </div>
     </div>
+
     <v-divider></v-divider>
+
     <div class="d-flex flex-column align-center justify-center text-center container-size-padding">
       <div class="mb-2">
         <h2 class="font-weight-bold" style="font-size: 2.3rem;">UMA CARTEIRA MENOR</h2>
@@ -76,12 +79,14 @@
 </template>
 
 <script setup>
-import Carousel from "@/components/Home/Carousel.vue";
-import CategoryCards from "@/components/Home/CategoryCards.vue";
+// import Carousel from "@/components/Home/Carousel.vue";
+// import CategoryCards from "@/components/Home/CategoryCards.vue";
 
 import { useDrawerStore } from "@/store/store";
 import { useRoute } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+
+import { getFeaturedProducts } from "@/data/home.js"
 
 const route = useRoute();
 
@@ -93,7 +98,15 @@ const displayCartDrawerr = () => {
   drawerStore.displayCartDrawerx();
 };
 
-onMounted(() => {
+const featuredProducts = ref([]);
+
+onMounted(async () => {
+  try {
+    featuredProducts.value = await getFeaturedProducts();
+  } catch (error) {
+    console.error('Error loading featured products:', error);
+  }
+
   if (queryParamCart) displayCartDrawerr();
 });
 </script>

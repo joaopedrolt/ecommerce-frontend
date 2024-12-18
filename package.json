@@ -11,6 +11,7 @@
     "@mdi/font": "7.0.96",
     "@splidejs/vue-splide": "^0.6.12",
     "@vueuse/core": "^10.9.0",
+    "firebase": "^11.1.0",
     "js-sha256": "^0.10.1",
     "maska": "^2.1.11",
     "motion": "^10.16.4",
