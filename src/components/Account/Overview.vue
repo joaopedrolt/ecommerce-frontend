@@ -56,7 +56,7 @@
             </v-card>
           </div>
           <div class="w-100 mt-3 mb-4">
-            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-black" height="37px"
+            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-dark" height="37px"
               width="100%" variant="flat" style="font-size: 0.8rem !important;">
               Adicionar Endereço
             </v-btn>
@@ -126,7 +126,7 @@
                       Ver Detalhes
                     </v-btn> -->
                     <v-btn @click="handleOrderDetails(item)" elevation="0"
-                      class="font-weight-regular button-color button-black" variant="flat" style="font-size: 0.72rem;">
+                      class="font-weight-regular button-color button-dark" variant="flat" style="font-size: 0.72rem;">
                       Ver Detalhes
                     </v-btn>
                   </td>

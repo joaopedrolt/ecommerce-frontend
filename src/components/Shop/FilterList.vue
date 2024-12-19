@@ -27,7 +27,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <div>
-      <v-btn class="text-subtitle-1 font-weight-regular mt-5 button-color button-black" height="35px" variant="flat"
+      <v-btn class="text-subtitle-1 font-weight-regular mt-5 button-color button-dark" height="35px" variant="flat"
         :ripple="false" style="width: 221px; font-size: 0.9rem !important;">
         Limpar Filtros
       </v-btn>
