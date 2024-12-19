@@ -90,7 +90,7 @@
             </div>
 
             <div>
-              <v-btn class="font-weight-regular button-color button-black mt-4" height="45px" width="100%"
+              <v-btn class="font-weight-regular button-color button-dark mt-4" height="45px" width="100%"
                 variant="flat" :ripple="false">
                 ADICIONAR AO CARRINHO
               </v-btn>

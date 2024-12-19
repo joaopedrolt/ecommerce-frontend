@@ -30,7 +30,7 @@
 
           <v-btn
             @click="handleContinueClick"
-            class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
+            class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
             height="45px"
             width="100%"
             variant="flat"

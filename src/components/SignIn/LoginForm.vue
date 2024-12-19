@@ -21,7 +21,7 @@
 
           <validation-filler :active="true" />
 
-          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
+          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
             height="45px" width="100%" variant="flat" :ripple="false">
             Entrar
           </v-btn>

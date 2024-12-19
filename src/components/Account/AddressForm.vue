@@ -50,7 +50,7 @@
                     density="comfortable"></v-text-field>
                 <validation-filler :active="!addressFormValidation.complemento" density="compact" />
 
-                <v-btn @click="handleSaveAddress" class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
+                <v-btn @click="handleSaveAddress" class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
                     height="45px" width="100%" variant="flat" :ripple="false">
                     Confirmar
                 </v-btn>

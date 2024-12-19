@@ -27,7 +27,7 @@
           <validation-filler :active="!isPasswordConfirmationValid" />
 
           <v-btn @click="handleCreateAccountClick"
-            class="text-subtitle-1 font-weight-regular button-color button-black mb-4" height="45px" width="100%"
+            class="text-subtitle-1 font-weight-regular button-color button-dark mb-4" height="45px" width="100%"
             variant="flat" :ripple="false" type="submit">
             Criar Conta
           </v-btn>

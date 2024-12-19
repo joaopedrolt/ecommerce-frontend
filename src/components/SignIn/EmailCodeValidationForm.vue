@@ -25,12 +25,12 @@
           </div>
 
           <v-btn v-if="!showCountdown" @click="handleSendAnotherCodeClick"
-            class="text-subtitle-1 font-weight-regular button-color button-black mt-4 mb-2" color="#111111" height="45px"
+            class="text-subtitle-1 font-weight-regular button-color button-dark mt-4 mb-2" color="#111111" height="45px"
             width="100%" variant="flat" :ripple="false">
             Solicitar Novo Código
           </v-btn>
 
-          <v-btn @click="handleValidationClick" class="text-subtitle-1 font-weight-regular button-color button-black mb-4"
+          <v-btn @click="handleValidationClick" class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
             height="45px" width="100%" variant="flat" :ripple="false" :disabled="disableConfirmButton">
             Confirmar
           </v-btn>

@@ -234,12 +234,12 @@
 
               <!-- <div class="d-flex justify-space-between align-center">
                 <v-btn v-if="step == 0" @click="calculateShippingCost()"
-                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
+                  class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar aaa
                 </v-btn>
                 <v-btn v-else @click="calculateShippingCost()"
-                  class="text-subtitle-1 font-weight-regular button-color button-black" color="#111111" height="45px"
+                  class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar bbb
                 </v-btn>
@@ -433,7 +433,7 @@
           </div>
 
           <v-btn @click="handleNextStep()"
-            class="next-section-btn text-subtitle-1 font-weight-regular button-color button-black" color="#111111"
+            class="next-section-btn text-subtitle-1 font-weight-regular button-color button-dark" color="#111111"
             height="45px" width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
             <template v-if="step == 0">Continuar com o Frete</template>
             <template v-if="step == 1">Continuar Pagamento</template>
