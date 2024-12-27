@@ -5,25 +5,18 @@
       <div class="product-left">
         <div class="product-header hide-desktop container-size-padding">
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
-            Camiseta Mangas Curtas Com Estampa Medusa
+            {{ product.name }}
           </div>
           <div class="product-price mt-1">
-            <div class="main-price font-weight-regular">R$24.90</div>
-            <div class="old-price font-weight-light" style="margin-top: 2.5px">
-              <s>R$32</s>
+            <div class="final-price font-weight-regular"> {{ formatPrice(product.price) }}</div>
+            <div class="gross-price font-weight-light" style="margin-top: 2.5px">
+              <s>{{ formatPrice(product.grossPrice) }}</s>
             </div>
           </div>
         </div>
         <div class="product-images">
           <div class="product-images-grid hide-mobile">
-            <img class="product-img"
-              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg" />
-            <img class="product-img"
-              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg" />
-            <img class="product-img"
-              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg" />
-            <img class="product-img"
-              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919164_1000.jpg" />
+            <img v-for="image in product.images" class="product-img" :src="image" />
           </div>
 
           <div class="product-images-slide hide-desktop">
@@ -53,19 +46,22 @@
       <div class="product-right container-size-padding mobile-padding">
         <div class="product-header hide-mobile">
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
-            Camiseta Mangas Curtas Com Estampa Medusa
+            {{ product.name }}
           </div>
           <div class="product-price mt-2">
-            <div class="main-price font-weight-regular">R$24.90</div>
-            <div class="old-price font-weight-light" style="margin-top: 2.5px">
-              <s>R$32</s>
+            <div class="final-price font-weight-regular">{{ formatPrice(product.price) }}</div>
+            <div class="gross-price font-weight-light" style="margin-top: 2.5px">
+              <s>{{ formatPrice(product.grossPrice) }}</s>
             </div>
           </div>
         </div>
         <div class="product-checkout">
           <div class="">
             <div class="product-amount d-flex flex-column">
-              <div class="text-body-2 font-weight-light mb-2">Quantidade</div>
+              <div class="text-subtitle-2 font-weight-regular mt-2" style="opacity: 0.6;">
+                {{ product.shortDescription }}
+              </div>
+              <div class="text-body-2 font-weight-light mb-2 mt-7">Quantidade</div>
               <div class="d-flex" style="
                   border: 1px solid #111111;
                   border-radius: 3px;
@@ -90,23 +86,16 @@
             </div>
 
             <div>
-              <v-btn class="font-weight-regular button-color button-dark mt-4" height="45px" width="100%"
+              <v-btn class="font-weight-regular button-color button-light mt-4" height="45px" width="100%"
                 variant="flat" :ripple="false">
                 ADICIONAR AO CARRINHO
               </v-btn>
             </div>
           </div>
-
-          <div class="text-subtitle-2 font-weight-regular mt-4" style="opacity: 0.6;">
-            Verde, jacquard, fechamento frontal por botão e zíper, cordão de
-            ajuste no cós, comprimento cropped, modelagem cenoura e cinco
-            bolsos. Ao comprar este item unissex, considere que sua grade de
-            tamanhos é masculina.
-          </div>
         </div>
 
 
-        <div class="product-details-list">
+        <div class="product-details-list mt-5">
           <v-divider color="#111111"></v-divider>
 
           <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
@@ -130,21 +119,14 @@
                   class="w-100 h-100 d-flex flex-column text-center py-1 text-subtitle-2 font-weight-regular text-start"
                   style="opacity: 0.6;">
                   <div class="pr-1">
-                    Com detalhes refinados e um design exclusivo, a pulseira LV Bloom é um modelo icônico e marcante. O
-                    fino
-                    cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma
-                    Flor
-                    do
-                    Monogram, elaboradas em metal brilhante com acabamento dourado. Um fecho inovador permite que essa
-                    pulseira
-                    se ajuste perfeitamente em qualquer pulso.
+                    {{ product.longDescription }}
                   </div>
 
-                  <ul class="px-4 mt-4 mb-2" style=" list-style-type: square !important;">
+                  <!-- <ul class="px-4 mt-4 mb-2" style=" list-style-type: square !important;">
                     <li>Metal com acabamento dourado</li>
                     <li>Cordão em couro de vitelo marrom</li>
                     <li>Assinaturas LV Initials e Flores do Monogram</li>
-                  </ul>
+                  </ul> -->
                 </div>
               </v-list-item>
             </v-list-group>
@@ -156,24 +138,21 @@
     </div>
 
     <div class="container-size-padding">
-      <div class="showcase">
+      <div v-for="section in product.sections" class="showcase">
         <div class="left-side d-flex flex-column align-center justify-center" style="flex: 7;">
           <div class="wrapper">
             <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
-              FUNCIONALIDADES DO FUTURO
+              {{ section.title }}
             </div>
             <div class="right-side" style="opacity: 0.6; padding-left: 2px;">
-              Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a
-              temperatura
-              corporal.
+              {{ section.subtitle }}
             </div>
           </div>
         </div>
 
         <div class="d-flex align-center justify-center" style="flex: 5;">
           <div style="width: 100%; height: 600px;">
-            <img style="width: 100%; height: 100%; object-fit: cover;"
-              src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg" />
+            <img style="width: 100%; height: 100%; object-fit: cover;" :src="section.image" />
           </div>
         </div>
       </div>
@@ -181,84 +160,47 @@
       <v-divider color="#111111"></v-divider>
 
       <div class="youmaylike flex-column">
-
-        <div class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1"
+        <div v-if="recommendedProducts.length > 0"
+          class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1"
           style="font-size: .9rem !important;">
           Você também pode gostar
         </div>
 
         <div class="img-container d-flex" style="gap: 15px;">
-          <div class="d-flex" style="gap: 15px; flex: 1;">
-            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+          <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="d-flex" style="gap: 15px; flex: 1;">
+            <div @click="handleRecommendedProductClick(recomendedProduct.id)" class="product-card d-flex flex-column"
+              elevation="0" style="flex: 1;">
               <div class="product-card-top">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                  alt="" />
+                <img :src="recomendedProduct.displayImage" alt="" />
               </div>
 
               <div class="product-card-bottom">
-                <div class="font-weight-bold">Macbook Air Pro</div>
+                <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
                 <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  Some small description for the product
+                  {{ recomendedProduct.displayDescription }}
                 </p>
                 <div class="product-card-price d-flex">
-                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-              <div class="product-card-top">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                  alt="" />
-              </div>
-
-              <div class="product-card-bottom">
-                <div class="font-weight-bold">Macbook Air Pro</div>
-                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  Some small description for the product
-                </p>
-                <div class="product-card-price d-flex">
-                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                  <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="d-flex" style="gap: 15px; flex: 1;">
-            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+          <div v-if="recommendedProducts.length > 0" v-for="recomendedProduct in recommendedProducts.slice(2, 4)"
+            class="d-flex" style="gap: 15px; flex: 1;">
+            <div @click="handleRecommendedProductClick(recomendedProduct.productId)"
+              class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
               <div class="product-card-top">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/OFF-WHITE-01_3c1c448d-4df1-4749-ba9d-bd7c3276fb98.jpg?v=1707325995&width=600"
-                  alt="" />
+                <img :src="recomendedProduct.displayImage" alt="" />
               </div>
 
               <div class="product-card-bottom">
-                <div class="font-weight-bold">Macbook Air Pro</div>
+                <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
                 <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  Some small description for the product
+                  {{ recomendedProduct.displayDescription }}
                 </p>
                 <div class="product-card-price d-flex">
-                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
-              <div class="product-card-top">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/skin-cropped-long-marrom-1.jpg?v=1708091790&width=600"
-                  alt="" />
-              </div>
-
-              <div class="product-card-bottom">
-                <div class="font-weight-bold">Macbook Air Pro</div>
-                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  Some small description for the product
-                </p>
-                <div class="product-card-price d-flex">
-                  <div class="text-subtitle-2 font-weight-regular">R$600</div>
+                  <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
                 </div>
               </div>
             </div>
@@ -266,24 +208,73 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
 import { watch } from "vue";
-import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeMount, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/vue-splide";
 import "@splidejs/vue-splide/css";
 
+import formatPrice from "@/utils/formatPrice";
+
+import { getProduct, getRecomendedProducts/* , duplicateDocument  */} from "@/data/product.js"
+
 const route = useRoute();
-const productId = computed(() => route.params.produtoId);
+const router = useRouter();
 
 const amount = ref(0);
-
 const open = ref([]);
+
+// const product = ref({
+//   discount: 10,
+//   displayImage: "",
+//   images: [
+//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg", 
+//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg", 
+//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg" , 
+//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919164_1000.jpg"],
+//   longDescription: "Com detalhes refinados e um design exclusivo, a pulseira LV Bloom é um modelo icônico e marcante. O fino cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma Flor do Monogram, elaboradas em metal brilhante com acabamento dourado. Um fecho inovador permite que essa pulseira se ajuste perfeitamente em qualquer pulso. Metal com acabamento dourado Cordão em couro de vitelo marrom Assinaturas LV Initials e Flores do Monogram",
+//   name: "aaa",
+//   price: 10.9,
+//   grossPrice: 24.9,
+//   sections: [{
+//     image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
+//     positon: "left",
+//     sectionPosition: 1,
+//     subtitle: "Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a temperatura corporal.",
+//     title: "FUNCIONALIDADES DO FUTURO"
+//   }],
+//   shortDescription: "Verde, jacquard, fechamento frontal por botão e zíper, cordão de ajuste no cós, comprimento cropped, modelagem cenoura e cinco bolsos. Ao comprar este item unissex, considere que sua grade de tamanhos é masculina.",
+//   stock: 1
+// });
+
+const product = ref({
+  discount: 0,
+  displayImage: "",
+  images: [],
+  longDescription: "",
+  name: "",
+  price: 0,
+  grossPrice: 0,
+  sections: [],
+  shortDescription: "",
+  stock: 0
+});
+
+const recommendedProducts = ref([]);
+
+const handleRecommendedProductClick = (productId) => {
+  router.push({
+    name: "Product",
+    params: {
+      productId,
+    },
+  });
+}
 
 watch(amount, () => {
   if (amount.value < 0) {
@@ -295,7 +286,20 @@ watch(amount, () => {
   }
 });
 
-onMounted(() => { });
+watch(() => route.params.productId, (newVal) => {
+  if (newVal != undefined) {
+    router.go(0);
+  }
+});
+
+onBeforeMount(async () => {
+  const productId = route.params.productId;
+
+  product.value = await getProduct(productId);
+  recommendedProducts.value = await getRecomendedProducts(productId);
+
+  // await duplicateDocument();
+});
 </script>
 
 <style lang="scss">
@@ -324,11 +328,11 @@ onMounted(() => { });
         align-items: center;
         gap: 8px;
 
-        .main-price {
+        .final-price {
           font-size: 1.1rem;
         }
 
-        .old-price {
+        .gross-price {
           font-size: 1rem;
         }
       }
@@ -375,8 +379,6 @@ onMounted(() => { });
       width: 40%;
 
       .product-checkout {
-        margin: 36px 0;
-
         .small-desc {
           font-size: 0.9rem;
           margin-top: 16px;
@@ -384,8 +386,6 @@ onMounted(() => { });
       }
     }
   }
-
-  .product-details-list {}
 
   .v-list-item {
     padding-right: 5px !important;
@@ -427,11 +427,13 @@ onMounted(() => { });
 
   .youmaylike {
     display: flex;
+    align-items: center;
     gap: 15px;
 
     .product-card {
       cursor: pointer;
       width: calc(33.33333% - 14px);
+      max-width: 306px !important;
 
       .product-card-top {
         width: 100%;
@@ -474,7 +476,7 @@ onMounted(() => { });
           align-items: end;
           gap: 0;
 
-          .main-price {
+          .final-price {
             margin: 0 !important;
           }
         }

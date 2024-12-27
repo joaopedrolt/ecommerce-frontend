@@ -1,80 +1,5 @@
 <template>
   <div class="home-view">
-    <!-- <carousel />
-    <category-cards /> -->
-    <!-- <div class="d-flex flex-column align-center justify-center text-center container-size-padding">
-      <div class="mb-2">
-        <h2 class="font-weight-bold" style="font-size: 2.3rem;">A MELHOR DE TODAS</h2>
-        <h3 class="text-overline" style="font-size: 0.9rem !important;">Insanamente confortável!</h3>
-
-        <div class="d-flex mt-6 justify-center" style="gap: 40px;">
-          <div class="d-flex flex-column align-center">
-            <div style="border: 1px solid black; border-radius: 50%; padding: 9px;">
-              <v-icon>mdi-leaf</v-icon>
-            </div>
-            <div class="mt-2 text-body-2">
-              Sustentavel
-            </div>
-          </div>
-          <div class="d-flex flex-column align-center">
-            <div style="border: 1px solid black; border-radius: 50%; padding: 9px;">
-              <v-icon>mdi-silverware-clean</v-icon>
-            </div>
-            <div class="mt-2 text-body-2">
-              Sustentavel
-            </div>
-          </div>
-          <div class="d-flex flex-column align-center">
-            <div style="border: 1px solid black; border-radius: 50%; padding: 9px;">
-              <v-icon>mdi-archive</v-icon>
-            </div>
-            <div class="mt-2 text-body-2">
-              Sustentavel
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <v-img class="mt-16 mb-10 h-100 w-100" style="max-width: 900px;"
-        src="https://www.jouse.com.br/static/img/home/camiseta-mobile-2x.jpg" alt="Camiseta dobrada"></v-img>
-      <div class="featured-product">
-        <v-btn class="featured-product-button font-weight-regular mt-4" height="45px" variant="outlined"
-          :ripple="false">
-          Conhecer melhor <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-
-        <v-btn @click="displayCartDrawerr"
-          class="featured-product-button font-weight-regular button-color button-dark mt-4" height="45px"
-          variant="flat" :ripple="false">
-          Comprar agora <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </div>
-    </div>
-
-    <v-divider></v-divider>
-
-    <div class="d-flex flex-column align-center justify-center text-center container-size-padding">
-      <div class="mb-2">
-        <h2 class="font-weight-bold" style="font-size: 2.3rem;">UMA CARTEIRA MENOR</h2>
-        <h3 class="text-overline" style="font-size: 0.9rem !important;">Insanamente confortável!</h3>
-      </div>
-      <v-img class="mt-9 h-100 w-100" style="max-width: 900px;"
-        src="https://www.jouse.com.br/static/img/home/jouse-mobile-2x.jpg" alt="Camiseta dobrada"></v-img>
-      <div class="featured-product">
-        <v-btn class="featured-product-button font-weight-regular mt-4" height="45px" variant="outlined"
-          :ripple="false">
-          Conhecer melhor <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-
-        <v-btn @click="displayCartDrawerr"
-          class="featured-product-button font-weight-regular button-color button-dark mt-4" height="45px"
-          variant="flat" :ripple="false">
-          Comprar agora <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </div>
-    </div> -->
-
     <template v-for="(featuredProduct, index) in featuredProducts" :key="index">
       <div class="featured-product container-size-padding"
         :class="[`featured-product-${featuredProduct.theme}`, { 'background-image-fill': featuredProduct.fullscreen }]"
@@ -94,31 +19,15 @@
                 {{ icon.title }}
               </div>
             </div>
-            <!-- <div class="d-flex flex-column align-center">
-            <div style="border: 1px solid black; border-radius: 50%; padding: 9px;">
-              <v-icon>mdi-silverware-clean</v-icon>
-            </div>
-            <div class="mt-2 text-body-2">
-              Sustentavel
-            </div>
-          </div>
-          <div class="d-flex flex-column align-center">
-            <div style="border: 1px solid black; border-radius: 50%; padding: 9px;">
-              <v-icon>mdi-archive</v-icon>
-            </div>
-            <div class="mt-2 text-body-2">
-              Sustentavel
-            </div>
-          </div> -->
           </div>
         </div>
 
-        <v-img v-if="!featuredProduct.fullscreen" class="mt-9 h-100 w-100" style="max-width: 900px;"
-          :src="featuredProduct.image" alt="Produto em Destaque"></v-img>
+        <v-img v-if="!featuredProduct.fullscreen" class="mt-1 h-100 w-100 mt-7 mb-6"
+          style="max-height: 500px; max-width: 600px;" :src="featuredProduct.image"></v-img>
 
         <div class="featured-product-actions">
-          <v-btn class="featured-product-button font-weight-regular mt-4" height="45px" variant="outlined"
-            :ripple="false">
+          <v-btn @click="handleProductPageClick(featuredProduct.productId)"
+            class="featured-product-button font-weight-regular mt-4" height="45px" variant="outlined" :ripple="false">
             Conhecer melhor <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
 
@@ -131,23 +40,22 @@
       </div>
       <v-divider v-if="featuredProducts.length != index + 1"></v-divider>
     </template>
-
   </div>
 </template>
 
 <script setup>
-// import Carousel from "@/components/Home/Carousel.vue";
-// import CategoryCards from "@/components/Home/CategoryCards.vue";
-
 import { useDrawerStore } from "@/store/store";
-import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ref, onBeforeMount } from "vue";
 
 import { getFeaturedProductsOrdered } from "@/data/home.js"
 
 const route = useRoute();
+const router = useRouter();
 
-const queryParamCart = route.query.cart;
+const featuredProducts = ref([]);
+
+// const queryParamCart = route.query.cart;
 
 const drawerStore = useDrawerStore();
 
@@ -155,16 +63,17 @@ const displayCartDrawerr = () => {
   drawerStore.displayCartDrawerx();
 };
 
-const featuredProducts = ref([]);
+const handleProductPageClick = (productId) => {
+  router.push({
+    name: "Product",
+    params: {
+      productId,
+    },
+  });
+}
 
-onMounted(async () => {
-  try {
-    featuredProducts.value = await getFeaturedProductsOrdered();
-  } catch (error) {
-    console.error('Error loading featured products:', error);
-  }
-
-  if (queryParamCart) displayCartDrawerr();
+onBeforeMount(async () => {
+  featuredProducts.value = await getFeaturedProductsOrdered();
 });
 </script>
 

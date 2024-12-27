@@ -174,6 +174,11 @@ const products = reactive([
     quantity: 0
   },
 ]);
+
+// onBeforeMount(async () => {
+//   const productId = route.params.productId;
+//   product.value = await getProduct(productId);
+// });
 </script>
 
 <style lang="scss">

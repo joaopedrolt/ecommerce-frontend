@@ -106,7 +106,7 @@ const routes = [
         path: "/produto",
         children: [
           {
-            path: ":produtoId",
+            path: ":productId",
             name: "Product",
             component: () => import("@/views/Default/Product.vue"),
           },

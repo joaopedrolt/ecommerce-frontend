@@ -1,0 +1,77 @@
+import { db } from '../firebase';
+import { doc, getDoc, getDocs, addDoc, collection, query } from 'firebase/firestore';
+import getRandomListItens from "@/utils/getRandomListItens";
+
+const productsCollectionName = "products";
+
+export const getProduct = async (productId) => {
+    try {
+        const docRef = doc(db, productsCollectionName, productId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return docSnap.data();
+        } else {
+            console.log("No such Product!");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error Product: ", error);
+    }
+};  
+
+export const getRecomendedProducts = async (currentProductId) => {
+    try {
+        const querySnapshot = await getDocs(collection(db, productsCollectionName));
+        var productIDs = querySnapshot.docs.map(doc => doc.id);
+
+        if(!productIDs.length) 
+            return [];
+
+        if(currentProductId){
+            const filteredProductIDs = productIDs.filter(id => id !== currentProductId);
+
+            if(filteredProductIDs.length) {
+                productIDs = filteredProductIDs;
+            } else {
+                return [];
+            }
+        }
+
+        const productIDsRandomized = getRandomListItens(productIDs, 4);
+
+        const productPromises = productIDsRandomized.map((id) => {
+            const docRef = doc(db, "products", id);
+            return getDoc(docRef);
+        });
+
+        const productSnapshots = await Promise.all(productPromises);
+
+        return productSnapshots.map((snapshot) => ({
+            id: snapshot.id,
+            ...snapshot.data(),
+        }));
+    } catch (error) {
+        console.error("Error fetching Recomended Products: ", error);
+        return [];
+    }
+};
+
+/* export const duplicateDocument = async () => {
+    try {
+        const docRef = doc(db, "products", "GaAp5SyjPCTC7ufuEPWG");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const documentData = docSnap.data(); // Extract document data
+            
+            const newDocRef = await addDoc(collection(db, "products"), documentData);
+            
+            console.log(`Document duplicated to new ID: ${newDocRef.id}`);
+        } else {
+            console.log('No such document!');
+        }
+    } catch (error) {
+        console.error('Error duplicating document:', error);
+    }
+}; */

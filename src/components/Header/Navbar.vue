@@ -2,7 +2,7 @@
   <v-app-bar class="nav-component" absolute style="z-index: 1003 !important" :elevation="0" height="75px">
     <div class="container-limit container-size-padding navbar-padding nav-container">
       <div id="navbar-anchor" class="h-100 w-100 d-flex justify-space-between align-center">
-        <div class="h-100 logo-black">
+        <div @click="handleLogoClick" class="h-100 logo-black">
           <v-img src="/logo.svg" width="120px" height="75px"></v-img>
         </div>
 
@@ -55,6 +55,12 @@ const displayCartDrawerr = () => {
 
 const displaySearchOverlay = () => {
   searchStore.displaySearchOverlayx();
+};
+
+const handleLogoClick = () => {
+  router.push({
+    name: "Home",
+  });
 };
 
 const handleSignInClick = () => {
