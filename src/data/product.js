@@ -47,7 +47,7 @@ export const getRecomendedProducts = async (currentProductId) => {
         const productIDsRandomized = getRandomListItens(productIDs, 4);
 
         const productPromises = productIDsRandomized.map((id) => {
-            const docRef = doc(db, "products", id);
+            const docRef = doc(db, productsCollectionName, id);
             return getDoc(docRef);
         });
 
@@ -65,7 +65,7 @@ export const getRecomendedProducts = async (currentProductId) => {
 
 export const duplicateDocument = async () => {
     try {
-        const docRef = doc(db, "products", "GaAp5SyjPCTC7ufuEPWG");
+        const docRef = doc(db, productsCollectionName, "GaAp5SyjPCTC7ufuEPWG");
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {

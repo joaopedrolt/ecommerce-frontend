@@ -13,25 +13,10 @@
         <v-icon size="small">mdi-close</v-icon>
       </v-btn>
     </div>
+
     <v-divider></v-divider>
 
-    <template v-if="isCartEmpty">
-      <div class="empty-cart-container w-100 d-flex justify-center align-center">
-        <div class="d-flex flex-column">
-          <div class="text-center mb-4">
-            O seu carrinho ainda está vazio.
-            <br />
-            Aceita algumas sugestões?
-          </div>
-          <v-btn class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
-            width="100%" variant="flat" :ripple="false">
-            Voltar a loja
-          </v-btn>
-        </div>
-      </div>
-    </template>
-
-    <template v-else>
+    <template v-if="!isCartEmpty && !loading">
       <div class="empty-cart-container justify-space-between flex-column w-100 d-flex">
         <div class="d-flex flex-column w-100 pl-3 pr-3 h-100" style="overflow-y: auto;">
           <div class="w-100 h-100">
@@ -88,65 +73,60 @@
             <div class="text-subtitle-1">R$ 399.00</div>
           </div>
 
-          <v-btn @click="handleCheckout" class="text-subtitle-2 font-weight-regular button-color button-dark"
-            color="#111111" height="45px" width="100%" variant="flat" :ripple="false">
+          <v-btn class="text-subtitle-2 font-weight-regular button-color button-black" color="#111111" height="45px"
+            width="100%" variant="flat" :ripple="false">
             FINALIZAR A COMPRA
           </v-btn>
         </div>
       </div>
     </template>
 
+    <template v-if="isCartEmpty && !loading">
+      <div class="centralized-cart-container w-100 d-flex justify-center align-center">
+        <div class="d-flex flex-column align-center">
+          <div class="">
+            <v-icon class="mb-4" size="x-large">mdi-cart-plus</v-icon>
+          </div>
+
+          <div class="text-center mb-4">
+            O seu carrinho ainda está vazio.
+            <br />
+            Aceita algumas sugestões?
+          </div>
+          <v-btn class="text-subtitle-1 font-weight-regular button-color button-light" color="#111111" height="45px"
+            width="100%" variant="flat" :ripple="false">
+            Voltar a loja
+          </v-btn>
+        </div>
+      </div>
+    </template>
+
+    <template v-if="loading">
+      <div class="centralized-cart-container w-100 d-flex justify-center align-center">
+        <circular-loading />
+      </div>
+    </template>
+    
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { ref, watch, reactive } from "vue";
+import { ref, watch, reactive, onBeforeMount } from "vue";
 import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 import formatPrice from "@/utils/formatPrice";
 import { useRouter } from "vue-router";
 
+import CircularLoading from "@/components/CircularLoading.vue";
+
 const drawerStore = useDrawerStore();
 const { displayCartDrawer } = storeToRefs(drawerStore);
 
-const open = ref([]);
-const isCartEmpty = ref(false);
-const quantity = ref(0);
-
 const router = useRouter();
 
-const updateProductQuantity = (product, operation) => {
-  if (operation == 'sum') {
-    if (product.quantity < 10)
-      product.quantity++;
-  }
-
-  if (operation == 'subtraction') {
-    if (product.quantity > 0) product.quantity--;
-  }
-}
-
-watch(displayCartDrawer, (newValue) => {
-  const htmlElement = document.getElementsByTagName("html");
-
-  if (!newValue) {
-    open.value = [];
-    htmlElement[0].style.overflow = "";
-  } else {
-    htmlElement[0].style.overflow = "hidden";
-  }
-});
-
-const hideNavigationDrawer = () => {
-  displayCartDrawer.value = false;
-};
-
-const handleCheckout = async () => {
-  await router.push({
-    name: "Checkout"
-  });
-  router.go(0);
-}
+const loading = ref(false);
+const isCartEmpty = ref(false);
+const quantity = ref(0);
 
 const products = reactive([
   {
@@ -175,16 +155,51 @@ const products = reactive([
   },
 ]);
 
-// onBeforeMount(async () => {
-//   const productId = route.params.productId;
-//   product.value = await getProduct(productId);
-// });
+const updateProductQuantity = (product, operation) => {
+  if (operation == 'sum') {
+    if (product.quantity < 10)
+      product.quantity++;
+  }
+
+  if (operation == 'subtraction') {
+    if (product.quantity > 0) product.quantity--;
+  }
+}
+
+const hideNavigationDrawer = () => {
+  displayCartDrawer.value = false;
+};
+
+const handleCheckout = async () => {
+  await router.push({
+    name: "Checkout"
+  });
+  router.go(0);
+}
+
+watch(displayCartDrawer, async (newValue) => {
+  const htmlElement = document.getElementsByTagName("html");
+
+  if (!newValue) {
+    htmlElement[0].style.overflow = "";
+  } else {
+    loading.value = true;
+
+    setTimeout(() => {
+      loading.value = false;
+        
+      /* getUserCart(rXiNPm5lXTExkVtmPcy0); */
+    }, 2000);
+
+    htmlElement[0].style.overflow = "hidden";
+  }
+});
 </script>
 
 <style lang="scss">
 @import "@/styles/global.scss";
 
-.empty-cart-container {
+.centralized-cart-container {
   height: calc(100% - 50px);
 }
 
