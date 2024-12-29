@@ -12,7 +12,7 @@
           <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
             {{ p.subtitle }}
           </p>
-          <div class="product-card-price d-flex">
+          <div class="product-card-price">
             <div class="text-subtitle-2 font-weight-regular"> {{ p.price }} </div>
             <!--             <div class="text-caption price-cents">99</div> -->
           </div>
@@ -80,37 +80,5 @@ const handleProductClick = (productId) => {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-
-  .product-card {
-    cursor: pointer;
-    width: calc(33.33333% - 14px);
-
-    .product-card-top {
-      width: 100%;
-
-      img {
-        height: 100%;
-        width: 100%;
-      }
-    }
-
-    .product-card-bottom {
-      flex-shrink: 0;
-      justify-content: center;
-      padding: 12px 0;
-    }
-  }
-
-  @media (max-width: $tablet) {
-    .product-card {
-      width: calc(50% - 10px);
-    }
-  }
-
-  @media (max-width: $phone) {
-    .product-card {
-      width: 100%;
-    }
-  }
 }
 </style>

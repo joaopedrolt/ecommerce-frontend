@@ -137,3 +137,43 @@ html {
   background-size: cover;
   background-position: center;
 }
+
+.product-card {
+  cursor: pointer;
+  width: calc(33.33333% - 14px);
+  padding: 0 25px;
+  text-align: center;
+
+  .product-card-top {
+    width: 100%;
+
+    img {
+      height: 300px;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .product-card-bottom {
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 12px 0;
+
+    .product-card-price{
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: $tablet) {
+    width: calc(50% - 10px);
+  }
+
+  @media (max-width: $phone) {
+    width: 100%;
+  }
+
+  @media (max-width: min-width) {
+    width: 100%;
+  }
+}

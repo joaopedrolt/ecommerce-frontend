@@ -10,7 +10,13 @@ export const getProduct = async (productId) => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            return docSnap.data();
+            const product = docSnap.data();
+
+            if (product.sections?.length) {
+                product.sections.sort((a, b) => a.sectionPosition - b.sectionPosition);
+            }
+
+            return product;
         } else {
             console.log("No such Product!");
             return null;
@@ -18,20 +24,20 @@ export const getProduct = async (productId) => {
     } catch (error) {
         console.error("Error Product: ", error);
     }
-};  
+};
 
 export const getRecomendedProducts = async (currentProductId) => {
     try {
         const querySnapshot = await getDocs(collection(db, productsCollectionName));
         var productIDs = querySnapshot.docs.map(doc => doc.id);
 
-        if(!productIDs.length) 
+        if (!productIDs.length)
             return [];
 
-        if(currentProductId){
+        if (currentProductId) {
             const filteredProductIDs = productIDs.filter(id => id !== currentProductId);
 
-            if(filteredProductIDs.length) {
+            if (filteredProductIDs.length) {
                 productIDs = filteredProductIDs;
             } else {
                 return [];
@@ -57,16 +63,16 @@ export const getRecomendedProducts = async (currentProductId) => {
     }
 };
 
-/* export const duplicateDocument = async () => {
+export const duplicateDocument = async () => {
     try {
         const docRef = doc(db, "products", "GaAp5SyjPCTC7ufuEPWG");
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const documentData = docSnap.data(); // Extract document data
-            
+
             const newDocRef = await addDoc(collection(db, "products"), documentData);
-            
+
             console.log(`Document duplicated to new ID: ${newDocRef.id}`);
         } else {
             console.log('No such document!');
@@ -74,4 +80,4 @@ export const getRecomendedProducts = async (currentProductId) => {
     } catch (error) {
         console.error('Error duplicating document:', error);
     }
-}; */
+};

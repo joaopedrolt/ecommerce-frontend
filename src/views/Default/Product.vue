@@ -1,8 +1,8 @@
 <template>
-  <div class="product-view container-limit">
+  <div v-if="renderComponent" class="product-view container-limit">
 
     <div class="product-main container-size-padding desktop-padding">
-      <div class="product-left">
+      <div v-if="product.images.length" class="product-left">
         <div class="product-header hide-desktop container-size-padding">
           <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
             {{ product.name }}
@@ -15,28 +15,26 @@
           </div>
         </div>
         <div class="product-images">
-          <div class="product-images-grid hide-mobile">
-            <img v-for="image in product.images" class="product-img" :src="image" />
-          </div>
+          <!-- <div class="product-images-grid">
+            <img v-for="image in product.images.slice(0, 2)" class="product-img" :src="image" />
+          </div> -->
 
-          <div class="product-images-slide hide-desktop">
+          <div class="product-images-slide">
             <div class="container-limit carousel-limit carousel-height-limit">
               <Splide :has-track="false" aria-label="..." :options="{
                 arrows: true,
                 speed: 1000,
               }">
                 <SplideTrack>
-                  <SplideSlide style="width: 100%" class="carousel-height-limit">
-                    <img class="carousel-height-limit carousel-img-sizing"
-                      src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg"
-                      alt="Sample 1" />
+                  <SplideSlide v-for="image in product.images" style="width: 100%" class="carousel-height-limit">
+                    <img class="carousel-height-limit carousel-img-sizing" :src="image" />
                   </SplideSlide>
 
-                  <SplideSlide style="width: 100%" class="carousel-height-limit">
+                  <!-- <SplideSlide style="width: 100%" class="carousel-height-limit">
                     <img class="carousel-height-limit carousel-img-sizing"
                       src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg"
                       alt="Sample 1" />
-                  </SplideSlide>
+                  </SplideSlide> -->
                 </SplideTrack>
               </Splide>
             </div>
@@ -138,13 +136,14 @@
     </div>
 
     <div class="container-size-padding">
-      <div v-for="section in product.sections" class="showcase">
-        <div class="left-side d-flex flex-column align-center justify-center" style="flex: 7;">
+      <div v-for="section in product.sections" class="showcase"
+        :class="section.position == 'right' ? 'right-side' : 'left-side'">
+        <div class="showcase-content d-flex flex-column align-center justify-center" style="flex: 7;">
           <div class="wrapper">
             <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
               {{ section.title }}
             </div>
-            <div class="right-side" style="opacity: 0.6; padding-left: 2px;">
+            <div style="opacity: 0.6; padding-left: 2px;">
               {{ section.subtitle }}
             </div>
           </div>
@@ -157,7 +156,7 @@
         </div>
       </div>
 
-      <v-divider color="#111111"></v-divider>
+      <v-divider class="mt-9" color="#111111"></v-divider>
 
       <div class="youmaylike flex-column">
         <div v-if="recommendedProducts.length > 0"
@@ -166,10 +165,10 @@
           Você também pode gostar
         </div>
 
-        <div class="img-container d-flex" style="gap: 15px;">
-          <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="d-flex" style="gap: 15px; flex: 1;">
-            <div @click="handleRecommendedProductClick(recomendedProduct.id)" class="product-card d-flex flex-column"
-              elevation="0" style="flex: 1;">
+        <div class="product-container d-flex mt-5" style="gap: 15px;">
+          <div class="product-division d-flex" style="gap: 15px; flex: 1;">
+            <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="product-card d-flex flex-column"
+              elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
               <div class="product-card-top">
                 <img :src="recomendedProduct.displayImage" alt="" />
               </div>
@@ -179,17 +178,16 @@
                 <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
                   {{ recomendedProduct.displayDescription }}
                 </p>
-                <div class="product-card-price d-flex">
+                <div class="product-card-price">
                   <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-if="recommendedProducts.length > 0" v-for="recomendedProduct in recommendedProducts.slice(2, 4)"
-            class="d-flex" style="gap: 15px; flex: 1;">
-            <div @click="handleRecommendedProductClick(recomendedProduct.productId)"
-              class="product-card d-flex flex-column" elevation="0" style="flex: 1;">
+          <div v-if="recommendedProducts.length > 2" class="product-division d-flex" style="gap: 15px; flex: 1;">
+            <div v-for="recomendedProduct in recommendedProducts.slice(2, 4)" class="product-card d-flex flex-column"
+              elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
               <div class="product-card-top">
                 <img :src="recomendedProduct.displayImage" alt="" />
               </div>
@@ -199,7 +197,7 @@
                 <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
                   {{ recomendedProduct.displayDescription }}
                 </p>
-                <div class="product-card-price d-flex">
+                <div class="product-card-price">
                   <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
                 </div>
               </div>
@@ -209,6 +207,7 @@
       </div>
     </div>
   </div>
+  <loading-white-screen v-else />
 </template>
 
 <script setup>
@@ -216,18 +215,22 @@ import { watch } from "vue";
 import { onBeforeMount, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import LoadingWhiteScreen from "@/components/LoadingWhiteScreen.vue";
+
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/vue-splide";
 import "@splidejs/vue-splide/css";
 
 import formatPrice from "@/utils/formatPrice";
 
-import { getProduct, getRecomendedProducts/* , duplicateDocument  */} from "@/data/product.js"
+import { getProduct, getRecomendedProducts, duplicateDocument } from "@/data/product.js"
 
 const route = useRoute();
 const router = useRouter();
 
 const amount = ref(0);
 const open = ref([]);
+
+const renderComponent = ref(true);
 
 // const product = ref({
 //   discount: 10,
@@ -288,6 +291,7 @@ watch(amount, () => {
 
 watch(() => route.params.productId, (newVal) => {
   if (newVal != undefined) {
+    renderComponent.value = false;
     router.go(0);
   }
 });
@@ -298,7 +302,7 @@ onBeforeMount(async () => {
   product.value = await getProduct(productId);
   recommendedProducts.value = await getRecomendedProducts(productId);
 
-  // await duplicateDocument();
+  /*  await duplicateDocument(); */
 });
 </script>
 
@@ -344,7 +348,7 @@ onBeforeMount(async () => {
       justify-content: center;
 
       .product-images {
-        margin-right: 1.8rem;
+        margin-right: 2.3rem;
         height: 100%;
         width: 100%;
 
@@ -363,12 +367,14 @@ onBeforeMount(async () => {
 
         .product-images-slide {
           .carousel-height-limit {
-            height: 500px !important;
+            max-height: 625px !important;
+            min-height: 480px !important;
           }
 
           .carousel-img-sizing {
             width: 100%;
-            object-fit: cover;
+            height: 100%;
+            object-fit: contain;
             object-position: center center;
           }
         }
@@ -412,44 +418,31 @@ onBeforeMount(async () => {
     display: flex;
     margin: 0 auto;
     text-align: start;
-    margin: 80px 0 80px;
+    margin: 120px 0 80px;
 
-    .left-side {
-      border-left: 3px #111111 solid;
+    .wrapper {
+      max-width: 450px;
+    }
 
-      .wrapper {
-        max-width: 450px;
+    &.left-side {
+      .showcase-content {
+        border-left: 3px #111111 solid;
       }
     }
 
-    .right-side {}
+    &.right-side {
+      flex-direction: row-reverse;
+
+      .showcase-content {
+        border-right: 3px #111111 solid;
+      }
+    }
   }
 
   .youmaylike {
     display: flex;
     align-items: center;
     gap: 15px;
-
-    .product-card {
-      cursor: pointer;
-      width: calc(33.33333% - 14px);
-      max-width: 306px !important;
-
-      .product-card-top {
-        width: 100%;
-
-        img {
-          height: 100%;
-          width: 100%;
-        }
-      }
-
-      .product-card-bottom {
-        flex-shrink: 0;
-        justify-content: center;
-        padding: 12px 0;
-      }
-    }
   }
 
   @media (max-width: $tablet) {
@@ -508,6 +501,29 @@ onBeforeMount(async () => {
       text-align: center;
       margin: 33px 0 38px;
 
+      &.left-side,
+      &.right-side {
+        flex-direction: column;
+
+        .showcase-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-left: none;
+          border-right: none;
+
+          .wrapper {
+            max-width: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            margin-bottom: 30px;
+          }
+        }
+      }
+
       .left-side {
         display: flex;
         flex-direction: column;
@@ -524,14 +540,18 @@ onBeforeMount(async () => {
           margin-bottom: 30px;
         }
       }
-
-      .right-side {}
     }
 
     .youmaylike {
-      .img-container {
+      .product-container {
         flex-direction: column !important;
       }
+    }
+  }
+
+  @media (max-width: $phone) {
+    .product-division {
+      flex-direction: column;
     }
   }
 }
