@@ -8,7 +8,7 @@
           Carrinho
         </div>
       </div>
-      <v-btn @click="hideNavigationDrawer()" class="d-flex h-100 align-top" elevation="0" icon :ripple="false"
+      <v-btn @click="handleHideNavigationDrawer()" class="d-flex h-100 align-top" elevation="0" icon :ripple="false"
         style="height: 30px !important; width:30px;">
         <v-icon size="small">mdi-close</v-icon>
       </v-btn>
@@ -32,31 +32,39 @@
                     <div class="font-weight-bold text-subtitle-1">{{ p.title }}</div>
                     <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(p.price) }}</div>
 
-                    <div class="counter-component mt-1" style="
+                    <div class="d-flex justify-center counter-component mt-1" style="
                       border: 1px solid #111111;
                       border-radius: 3px;
                       height: 44px;
-                      width: fit-content;">
-                      <v-btn class="button-plus-minus" elevation="0" @click="updateProductQuantity(p, 'subtraction')"
+                      width: fit-content;
+                      min-width: 87px;">
+                      <v-btn class="button-plus-minus" elevation="0"
+                        @click="handleUpdateProductQuantity(p.id, 'subtraction')"
+                        v-if="!loadingProductQuantity.loading || (loadingProductQuantity.loading && loadingProductQuantity.productId != p.id)"
                         :ripple="false">
                         <v-icon>mdi-minus</v-icon>
                       </v-btn>
 
-                      <div class="counter-input" style="font-size: 0.8rem;">
-                        <div>
+                      <div class="counter-input" style="font-size: 0.8rem; margin-bottom: 1.4px;">
+                        <div
+                          v-if="!loadingProductQuantity.loading || (loadingProductQuantity.loading && loadingProductQuantity.productId != p.id)">
                           {{ p.quantity }}
                         </div>
+                        <v-progress-circular
+                          v-else-if="loadingProductQuantity.loading && loadingProductQuantity.productId == p.id"
+                          indeterminate :size="17" :width="2"></v-progress-circular>
                       </div>
 
-                      <v-btn class="button-plus-minus" elevation="0" @click="updateProductQuantity(p, 'sum')"
+                      <v-btn class="button-plus-minus" elevation="0" @click="handleUpdateProductQuantity(p.id, 'sum')"
+                        v-if="!loadingProductQuantity.loading || (loadingProductQuantity.loading && loadingProductQuantity.productId != p.id)"
                         :ripple="false">
                         <v-icon>mdi-plus</v-icon>
                       </v-btn>
                     </div>
                   </div>
                   <div>
-                    <v-btn class="d-flex h-100 align-top" elevation="0" icon :ripple="false"
-                      style="height: 30px !important; width:30px;">
+                    <v-btn class="d-flex h-100 align-top" @click="handleRemoveProduct(p.id)" elevation="0" icon
+                      :ripple="false" style="height: 30px !important; width:30px;">
                       <v-icon size="small">mdi-delete</v-icon>
                     </v-btn>
                   </div>
@@ -70,7 +78,7 @@
           <v-divider color="111111"></v-divider>
           <div class="w-100 d-flex justify-space-between px-1 pt-3 pb-3">
             <div class="text-subtitle-1">Total: </div>
-            <div class="text-subtitle-1">R$ 399.00</div>
+            <div class="text-subtitle-1">{{ formatPrice(totalPrice) }}</div>
           </div>
 
           <v-btn class="text-subtitle-2 font-weight-regular button-color button-black" color="#111111" height="45px"
@@ -93,8 +101,9 @@
             <br />
             Aceita algumas sugestões?
           </div>
-          <v-btn class="text-subtitle-1 font-weight-regular button-color button-light" color="#111111" height="45px"
-            width="100%" variant="flat" :ripple="false">
+          <v-btn class="text-subtitle-1 font-weight-regular button-color button-light"
+            @click="handleHideNavigationDrawer()" color="#111111" height="45px" width="100%" variant="flat"
+            :ripple="false">
             Voltar a loja
           </v-btn>
         </div>
@@ -106,16 +115,18 @@
         <circular-loading />
       </div>
     </template>
-    
+
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { ref, watch, reactive, onBeforeMount } from "vue";
+import { ref, watch, computed } from "vue";
 import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 import formatPrice from "@/utils/formatPrice";
 import { useRouter } from "vue-router";
+
+import { getUserCart, updateCartProduct } from "@/data/cart"
 
 import CircularLoading from "@/components/CircularLoading.vue";
 
@@ -125,48 +136,22 @@ const { displayCartDrawer } = storeToRefs(drawerStore);
 const router = useRouter();
 
 const loading = ref(false);
-const isCartEmpty = ref(false);
-const quantity = ref(0);
+const loadingProductQuantity = ref({ productId: null, loading: false });
 
-const products = reactive([
-  {
-    image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
-    title: "Calça Wide Leg",
-    price: 399.00,
-    quantity: 0
-  },
-  {
-    image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
-    title: "Calça Wide Leg",
-    price: 399.00,
-    quantity: 0
-  },
-  {
-    image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
-    title: "Calça Wide Leg",
-    price: 399.00,
-    quantity: 0
-  },
-  {
-    image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
-    title: "Calça Wide Leg",
-    price: 399.00,
-    quantity: 0
-  },
-]);
+const userId = ref("rXiNPm5lXTExkVtmPcy0");
 
-const updateProductQuantity = (product, operation) => {
-  if (operation == 'sum') {
-    if (product.quantity < 10)
-      product.quantity++;
-  }
+const products = ref([]);
+const isCartEmpty = computed(() => {
+  return !(products.value && products.value.length > 0);
+});
 
-  if (operation == 'subtraction') {
-    if (product.quantity > 0) product.quantity--;
-  }
-}
+const totalPrice = computed(() =>
+  products.value.length
+    ? products.value.reduce((sum, p) => sum + p.price * p.quantity, 0)
+    : 0
+);
 
-const hideNavigationDrawer = () => {
+const handleHideNavigationDrawer = () => {
   displayCartDrawer.value = false;
 };
 
@@ -175,7 +160,37 @@ const handleCheckout = async () => {
     name: "Checkout"
   });
   router.go(0);
-}
+};
+
+const loadUserCart = async (userId, params) => {
+  if (params.type == "general") {
+    loading.value = true;
+    products.value = await getUserCart(userId);
+    loading.value = false;
+  }
+
+  else if (params.type == "qtd") {
+    loadingProductQuantity.value = { productId: params.productId, loading: true };
+
+    products.value = await getUserCart(userId);
+
+    setTimeout(() => {
+      loadingProductQuantity.value = { productId: null, loading: false } // Efect
+    }, 100)
+  }
+};
+
+const handleUpdateProductQuantity = async (productId, operation) => {
+  if (await updateCartProduct(userId.value, productId, operation)) {
+    await loadUserCart(userId.value, { type: "qtd", productId });
+  }
+};
+
+const handleRemoveProduct = async (productId) => {
+  if (await updateCartProduct(userId.value, productId, "remove")) {
+    await loadUserCart(userId.value, { type: "general" });
+  }
+};
 
 watch(displayCartDrawer, async (newValue) => {
   const htmlElement = document.getElementsByTagName("html");
@@ -183,14 +198,7 @@ watch(displayCartDrawer, async (newValue) => {
   if (!newValue) {
     htmlElement[0].style.overflow = "";
   } else {
-    loading.value = true;
-
-    setTimeout(() => {
-      loading.value = false;
-        
-      /* getUserCart(rXiNPm5lXTExkVtmPcy0); */
-    }, 2000);
-
+    await loadUserCart(userId.value, { type: "general" });
     htmlElement[0].style.overflow = "hidden";
   }
 });

@@ -12,8 +12,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-/* export const collections = {
-  
-} */
+export const collectionNames = {
+  carts: "carts",
+  products: "products"
+}
 
 export const db = getFirestore(app); 

@@ -1,12 +1,10 @@
-import { db } from '../firebase';
+import { db, collectionNames } from '../firebase';
 import { doc, getDoc, getDocs, addDoc, collection, query } from 'firebase/firestore';
 import getRandomListItens from "@/utils/getRandomListItens";
 
-const productsCollectionName = "products";
-
 export const getProduct = async (productId) => {
     try {
-        const docRef = doc(db, productsCollectionName, productId);
+        const docRef = doc(db, collectionNames.products, productId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -28,7 +26,7 @@ export const getProduct = async (productId) => {
 
 export const getRecomendedProducts = async (currentProductId) => {
     try {
-        const querySnapshot = await getDocs(collection(db, productsCollectionName));
+        const querySnapshot = await getDocs(collection(db, collectionNames.products));
         var productIDs = querySnapshot.docs.map(doc => doc.id);
 
         if (!productIDs.length)
@@ -47,7 +45,7 @@ export const getRecomendedProducts = async (currentProductId) => {
         const productIDsRandomized = getRandomListItens(productIDs, 4);
 
         const productPromises = productIDsRandomized.map((id) => {
-            const docRef = doc(db, productsCollectionName, id);
+            const docRef = doc(db, collectionNames.products, id);
             return getDoc(docRef);
         });
 
@@ -65,7 +63,7 @@ export const getRecomendedProducts = async (currentProductId) => {
 
 export const duplicateDocument = async () => {
     try {
-        const docRef = doc(db, productsCollectionName, "GaAp5SyjPCTC7ufuEPWG");
+        const docRef = doc(db, collectionNames.products, "GaAp5SyjPCTC7ufuEPWG");
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
