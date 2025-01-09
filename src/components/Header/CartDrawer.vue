@@ -166,6 +166,7 @@ const loadUserCart = async (userId, params) => {
   if (params.type == "general") {
     loading.value = true;
     products.value = await getUserCart(userId);
+    console.log(products.value)
     loading.value = false;
   }
 

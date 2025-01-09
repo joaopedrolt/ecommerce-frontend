@@ -84,8 +84,8 @@
             </div>
 
             <div>
-              <v-btn class="font-weight-regular button-color button-light mt-4" height="45px" width="100%"
-                variant="flat" :ripple="false">
+              <v-btn class="font-weight-regular button-color button-light mt-4"
+                @click="handleAddToCart(product.grossPrice)" height="45px" width="100%" variant="flat" :ripple="false">
                 ADICIONAR AO CARRINHO
               </v-btn>
             </div>
@@ -222,40 +222,18 @@ import "@splidejs/vue-splide/css";
 
 import formatPrice from "@/utils/formatPrice";
 
-import { getProduct, getRecomendedProducts, duplicateDocument } from "@/data/product.js"
+import { getProduct, getRecomendedProducts/* , duplicateDocument */ } from "@/data/product.js"
+import { addProductToCart } from "@/data/cart.js"
 
 const route = useRoute();
 const router = useRouter();
 
-const amount = ref(0);
+const amount = ref(1);
 const open = ref([]);
 
 const renderComponent = ref(true);
-
-// const product = ref({
-//   discount: 10,
-//   displayImage: "",
-//   images: [
-//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg", 
-//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg", 
-//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg" , 
-//     "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919164_1000.jpg"],
-//   longDescription: "Com detalhes refinados e um design exclusivo, a pulseira LV Bloom é um modelo icônico e marcante. O fino cordão em couro de vitelo é decorado com dois emblemas clássicos da Maison: as LV Initials e uma Flor do Monogram, elaboradas em metal brilhante com acabamento dourado. Um fecho inovador permite que essa pulseira se ajuste perfeitamente em qualquer pulso. Metal com acabamento dourado Cordão em couro de vitelo marrom Assinaturas LV Initials e Flores do Monogram",
-//   name: "aaa",
-//   price: 10.9,
-//   grossPrice: 24.9,
-//   sections: [{
-//     image: "https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919233_1000.jpg",
-//     positon: "left",
-//     sectionPosition: 1,
-//     subtitle: "Camiseta anti odor com ação antibacteriana, de rápida absorção e evaporação do suor, regulando a temperatura corporal.",
-//     title: "FUNCIONALIDADES DO FUTURO"
-//   }],
-//   shortDescription: "Verde, jacquard, fechamento frontal por botão e zíper, cordão de ajuste no cós, comprimento cropped, modelagem cenoura e cinco bolsos. Ao comprar este item unissex, considere que sua grade de tamanhos é masculina.",
-//   stock: 1
-// });
-
 const product = ref({
+  id: "",
   discount: 0,
   displayImage: "",
   images: [],
@@ -270,6 +248,8 @@ const product = ref({
 
 const recommendedProducts = ref([]);
 
+const userId = ref("rXiNPm5lXTExkVtmPcy0");
+
 const handleRecommendedProductClick = (productId) => {
   router.push({
     name: "Product",
@@ -279,9 +259,13 @@ const handleRecommendedProductClick = (productId) => {
   });
 }
 
+const handleAddToCart = async () => {
+  await addProductToCart(userId.value, product.value.id, amount.value);
+}
+
 watch(amount, () => {
-  if (amount.value < 0) {
-    amount.value = 0;
+  if (amount.value < 1) {
+    amount.value = 1;
   }
 
   if (amount.value > 10) {

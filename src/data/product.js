@@ -14,7 +14,7 @@ export const getProduct = async (productId) => {
                 product.sections.sort((a, b) => a.sectionPosition - b.sectionPosition);
             }
 
-            return product;
+            return { id: productId, ...product };
         } else {
             console.log("No such Product!");
             return null;

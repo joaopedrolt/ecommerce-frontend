@@ -1,5 +1,18 @@
 import { db, collectionNames } from '../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+
+import { getProduct } from './product';
+
+const createUserCart = async (userId) => {
+    try {
+        await setDoc(doc(db, collectionNames.carts, userId), { items: [] });
+        console.log("User's cart created!");
+        return true;
+    } catch (error) {
+        console.error("Error creating cart: ", error);
+        return false;
+    }
+};
 
 export const getUserCart = async (userId) => {
     try {
@@ -8,10 +21,16 @@ export const getUserCart = async (userId) => {
             return [];
         }
 
-        const cartDoc = await getDoc(doc(db, collectionNames.carts, userId));
+        var cartDoc = await getDoc(doc(db, collectionNames.carts, userId));
         if (!cartDoc.exists()) {
             console.warn(`No cart found for user ID: ${userId}`);
-            return [];
+
+            if (await createUserCart(userId)) {
+                cartDoc = await getDoc(doc(db, collectionNames.carts, userId));
+            }
+            else {
+                return [];
+            }
         }
 
         const { items = [] } = cartDoc.data();
@@ -20,22 +39,19 @@ export const getUserCart = async (userId) => {
             return [];
         }
 
-        const productSnapshots = await Promise.all(
-            items.map(({ productId }) => getDoc(doc(db, collectionNames.products, productId)))
-        );
+        return await Promise.all(items.map(async (cartProduct) => {
+            const productId = cartProduct.productId;
+            const product = await getProduct(productId);
 
-        return productSnapshots.map((snapshot) => {
-            const product = snapshot.data();
-            const { quantity } = items.find(({ productId }) => productId === snapshot.id);
-
-            return {
-                id: snapshot.id,
-                image: product.displayImage,
-                price: product.price,
-                title: product.name,
-                quantity
-            };
-        });
+            if (product)
+                return {
+                    id: productId,
+                    image: product.displayImage,
+                    price: product.price,
+                    title: product.name,
+                    quantity: cartProduct.quantity
+                };
+        }));
     } catch (error) {
         console.error("Error fetching cart:", error);
         return [];
@@ -59,7 +75,7 @@ export const updateCartProduct = async (userId, productId, operation) => {
         if (operation === "subtraction" && product.quantity === 1) {
             operation = "remove";
         } else if (operation === "sum" && product.quantity >= 10) {
-            return false; 
+            return false;
         }
 
         const updatedItems = operation === "remove"
@@ -74,6 +90,55 @@ export const updateCartProduct = async (userId, productId, operation) => {
         return true;
     } catch (error) {
         console.error("Error updating product quantity:", error);
+        return false;
+    }
+};
+
+// melhorar essa funcao
+
+export const addProductToCart = async (userId, productId, quantity) => {
+    try {
+        if (!userId || !productId || !quantity) return false;
+
+        const cartRef = doc(db, collectionNames.carts, userId);
+        const cartDoc = await getDoc(cartRef);
+
+        if (!cartDoc.exists()) {
+            console.warn(`No cart found for user ID: ${userId}`);
+
+            if (await createUserCart(userId)) {
+                cartDoc = await getDoc(doc(db, collectionNames.carts, userId));
+            }
+            else {
+                return false;
+            }
+        }
+
+        const items = cartDoc.data()?.items || [];
+        const product = items.find(item => item.productId === productId);
+
+        const cartItem = {
+            productId,
+            quantity
+        }
+
+        var updatedItems = [];
+
+        if (!product) {
+            updatedItems = [...items, cartItem];
+        }
+        else {
+            updatedItems = items.map(item =>
+                item.productId === productId
+                    ? { ...item, quantity: item.quantity + quantity }
+                    : item
+            );
+        }
+
+        await updateDoc(cartRef, { items: updatedItems });
+        return true;
+    } catch (error) {
+        console.error("Error adding product to cart quantity:", error);
         return false;
     }
 };
