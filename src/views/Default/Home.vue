@@ -31,9 +31,9 @@
             Conhecer melhor <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
 
-          <v-btn @click="displayCartDrawerr" class="featured-product-button font-weight-regular button-color mt-4"
-            height="45px" variant="flat" :ripple="false"
-            :class="[`featured-product-${featuredProduct.theme}`, `button-${featuredProduct.theme}`]">
+          <v-btn @click="handleAddToCart(featuredProduct.productId)"
+            class="featured-product-button font-weight-regular button-color mt-4" height="45px" variant="flat"
+            :ripple="false" :class="[`featured-product-${featuredProduct.theme}`, `button-${featuredProduct.theme}`]">
             Comprar agora <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </div>
@@ -49,6 +49,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, onBeforeMount } from "vue";
 
 import { getFeaturedProductsOrdered } from "@/data/home.js"
+import { addProductToCart } from "@/data/cart.js"
 
 const route = useRoute();
 const router = useRouter();
@@ -57,11 +58,19 @@ const featuredProducts = ref([]);
 
 // const queryParamCart = route.query.cart;
 
+const userId = ref("rXiNPm5lXTExkVtmPcy0");
+
 const drawerStore = useDrawerStore();
 
 const displayCartDrawerr = () => {
   drawerStore.displayCartDrawerx();
 };
+
+const handleAddToCart = async (productId) => {
+  if (await addProductToCart(userId.value, productId, 1)) {
+    drawerStore.displayCartDrawerx();
+  }
+}
 
 const handleProductPageClick = (productId) => {
   router.push({
@@ -72,8 +81,12 @@ const handleProductPageClick = (productId) => {
   });
 }
 
-onBeforeMount(async () => {
+const loadFeaturedProducts = async () => {
   featuredProducts.value = await getFeaturedProductsOrdered();
+};
+
+onBeforeMount(async () => {
+  await loadFeaturedProducts();
 });
 </script>
 

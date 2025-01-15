@@ -319,7 +319,7 @@
                         </div>
                       </v-list-item-title>
 
-                      <template v-slot:append="{ }">
+                      <template v-slot:append="{}">
                         <v-icon class="ml-2">mdi-credit-card-outline</v-icon>
                       </template>
                     </v-list-item>
@@ -356,7 +356,7 @@
                         </div>
                       </v-list-item-title>
 
-                      <template v-slot:append="{ }">
+                      <template v-slot:append="{}">
                         <v-icon class="ml-2">mdi-qrcode</v-icon>
                       </template>
                     </v-list-item>
@@ -393,7 +393,7 @@
                         </div>
                       </v-list-item-title>
 
-                      <template v-slot:append="{ }">
+                      <template v-slot:append="{}">
                         <v-icon class="ml-2">mdi-barcode</v-icon>
                       </template>
                     </v-list-item>
@@ -658,7 +658,28 @@
         </div>
 
         <div class="cart-itens">
-          <div class="d-flex justify-space-between w-100">
+          <div v-for="p in products" class="d-flex justify-space-between w-100">
+            <div style="height: 90px; width: 90px;">
+              <v-img class="h-100 w-100" style="border-radius: 10px;" :src="p.image"></v-img>
+            </div>
+
+            <div class="d-flex w-100 justify-space-between">
+              <div class="d-flex flex-column justify-center ml-4">
+                <div class="font-weight-bold">
+                  {{ p.title }}
+                </div>
+                <div class="text-subtitle-2 font-weight-light">
+                  Quantidade: {{ p.quantity }}
+                </div>
+              </div>
+
+              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                {{ formatPrice(p.price) }}
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="d-flex justify-space-between w-100">
             <div style="height: 90px; width: 90px;">
               <v-img class="h-100 w-100" style="border-radius: 10px;"
                 src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
@@ -722,29 +743,7 @@
                 R$ 159,00
               </div>
             </div>
-          </div>
-
-          <div class="d-flex justify-space-between w-100">
-            <div style="height: 90px; width: 90px;">
-              <v-img class="h-100 w-100" style="border-radius: 10px;"
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-            </div>
-
-            <div class="d-flex w-100 justify-space-between">
-              <div class="d-flex flex-column justify-center ml-4">
-                <div class="font-weight-bold">
-                  Tech T-Shirt
-                </div>
-                <div class="text-subtitle-2 font-weight-light">
-                  Preta / PP
-                </div>
-              </div>
-
-              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                R$ 159,00
-              </div>
-            </div>
-          </div>
+          </div> -->
         </div>
 
         <v-divider color="#111111"></v-divider>
@@ -752,25 +751,25 @@
         <div class="order-sum d-flex flex-column" style="gap: 4px;">
           <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Subtotal:</div>
-            <div class="font-weight-regular">R$3600</div>
+            <div class="font-weight-regular">{{ formatPrice(totalPriceWithoutShipping) }}</div>
           </div>
 
           <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Frete:</div>
-            <div class="font-weight-regular">R$40</div>
+            <div class="font-weight-regular"> {{ formatPrice(shippingPrice) }}</div>
           </div>
 
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+          <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Desconto:</div>
             <div class="font-weight-regular">-R$300</div>
-          </div>
+          </div> -->
         </div>
 
         <v-divider color="#111111"></v-divider>
 
         <div class="d-flex align-center justify-space-between pt-4">
           <div style="margin-top: 1px;">Total:</div>
-          <div class="text-h6 font-weight-regular ">R$ 3340,00</div>
+          <div class="text-h6 font-weight-regular ">{{ formatPrice(totalPrice) }}</div>
         </div>
       </div>
     </div>
@@ -778,7 +777,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, reactive, watch, computed, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from "pinia";
 import { vMaska } from "maska"
@@ -806,13 +805,59 @@ import {
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import { useCartStore } from "@/store/store";
 
+import { getUserCart } from "@/data/cart"
+
+import formatPrice from "@/utils/formatPrice";
+import generateShippingPrice from "@/utils/generateShippingPrice";
+
 const cartStore = useCartStore();
-const { shippingData, isShippingDataValid, 
-        freteData,  isFreteDataValid } = storeToRefs(cartStore);
+const { shippingData, isShippingDataValid,
+  freteData, isFreteDataValid } = storeToRefs(cartStore);
 
 const router = useRouter();
 const route = useRoute();
 const render = ref(false);
+
+const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const products = ref([]);
+const shippingPrice = ref(0);
+
+// const totalPrice = computed(() => {
+//   if (!products.value.length) {
+//     return 0;
+//   }
+
+//   const productTotal = products.value.reduce((sum, product) => {
+//     const price = Number(product.price) || 0;
+//     const quantity = Number(product.quantity) || 0;
+//     return sum + price * quantity;
+//   }, 0);
+
+//   const shipping = Number(shippingPrice.value) > 0 ? Number(shippingPrice.value) : 0;
+
+//   const total = productTotal + shipping;
+//   return Math.round(total * 100) / 100;
+// });
+
+const totalPriceWithoutShipping = computed(() => {
+  if (!products.value.length) {
+    return 0;
+  }
+
+  // Calculate total for products only
+  return products.value.reduce((sum, product) => {
+    const price = parseFloat(product.price) || 0;
+    const quantity = parseFloat(product.quantity) || 0;
+    return sum + price * quantity;
+  }, 0);
+});
+
+const totalPrice = computed(() => {
+  const shipping = parseFloat(shippingPrice.value) > 0 ? parseFloat(shippingPrice.value) : 0;
+  const total = totalPriceWithoutShipping.value + shipping;
+
+  return Math.round(total * 100) / 100;
+});
 
 const step = ref(0);
 const items = ref([
@@ -887,7 +932,7 @@ const updateStep = (itemStep) => {
 }
 
 const setFreteSection = (isLocked) => {
-  if(isLocked) setPaymentSection(isLocked)
+  if (isLocked) setPaymentSection(isLocked)
   freteBreadcrumbs.value.disabled = isLocked;
 }
 
@@ -908,6 +953,11 @@ const handleNextStep = () => {
       break;
   }
 }
+
+const loadUserCart = async (userId) => {
+  products.value = await getUserCart(userId);
+  shippingPrice.value = generateShippingPrice();
+};
 
 const handleCartEdit = () => {
   router.push({
@@ -930,7 +980,9 @@ const handlePreviousStep = () => {
   }
 }
 
-onMounted(() => {
+onBeforeMount(async () => {
+  await loadUserCart(userId.value);
+
   if (isShippingDataValid.value) {
     Object.assign(shipping, shippingData.value);
     displayAddressPartialForm.value = true;
@@ -963,7 +1015,7 @@ onMounted(() => {
   setTimeout(() => {
     render.value = true;
   }, 100);
-});
+})
 
 // Shipping Form
 const shippingForm = ref();
@@ -1107,12 +1159,12 @@ const handleLogin = () => {
 const freteMethod = ref(null);
 
 const paymenteee = (method) => {
-  if(method == null && isShippingDataValid.value) return;
+  if (method == null && isShippingDataValid.value) return;
 
   if (freteBreadcrumbs.value)
-        setPaymentSection(false);
+    setPaymentSection(false);
 
-  cartStore.setFreteData({method});
+  cartStore.setFreteData({ method });
 
   router.push({
     name: "Checkout",

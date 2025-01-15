@@ -49,6 +49,7 @@ export const getUserCart = async (userId) => {
                     image: product.displayImage,
                     price: product.price,
                     title: product.name,
+                    description: product.displayDescription,
                     quantity: cartProduct.quantity
                 };
         }));
@@ -117,20 +118,22 @@ export const addProductToCart = async (userId, productId, quantity) => {
         const items = cartDoc.data()?.items || [];
         const product = items.find(item => item.productId === productId);
 
-        const cartItem = {
-            productId,
-            quantity
-        }
-
         var updatedItems = [];
 
         if (!product) {
+            const cartItem = {
+                productId,
+                quantity
+            }
+
             updatedItems = [...items, cartItem];
         }
         else {
+            quantity = (product.quantity + quantity) >= 10 ? 10 : product.quantity + quantity;
+
             updatedItems = items.map(item =>
                 item.productId === productId
-                    ? { ...item, quantity: item.quantity + quantity }
+                    ? { ...item, quantity }
                     : item
             );
         }

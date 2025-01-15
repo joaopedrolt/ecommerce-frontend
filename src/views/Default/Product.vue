@@ -215,6 +215,9 @@ import { watch } from "vue";
 import { onBeforeMount, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { storeToRefs } from "pinia";
+import { useDrawerStore } from "@/store/store";
+
 import LoadingWhiteScreen from "@/components/LoadingWhiteScreen.vue";
 
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/vue-splide";
@@ -227,6 +230,9 @@ import { addProductToCart } from "@/data/cart.js"
 
 const route = useRoute();
 const router = useRouter();
+
+const drawerStore = useDrawerStore();
+const { displayCartDrawer } = storeToRefs(drawerStore);
 
 const amount = ref(1);
 const open = ref([]);
@@ -260,7 +266,9 @@ const handleRecommendedProductClick = (productId) => {
 }
 
 const handleAddToCart = async () => {
-  await addProductToCart(userId.value, product.value.id, amount.value);
+  if (await addProductToCart(userId.value, product.value.id, amount.value)) {
+    drawerStore.displayCartDrawerx();
+  }
 }
 
 watch(amount, () => {
