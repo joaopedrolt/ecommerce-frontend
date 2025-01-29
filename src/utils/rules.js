@@ -1,3 +1,5 @@
+import { searchAdressByCEP } from "@/utils/cep.js";
+
 const EMPTY_FIELD_MESSAGE = "Esse campo não pode ser vazio!";
 const INVALID_FORMAT_MESSAGE = "Formato inválido!";
 
@@ -250,8 +252,120 @@ export const cepRules = [
     return true;
   },
   (value) => {
-    if (!(/^\d{5}-\d{3}$/.test(value)))
+    if (!(/^[0-9]{5}-?[0-9]{3}$/.test(value)))
       return INVALID_FORMAT_MESSAGE;
     return true;
   },
+  async (value) => {
+    return await searchAdressByCEP(value, true) ? true : "Cep não encontrado!";
+  },
+];
+
+export const cardNumberRules = [
+  (value) => {
+    if (value === undefined || value === null) {
+      return EMPTY_FIELD_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    if (value.length === 0) {
+      return EMPTY_FIELD_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    if (!/^(?:\d{4} \d{4} \d{4} \d{3}|\d{4} \d{4} \d{4} \d{4})$/.test(value)) {
+      return INVALID_FORMAT_MESSAGE;
+    }
+    return true;
+  }
+];
+
+export const expirationDateRules = [
+  (value) => {
+    if (value === undefined || value === null) {
+      return EMPTY_FIELD_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    if (value.length === 0) {
+      return EMPTY_FIELD_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(value)) {
+      return INVALID_FORMAT_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    const [month, year] = value.split("/").map(Number);
+    if (month < 1 || month > 12) {
+      return INVALID_FORMAT_MESSAGE;
+    }
+    return true;
+  },
+  (value) => {
+    const [month, year] = value.split("/").map(Number);
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1; // Months are 0-based
+    const currentYear = now.getFullYear();
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      return "A validade do cartão já expirou.";
+    }
+    if (year > currentYear + 20) {
+      return "O ano de validade do cartão é inválido.";
+    }
+    return true;
+  },
+];
+
+export const cardCvcRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  (value) => {
+    if (value.length == 0)
+      return EMPTY_FIELD_MESSAGE;
+    return true
+  },
+  (value) => {
+    let maxCharacters = 4;
+    if (value.length > maxCharacters)
+      return maxCharactersMessage(maxCharacters);
+    return true
+  },
+];
+
+export const cardNameRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  (value) => {
+    if (value.length == 0)
+      return EMPTY_FIELD_MESSAGE;
+    return true
+  },
+  (value) => {
+    let maxCharacters = 30;
+    if (value.length > maxCharacters)
+      return maxCharactersMessage(maxCharacters);
+    return true
+  },
+];
+
+export const installmentsRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  }
 ];

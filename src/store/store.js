@@ -70,7 +70,7 @@ export const useCartStore = defineStore("cart", {
       cidade: "",
       estado: null,
       cep: "",
-      save: true
+      price: 0.0,
     }),
     isShippingDataValid: useStorage(cartlocalStorageKeys[1], false),
 
@@ -85,7 +85,6 @@ export const useCartStore = defineStore("cart", {
         localStorage.removeItem(key);
       });;
     },
-
     // Shipping
     setShippingDataStatus(isValid) {
       if (!isValid) this.clearCartLocalStorage();
@@ -94,10 +93,15 @@ export const useCartStore = defineStore("cart", {
     setShippingData(obj) {
       if (!obj) return;
 
-      this.setShippingDataStatus(true);
-      this.shippingData = obj;
-    },
+      if (this.shippingData != null && this.shippingData.cep == obj.cep && Number(this.shippingData.price) > 0) {
+        this.shippingData = { ...obj, price: Number(this.shippingData.price) };
+      }
+      else {
+        this.shippingData = { ...obj, price: Number(obj.price) };
+      }
 
+      this.setShippingDataStatus(true);
+    },
     // Frete
     setFreteDataStatus(isValid) {
       if (!isValid) this.clearCartLocalStorage();

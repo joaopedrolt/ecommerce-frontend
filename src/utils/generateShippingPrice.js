@@ -1,3 +1,3 @@
 export default () => {
-    return (Math.random() * 50).toFixed(2);
+    return (Math.random() * 10 + 20).toFixed(2);
 };

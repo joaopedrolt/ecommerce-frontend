@@ -56,7 +56,7 @@ const router = useRouter();
 
 const featuredProducts = ref([]);
 
-// const queryParamCart = route.query.cart;
+const queryParamCart = route.query.cart;
 
 const userId = ref("rXiNPm5lXTExkVtmPcy0");
 
@@ -87,6 +87,8 @@ const loadFeaturedProducts = async () => {
 
 onBeforeMount(async () => {
   await loadFeaturedProducts();
+
+  if (queryParamCart) displayCartDrawerr();
 });
 </script>
 

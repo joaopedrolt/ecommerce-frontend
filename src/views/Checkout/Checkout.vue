@@ -208,7 +208,7 @@
                       </div>
 
                       <div class="d-flex flex-column" style="flex: 2;">
-                        <v-autocomplete id="estado" class="sibling-input" item-title="nome" item-value="id"
+                        <v-autocomplete id="estado" class="sibling-input" item-title="nome" item-value="sigla"
                           :rules="estadoRules" return-object v-model="shipping.estado" label="Estado" :items="estados"
                           variant="outlined" density="comfortable">
                         </v-autocomplete>
@@ -217,8 +217,8 @@
                     </div>
                   </template>
 
-                  <v-text-field id="cep" v-model="shipping.cep" v-maska:[cepMask] numberMask :rules="cepRules"
-                    label="CEP" variant="outlined" density="comfortable">
+                  <v-text-field id="cep" v-model="shipping.cep" v-maska:[cepMask] :rules="cepRules" label="CEP"
+                    variant="outlined" density="comfortable" @blur="handleCepBlur">
                   </v-text-field>
                   <validation-filler :active="shippingFormValidation.cep" density="compact" />
 
@@ -279,13 +279,13 @@
                           <div>Total Express</div>
                         </div>
                         <div class="w-100 text-subtitle-2 font-weight-regular">
-                          7 dias úteis
+                          3 dias úteis
                         </div>
                       </div>
 
                       <div class="d-flex text-subtitle-2 align-flex font-weight-regular"
                         style="word-break: keep-all; white-space: nowrap;">
-                        R$ 16,00
+                        {{ formatPrice(shippingData.price) }}
                       </div>
                     </template>
                   </v-radio>
@@ -296,124 +296,155 @@
 
           <v-window-item :value="2">
             <!-- Destinatario -->
-            <div class="text-h5 font-weight-regular">
-              Forma de Pagamento
-            </div>
-            <div>
-              <v-list class="frete-ratio" v-model:opened="paymentMethodRatio" open-strategy="single" eager>
-                <v-list-group value="card">
-                  <template v-slot:activator="{ isOpen, props }">
-                    <v-list-item :ripple="false" v-bind="props">
+            <v-form ref="paymentForm" validate-on="layz">
+              <div class="text-h5 font-weight-regular">
+                Forma de Pagamento
+              </div>
+              <div>
+                <v-list class="frete-ratio" v-model:opened="paymentMethodRatio" open-strategy="single" eager>
+                  <v-list-group value="card">
+                    <template v-slot:activator="{ isOpen, props }">
+                      <v-list-item :ripple="false" v-bind="props">
 
-                      <v-list-item-title>
-                        <div class="d-flex align-center">
-                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.35rem;">
-                            <v-radio :model-value="isOpen" density="compact"></v-radio>
-                          </div>
-                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                        <v-list-item-title>
+                          <div class="d-flex align-center">
+                            <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.35rem;">
+                              <v-radio :model-value="isOpen" density="compact"></v-radio>
+                            </div>
+                            <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
                             -webkit-user-select: none; 
                             -ms-user-select: none; 
                              user-select: none;">
-                            Cartão de Crédito
+                              Cartão de Crédito
+                            </div>
+                          </div>
+                        </v-list-item-title>
+
+                        <template v-slot:append="{}">
+                          <v-icon class="ml-2">mdi-credit-card-outline</v-icon>
+                        </template>
+                      </v-list-item>
+                    </template>
+                    <v-list-item>
+                      <div class="w-100 h-100 d-flex flex-column text-center px-2 pt-5 pb-1">
+
+                        <v-text-field id="cardNumber" v-model="payment.cardNumber" v-maska:[cardNumberMask]
+                          label="Número do Cartão" :rules="cardNumberRules" variant="outlined" density="comfortable">
+                        </v-text-field>
+                        <validation-filler :active="paymentFormValidation.cardNumber" density="compact" />
+
+                        <div class="parent-input-container d-flex w-100">
+                          <div class="d-flex flex-column" style="flex: 3;">
+                            <v-text-field id="cardExpirationDate" v-model="payment.cardExpirationDate"
+                              v-maska:[cardExpirationDateMask] label="Data de Vencimento (MM/AAAA)"
+                              :rules="expirationDateRules" variant="outlined" class="sibling-input"
+                              density="comfortable">
+                            </v-text-field>
+                            <validation-filler :active="paymentFormValidation.cardExpirationDate" density="compact" />
+                          </div>
+
+                          <div class="d-flex flex-column" style="flex: 2;">
+                            <v-text-field id="cvc" v-model="payment.cvc" v-maska:[cardCvcMask]
+                              label="Codigo de Segurança" class="sibling-input" :rules="cardCvcRules" variant="outlined"
+                              density="comfortable">
+                            </v-text-field>
+                            <validation-filler :active="paymentFormValidation.cvc" density="compact" />
                           </div>
                         </div>
-                      </v-list-item-title>
 
-                      <template v-slot:append="{}">
-                        <v-icon class="ml-2">mdi-credit-card-outline</v-icon>
-                      </template>
-                    </v-list-item>
-                  </template>
-                  <v-list-item>
-                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
-                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
-                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
-                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
-                        "Finalizar a compra", você verá
-                        o QR Code para fazer o pagamento instantâneo.
+                        <v-text-field id="nameOnCard" v-model="payment.nameOnCard" label="Nome no Cartão"
+                          :rules="cardNameRules" variant="outlined" density="comfortable">
+                        </v-text-field>
+                        <validation-filler :active="paymentFormValidation.nameOnCard" density="compact" />
+
+                        <v-autocomplete id="installments" v-model="payment.installments" item-title="formattedPrice"
+                          item-value="number" return-object label="Parcelas" :rules="installmentsRules"
+                          :items="installments" variant="outlined" density="comfortable">
+                        </v-autocomplete>
+                        <validation-filler :active="paymentFormValidation.installments" density="compact" />
                       </div>
-                    </div>
-                  </v-list-item>
-                </v-list-group>
+                    </v-list-item>
+                  </v-list-group>
 
-                <v-divider color="111111"></v-divider>
+                  <v-divider color="111111"></v-divider>
 
-                <v-list-group value="pix">
-                  <template v-slot:activator="{ isOpen, props }">
-                    <v-list-item :ripple="false" v-bind="props">
+                  <v-list-group value="pix">
+                    <template v-slot:activator="{ isOpen, props }">
+                      <v-list-item :ripple="false" v-bind="props">
 
-                      <v-list-item-title>
-                        <div class="d-flex align-center">
-                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.4rem;">
-                            <v-radio :model-value="isOpen" density="compact"></v-radio>
-                          </div>
-                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                        <v-list-item-title>
+                          <div class="d-flex align-center">
+                            <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.4rem;">
+                              <v-radio :model-value="isOpen" density="compact"></v-radio>
+                            </div>
+                            <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
                             -webkit-user-select: none; 
                             -ms-user-select: none; 
                              user-select: none;">
-                            Pix
+                              Pix
+                            </div>
                           </div>
+                        </v-list-item-title>
+
+                        <template v-slot:append="{}">
+                          <v-icon class="ml-2">mdi-qrcode</v-icon>
+                        </template>
+                      </v-list-item>
+                    </template>
+                    <v-list-item>
+                      <div
+                        class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-6 mb-2">
+                        <img style="filter: grayscale(100%); width: 195px; height: 150px;" src="/payment.svg" />
+                        <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar
+                          em
+                          "Finalizar a compra", você verá
+                          o QR Code para fazer o pagamento instantâneo.
                         </div>
-                      </v-list-item-title>
-
-                      <template v-slot:append="{}">
-                        <v-icon class="ml-2">mdi-qrcode</v-icon>
-                      </template>
-                    </v-list-item>
-                  </template>
-                  <v-list-item>
-                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
-                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
-                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
-                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
-                        "Finalizar a compra", você verá
-                        o QR Code para fazer o pagamento instantâneo.
                       </div>
-                    </div>
-                  </v-list-item>
-                </v-list-group>
+                    </v-list-item>
+                  </v-list-group>
 
-                <v-divider color="111111"></v-divider>
+                  <v-divider color="111111"></v-divider>
 
-                <v-list-group value="boleto">
-                  <template v-slot:activator="{ isOpen, props }">
-                    <v-list-item :ripple="false" v-bind="props">
+                  <v-list-group value="boleto">
+                    <template v-slot:activator="{ isOpen, props }">
+                      <v-list-item :ripple="false" v-bind="props">
 
-                      <v-list-item-title>
-                        <div class="d-flex align-center">
-                          <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.38rem;">
-                            <v-radio :model-value="isOpen" density="compact"></v-radio>
-                          </div>
-                          <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
+                        <v-list-item-title>
+                          <div class="d-flex align-center">
+                            <div class="d-flex align-center" style="width: 28px; height: 28px; margin-top: 0.38rem;">
+                              <v-radio :model-value="isOpen" density="compact"></v-radio>
+                            </div>
+                            <div class="d-flex align-center ml-2 font-weight-medium py-2" style="font-size: 0.9rem;
                             -webkit-user-select: none; 
                             -ms-user-select: none; 
                              user-select: none;">
-                            Boleto
+                              Boleto
+                            </div>
                           </div>
-                        </div>
-                      </v-list-item-title>
+                        </v-list-item-title>
 
-                      <template v-slot:append="{}">
-                        <v-icon class="ml-2">mdi-barcode</v-icon>
-                      </template>
-                    </v-list-item>
-                  </template>
-                  <v-list-item>
-                    <div class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 py-9">
-                      <img style="filter: grayscale(100%); margin-bottom: 1.7em; width: 195px; height: 150px;"
-                        src="https://http2.mlstatic.com/storage/v1/plugins/spfy-midas-transparent/assets/6f2e6e1055c5e098ae20.png" />
-                      <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar em
-                        "Finalizar a compra", você verá
-                        o QR Code para fazer o pagamento instantâneo.
+                        <template v-slot:append="{}">
+                          <v-icon class="ml-2">mdi-barcode</v-icon>
+                        </template>
+                      </v-list-item>
+                    </template>
+                    <v-list-item>
+                      <div
+                        class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-7 mb-2">
+                        <img style="filter: grayscale(100%); width: 175px; height: 150px;" src="/boleto.svg" />
+                        <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar
+                          em
+                          "Finalizar a compra", o boleto será gerado para efetuar o pagamento.
+                        </div>
                       </div>
-                    </div>
-                  </v-list-item>
-                </v-list-group>
-              </v-list>
-            </div>
+                    </v-list-item>
+                  </v-list-group>
+                </v-list>
+              </div>
+            </v-form>
           </v-window-item>
         </v-window>
-
 
         <div class="checkout-navigation-container mt-7">
           <div class="previous-section-btn" @click="handlePreviousStep()">
@@ -433,7 +464,7 @@
           </div>
 
           <v-btn @click="handleNextStep()"
-            class="next-section-btn text-subtitle-1 font-weight-regular button-color button-dark" color="#111111"
+            class="next-section-btn text-subtitle-1 font-weight-regular button-color button-light" color="#111111"
             height="45px" width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
             <template v-if="step == 0">Continuar com o Frete</template>
             <template v-if="step == 1">Continuar Pagamento</template>
@@ -490,7 +521,9 @@
               <template v-slot:actions="{ expanded }">
                 <div class="d-flex align-center" style="height: 45px;">
                   <div class="d-flex align-center">
-                    <div class="text-h6 font-weight-regular mr-1">{{ expanded ? '' : 'R$ 3340,00' }}</div>
+                    <div class="text-h6 font-weight-regular mr-1">{{ expanded ? '' : step > 0 ? formatPrice(totalPrice)
+                      :
+                      formatPrice(totalPriceWithoutShipping) }}</div>
                     <v-icon> {{ expanded ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
                   </div>
                 </div>
@@ -499,124 +532,128 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text style="margin-top: -8px;">
               <!-- Cart Itens -->
-              <div class="cart-itens">
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <v-divider color="#111111"></v-divider>
 
-              <div class="order-sum d-flex flex-column" style="gap: 4px;">
-                <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-                  <div>Subtotal:</div>
-                  <div class="font-weight-regular">R$3600</div>
+              <div class="cart-itens">
+                <div v-for="p in products" class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;" :src="p.image"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        {{ p.title }}
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Quantidade: {{ p.quantity }}
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      {{ formatPrice(p.price) }}
+                    </div>
+                  </div>
                 </div>
 
-                <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-                  <div>Frete:</div>
-                  <div class="font-weight-regular">R$40</div>
+                <!-- <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
                 </div>
 
-                <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-space-between w-100">
+                  <div style="height: 90px; width: 90px;">
+                    <v-img class="h-100 w-100" style="border-radius: 10px;"
+                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
+                  </div>
+
+                  <div class="d-flex w-100 justify-space-between">
+                    <div class="d-flex flex-column justify-center ml-4">
+                      <div class="font-weight-bold">
+                        Tech T-Shirt
+                      </div>
+                      <div class="text-subtitle-2 font-weight-light">
+                        Preta / PP
+                      </div>
+                    </div>
+
+                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
+                      R$ 159,00
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+
+              <template v-if="shippingData.price && shippingData.price > 0 && step > 0">
+                <v-divider color="#111111"></v-divider>
+
+                <div class="order-sum d-flex flex-column" style="gap: 4px;">
+                  <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+                    <div>Subtotal:</div>
+                    <div class="font-weight-regular">{{ formatPrice(totalPriceWithoutShipping) }}</div>
+                  </div>
+
+                  <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+                    <div>Frete:</div>
+                    <div class="font-weight-regular">{{ formatPrice(shippingData.price) }}</div>
+                  </div>
+
+                  <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
                   <div>Desconto:</div>
                   <div class="font-weight-regular">-R$300</div>
+                  </div> -->
                 </div>
-              </div>
+              </template>
 
               <v-divider color="#111111"></v-divider>
 
               <div class="d-flex align-center justify-space-between py-4">
                 <div style="margin-top: 1px;">Total:</div>
-                <div class="text-h6 font-weight-regular ">R$ 3340,00</div>
+                <div class="text-h6 font-weight-regular ">{{ step > 0 ? formatPrice(totalPrice) :
+                  formatPrice(totalPriceWithoutShipping) }}</div>
               </div>
             </v-expansion-panel-text>
 
-            <div class="top-summary w-100">
+            <div class="top-summary w-100 mb-1">
               <div @click="handleCartEdit()"
                 class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
                 style="cursor: pointer;">
@@ -645,26 +682,29 @@
           </div>
         </div>
 
-        <div class="top-summary w-100">
-          <div class="order-summery text-h5 font-weight-regular mb-2">
+        <div class="top-summary w-100 d-flex justify-space-between mb-2">
+          <div class="text-h6 font-weight-regular">
             Resumo do Pedido
           </div>
 
           <div @click="handleCartEdit()"
-            class="edit-cart text-caption text-end text-decoration-underline font-weight-regular"
+            class="edit-cart text-caption text-end font-weight-regular mt-1 mr-1 d-flex align-center"
             style="cursor: pointer;">
+            <v-icon style="margin-bottom: 5px;" class="mr-1">mdi-cart</v-icon>
             Editar carrinho
           </div>
         </div>
 
-        <div class="cart-itens">
+        <v-divider color="#111111"></v-divider>
+
+        <div class="cart-itens pr-1">
           <div v-for="p in products" class="d-flex justify-space-between w-100">
-            <div style="height: 90px; width: 90px;">
+            <div class="mr-2" style="height: 90px; width: 90px;">
               <v-img class="h-100 w-100" style="border-radius: 10px;" :src="p.image"></v-img>
             </div>
 
             <div class="d-flex w-100 justify-space-between">
-              <div class="d-flex flex-column justify-center ml-4">
+              <div class="d-flex flex-column justify-center ml-4 pr-10">
                 <div class="font-weight-bold">
                   {{ p.title }}
                 </div>
@@ -746,30 +786,33 @@
           </div> -->
         </div>
 
-        <v-divider color="#111111"></v-divider>
+        <template v-if="shippingData.price && shippingData.price > 0 && step > 0">
+          <v-divider color="#111111"></v-divider>
 
-        <div class="order-sum d-flex flex-column" style="gap: 4px;">
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-            <div>Subtotal:</div>
-            <div class="font-weight-regular">{{ formatPrice(totalPriceWithoutShipping) }}</div>
-          </div>
+          <div class="order-sum d-flex flex-column pr-2 pl-2" style="gap: 4px;">
+            <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+              <div>Subtotal:</div>
+              <div class="font-weight-regular">{{ formatPrice(totalPriceWithoutShipping) }}</div>
+            </div>
 
-          <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-            <div>Frete:</div>
-            <div class="font-weight-regular"> {{ formatPrice(shippingPrice) }}</div>
-          </div>
+            <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+              <div>Frete:</div>
+              <div class="font-weight-regular"> {{ formatPrice(shippingData.price) }}</div>
+            </div>
 
-          <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
+            <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
             <div>Desconto:</div>
             <div class="font-weight-regular">-R$300</div>
           </div> -->
-        </div>
+          </div>
+        </template>
 
         <v-divider color="#111111"></v-divider>
 
-        <div class="d-flex align-center justify-space-between pt-4">
+        <div class="d-flex align-center justify-space-between pt-4 pr-1 pl-2">
           <div style="margin-top: 1px;">Total:</div>
-          <div class="text-h6 font-weight-regular ">{{ formatPrice(totalPrice) }}</div>
+          <div class="text-h6 font-weight-regular ">{{ step > 0 ? formatPrice(totalPrice) :
+            formatPrice(totalPriceWithoutShipping) }}</div>
         </div>
       </div>
     </div>
@@ -793,22 +836,35 @@ import {
   cidadeRules,
   enderecoRules,
   numeroRules,
-  estadoRules
+  estadoRules,
+  cardNumberRules,
+  cardCvcRules,
+  expirationDateRules,
+  cardNameRules,
+  installmentsRules
 } from "@/utils/rules";
 
 import {
   cpfMask,
   cepMask,
-  telefoneMask
+  telefoneMask,
+  cardExpirationDateMask,
+  cardNumberMask,
+  cardCvcMask,
 } from "@/utils/masks";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import { useCartStore } from "@/store/store";
 
 import { getUserCart } from "@/data/cart"
+import { createOrder } from "@/data/order"
 
 import formatPrice from "@/utils/formatPrice";
 import generateShippingPrice from "@/utils/generateShippingPrice";
+
+import { cepValidation, searchAdressByCEP } from "@/utils/cep.js";
+
+import CircularLoading from "@/components/CircularLoading.vue";
 
 const cartStore = useCartStore();
 const { shippingData, isShippingDataValid,
@@ -820,7 +876,7 @@ const render = ref(false);
 
 const userId = ref("rXiNPm5lXTExkVtmPcy0");
 const products = ref([]);
-const shippingPrice = ref(0);
+const lastShippingCep = ref("");
 
 // const totalPrice = computed(() => {
 //   if (!products.value.length) {
@@ -853,7 +909,7 @@ const totalPriceWithoutShipping = computed(() => {
 });
 
 const totalPrice = computed(() => {
-  const shipping = parseFloat(shippingPrice.value) > 0 ? parseFloat(shippingPrice.value) : 0;
+  const shipping = parseFloat(shippingData.value.price) > 0 ? parseFloat(shippingData.value.price) : 0;
   const total = totalPriceWithoutShipping.value + shipping;
 
   return Math.round(total * 100) / 100;
@@ -949,14 +1005,13 @@ const handleNextStep = () => {
       paymenteee(freteMethod.value);
       break;
     case 2:
-      // alert("oi");
+      processPayment();
       break;
   }
 }
 
 const loadUserCart = async (userId) => {
   products.value = await getUserCart(userId);
-  shippingPrice.value = generateShippingPrice();
 };
 
 const handleCartEdit = () => {
@@ -987,8 +1042,12 @@ onBeforeMount(async () => {
     Object.assign(shipping, shippingData.value);
     displayAddressPartialForm.value = true;
 
+    if (shipping.cep && shipping.cep.length > 0) {
+      lastShippingCep.value = shipping.cep
+    }
+
     setFreteSection(false);
-  } else cartStore.setShippingDataStatus(false);
+  }
 
   if (isFreteDataValid.value && isShippingDataValid.value) {
     freteMethod.value = freteData.value.method;
@@ -1023,33 +1082,33 @@ const displayAddressPartialForm = ref(false);
 const isShippingFormLoading = ref(false);
 const mobileSummeryPanel = ref();
 const estados = [
-  { id: 1, nome: 'Acre', sigla: "SP" },
-  { id: 2, nome: 'Alagoas', sigla: "SP" },
-  { id: 3, nome: 'Amapá', sigla: "SP" },
-  { id: 4, nome: 'Amazonas', sigla: "SP" },
-  { id: 5, nome: 'Bahia', sigla: "SP" },
-  { id: 6, nome: 'Ceará', sigla: "SP" },
-  { id: 7, nome: 'Distrito Federal', sigla: "SP" },
-  { id: 8, nome: 'Espírito Santo', sigla: "SP" },
-  { id: 9, nome: 'Goiás', sigla: "SP" },
-  { id: 10, nome: 'Maranhão', sigla: "SP" },
-  { id: 11, nome: 'Mato Grosso', sigla: "SP" },
-  { id: 12, nome: 'Mato Grosso do Sul', sigla: "SP" },
-  { id: 13, nome: 'Minas Gerais', sigla: "SP" },
-  { id: 14, nome: 'Pará', sigla: "SP" },
-  { id: 15, nome: 'Paraíba', sigla: "SP" },
-  { id: 16, nome: 'Paraná', sigla: "SP" },
-  { id: 17, nome: 'Pernambuco', sigla: "SP" },
-  { id: 18, nome: 'Piauí', sigla: "SP" },
-  { id: 19, nome: 'Rio de Janeiro', sigla: "SP" },
-  { id: 20, nome: 'Rio Grande do Norte', sigla: "SP" },
-  { id: 21, nome: 'Rio Grande do Sul', sigla: "SP" },
-  { id: 22, nome: 'Rondônia', sigla: "SP" },
-  { id: 23, nome: 'Roraima', sigla: "SP" },
-  { id: 24, nome: 'Santa Catarina', sigla: "SP" },
-  { id: 25, nome: 'São Paulo', sigla: "SP" },
-  { id: 26, nome: 'Sergipe', sigla: "SP" },
-  { id: 27, nome: 'Tocantins', sigla: "SP" }
+  { nome: 'Acre', sigla: "AC" },
+  { nome: 'Alagoas', sigla: "AL" },
+  { nome: 'Amapá', sigla: "AP" },
+  { nome: 'Amazonas', sigla: "AM" },
+  { nome: 'Bahia', sigla: "BA" },
+  { nome: 'Ceará', sigla: "CE" },
+  { nome: 'Distrito Federal', sigla: "DF" },
+  { nome: 'Espírito Santo', sigla: "ES" },
+  { nome: 'Goiás', sigla: "GO" },
+  { nome: 'Maranhão', sigla: "MA" },
+  { nome: 'Mato Grosso', sigla: "MT" },
+  { nome: 'Mato Grosso do Sul', sigla: "MS" },
+  { nome: 'Minas Gerais', sigla: "MG" },
+  { nome: 'Pará', sigla: "PA" },
+  { nome: 'Paraíba', sigla: "PB" },
+  { nome: 'Paraná', sigla: "PR" },
+  { nome: 'Pernambuco', sigla: "PE" },
+  { nome: 'Piauí', sigla: "PI" },
+  { nome: 'Rio de Janeiro', sigla: "RJ" },
+  { nome: 'Rio Grande do Norte', sigla: "RN" },
+  { nome: 'Rio Grande do Sul', sigla: "RS" },
+  { nome: 'Rondônia', sigla: "RO" },
+  { nome: 'Roraima', sigla: "RR" },
+  { nome: 'Santa Catarina', sigla: "SC" },
+  { nome: 'São Paulo', sigla: "SP" },
+  { nome: 'Sergipe', sigla: "SE" },
+  { nome: 'Tocantins', sigla: "TO" }
 ];
 
 const shipping = reactive({
@@ -1067,7 +1126,7 @@ const shipping = reactive({
   cidade: "",
   estado: null,
   cep: "",
-  save: true
+  save: true,
 });
 
 const shippingFormValidation = reactive({
@@ -1085,7 +1144,7 @@ const shippingFormValidation = reactive({
   cidade: false,
   estado: false,
   cep: false,
-  save: false
+  save: false,
 });
 
 const setShippingFormLoading = (load) => {
@@ -1093,7 +1152,8 @@ const setShippingFormLoading = (load) => {
 }
 
 const calculateShippingCost = async () => {
-  setShippingFormLoading(true);
+  if (!displayAddressPartialForm.value)
+    setShippingFormLoading(true);
 
   let valid = true;
   for (const field of shippingForm.value.items) {
@@ -1130,6 +1190,8 @@ const calculateShippingCost = async () => {
       if (freteBreadcrumbs.value)
         setFreteSection(false);
 
+      shipping.price = generateShippingPrice();
+
       cartStore.setShippingData(JSON.parse(JSON.stringify(shipping)));
 
       router.push({
@@ -1137,7 +1199,10 @@ const calculateShippingCost = async () => {
         query: { step: 1 }
       });
     } else {
+      await loadAdressDetails();
+
       displayAddressPartialForm.value = true;
+
       ["endereco", "numero", "bairro", "complemento", "cidade", "estado"]
         .forEach(property => shippingFormValidation[property] = false);
     }
@@ -1146,6 +1211,45 @@ const calculateShippingCost = async () => {
   }
 
   setShippingFormLoading(false);
+}
+
+const handleCepBlur = async () => {
+  if (step.value == 0 && displayAddressPartialForm.value) {
+    setShippingFormLoading(true);
+    await loadAdressDetails();
+    setShippingFormLoading(false);
+  }
+}
+
+const loadAdressDetails = async () => {
+  try {
+    const valid = cepValidation(shipping.cep);
+
+    if (valid) {
+      const returnedAdress = await searchAdressByCEP(shipping.cep);
+
+      if (lastShippingCep.value != shipping.cep)
+        shipping.numero = "";
+
+      lastShippingCep.value = shipping.cep;
+
+      Object.assign(shipping, {
+        endereco: returnedAdress.logradouro,
+        bairro: returnedAdress.bairro,
+        cidade: returnedAdress.cidade,
+        estado: estados.find(e => e.sigla.toLowerCase() == returnedAdress.uf.toLowerCase())
+      });
+
+      cartStore.setShippingData(JSON.parse(JSON.stringify(shipping)));
+
+      return { valid: true };
+    } else {
+      lastShippingCep.value = shipping.cep;
+      return { valid: false, reason: "Formato inválido!" };
+    }
+  } catch (error) {
+    return { valid: false, reason: "CEP não encontrado!" };
+  }
 }
 
 const handleLogin = () => {
@@ -1173,7 +1277,131 @@ const paymenteee = (method) => {
 }
 
 // Payment Form
+const maxInstallments = 3;
+
 const paymentMethodRatio = ref([]);
+const installments = ref([]);
+
+const paymentForm = ref();
+
+const paymentFormValidation = reactive({
+  cardNumber: false,
+  cardExpirationDate: false,
+  cvc: false,
+  nameOnCard: false,
+  installments: false
+});
+
+const payment = reactive({
+  cardNumber: '',
+  cardExpirationDate: '',
+  cvc: '',
+  nameOnCard: '',
+  installments: null
+});
+
+const loadingPix = ref(false);
+
+const processPayment = async () => {
+  let valid = true;
+
+  const paymentMethod = paymentMethodRatio.value ? paymentMethodRatio.value[0] : null;
+
+  if (paymentMethod == 'card') {
+    for (const field of paymentForm.value.items) {
+      const mensagemErro = await field.validate();
+
+      let fieldValidation = '';
+      for (const key in paymentFormValidation) {
+        if (key === field.id) {
+          fieldValidation = key;
+          break;
+        }
+      }
+
+      if (mensagemErro.length > 0) {
+        paymentFormValidation[fieldValidation] = true;
+        valid = false;
+      } else {
+        paymentFormValidation[fieldValidation] = false;
+      }
+    }
+  }
+
+  if (paymentMethod != 'boleto' && paymentMethod != 'pix' && paymentMethod != 'card') {
+    valid = false;
+  }
+
+  if (valid) {
+    const order = {
+      payment: {
+        method: paymentMethod,
+        installments: paymentMethod == 'card' ? payment.installments : null
+      },
+      shipping: {
+        email: shippingData.value.email,
+        telefone: shippingData.value.telefone,
+        nome: shippingData.value.nome,
+        sobrenome: shippingData.value.sobrenome,
+        cpf: shippingData.value.cpf,
+        endereco: shippingData.value.endereco,
+        numero: shippingData.value.numero,
+        bairro: shippingData.value.bairro,
+        complemento: shippingData.value.complemento,
+        cidade: shippingData.value.cidade,
+        estado: shippingData.value.estado,
+        cep: shippingData.value.cep,
+      },
+      products: products.value.length >= 0 ?
+        products.value.map((product) => ({
+          productId: product.id,
+          price: product.price,
+          quantity: product.quantity
+        })) : [],
+      totalPrice: totalPrice.value,
+      userId: userId.value,
+      createdAt: new Date()
+    }
+
+    const response = await createOrder(order);
+    alert(response)
+  }
+}
+
+const loadInstallments = () => {
+  var listInstallments = installments.value = [];
+
+  for (let i = 1; i <= maxInstallments; i++) {
+    const calculatedPrice = totalPrice.value / i;
+    const formattedPrice = `${i}x de ${formatPrice(Number(calculatedPrice))} sem juros`;
+
+    listInstallments.push({ number: i, price: calculatedPrice, formattedPrice });
+  }
+
+  installments.value = listInstallments;
+}
+
+watch(paymentMethodRatio, (newMethod) => {
+  if (newMethod == "card") {
+    Object.assign(payment, {
+      cardNumber: '',
+      cardExpirationDate: '',
+      cvc: '',
+      nameOnCard: '',
+      installments: null
+    });
+
+    loadInstallments();
+  }
+
+  if (newMethod == "pix") {
+    loadingPix.value = true;
+
+    setTimeout(() => {
+      loadingPix.value = false;
+    }, 3000);
+  }
+});
 </script>
 
 <style lang="scss">
@@ -1313,8 +1541,9 @@ const paymentMethodRatio = ref([]);
     .cart-itens {
       display: flex;
       flex-direction: column;
+      gap: 15px;
 
-      padding-top: 13px;
+      padding-top: 20px;
       padding-bottom: 16px;
     }
 
@@ -1405,8 +1634,8 @@ const paymentMethodRatio = ref([]);
       } */
 
       .cart-itens {
-        padding-top: 0 !important;
-        padding-bottom: 13px !important;
+        padding-top: 25px !important;
+        padding-bottom: 19px !important;
       }
     }
   }

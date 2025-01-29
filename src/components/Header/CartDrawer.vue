@@ -81,8 +81,8 @@
             <div class="text-subtitle-1">{{ formatPrice(totalPrice) }}</div>
           </div>
 
-          <v-btn class="text-subtitle-2 font-weight-regular button-color button-black" color="#111111" height="45px"
-            width="100%" variant="flat" :ripple="false">
+          <v-btn @click="handleCheckout" class="text-subtitle-2 font-weight-regular button-color button-black"
+            color="#111111" height="45px" width="100%" variant="flat" :ripple="false">
             FINALIZAR A COMPRA
           </v-btn>
         </div>
