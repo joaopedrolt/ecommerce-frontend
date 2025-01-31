@@ -1,41 +1,20 @@
 <template>
   <Presence>
-    <Motion
-      v-show="showForm"
-      :initial="{ opacity: 0, scale: 0 }"
-      :animate="{ opacity: 1, scale: 1 }"
-      :exit="{ opacity: 0, scale: 0.6 }"
-      :transition="{ duration: 0.35, easing: 'ease-in-out' }"
-    >
-      <v-form
-        ref="emailValidationForm"
-        validate-on="layz"
-        class="signin-form-container"
-      >
+    <Motion v-show="showForm" :initial="{ opacity: 0, scale: 0 }" :animate="{ opacity: 1, scale: 1 }"
+      :exit="{ opacity: 0, scale: 0.6 }" :transition="{ duration: 0.35, easing: 'ease-in-out' }">
+      <v-form ref="emailValidationForm" validate-on="layz" class="signin-form-container">
         <div class="signin-content">
           <SignInHeader title="Bem-Vindo" subtitle="Digite seu e-mail" />
 
-          <v-text-field
-            class="mt-4"
-            v-model="signInEmailInput"
-            variant="outlined"
-            label="E-mail"
-            :rules="emailRules"
-            @keyup.enter="handleContinueClick"
-            @keydown.enter.prevent
-          >
+          <v-text-field class="mt-4" v-model="signInEmailInput" variant="outlined" label="E-mail" :disabled="loading"
+            :rules="emailRules" @keyup.enter="handleContinueClick" @keydown.enter.prevent>
           </v-text-field>
 
           <validation-filler :active="!isValidEmail" />
 
-          <v-btn
-            @click="handleContinueClick"
-            class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
-            height="45px"
-            width="100%"
-            variant="flat"
-            :ripple="false"
-          >
+          <v-btn @click="handleContinueClick" :loading="loading"
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
+            variant="flat" :ripple="false">
             Continuar
           </v-btn>
 
@@ -65,6 +44,8 @@ import { emailRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
 
+import { sendOtpEmail } from "@/services/otp";
+
 const router = useRouter();
 
 const signInStore = useSignInStore();
@@ -75,7 +56,11 @@ const emailValidationForm = ref();
 const isValidEmail = ref(true);
 const showForm = ref(true);
 
+const loading = ref(false);
+
 const handleContinueClick = async () => {
+  loading.value = true;
+
   const { valid } = await emailValidationForm.value.validate();
 
   if (valid) {
@@ -86,8 +71,6 @@ const handleContinueClick = async () => {
     var isAreadyRegistered = false;
 
     if (signInEmailInput.value == "v@gmail.com") {
-      isAreadyRegistered = false;
-    } else {
       isAreadyRegistered = true;
     }
 
@@ -100,11 +83,17 @@ const handleContinueClick = async () => {
     }
 
     if (!isAreadyRegistered) {
+      await sendOtpEmail(signInEmailInput.value);
+
       setTimeout(() => {
         router.push({ name: "EmailCodeValidation", query: { type: "create" } });
       }, 600);
     }
-  } else isValidEmail.value = false;
+  } else {
+    isValidEmail.value = false;
+  }
+
+  loading.value = false;
 };
 
 onBeforeRouteLeave((to, from) => {
@@ -114,5 +103,4 @@ onBeforeRouteLeave((to, from) => {
 });
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

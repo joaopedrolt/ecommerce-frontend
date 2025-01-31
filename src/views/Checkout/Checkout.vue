@@ -1364,7 +1364,7 @@ const processPayment = async () => {
     }
 
     const response = await createOrder(order);
-    alert(response)
+    console.log(response)
   }
 }
 

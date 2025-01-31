@@ -30,10 +30,11 @@
             Solicitar Novo Código
           </v-btn>
 
-          <v-btn @click="handleValidationClick" class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
-            height="45px" width="100%" variant="flat" :ripple="false" :disabled="disableConfirmButton">
+          <v-btn @click="handleValidationClick"
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
+            variant="flat" :ripple="false" :disabled="disableConfirmButton">
             Confirmar
-          </v-btn>
+          </v-btn> 
         </div>
       </v-form>
     </Motion>
@@ -49,6 +50,8 @@ import { useRouter, useRoute } from "vue-router";
 import SignInHeader from "./SignInHeader.vue";
 
 import { Motion, Presence } from "motion/vue";
+
+import { sendOtpEmail } from "@/services/otp";
 
 const router = useRouter();
 const route = useRoute();
@@ -87,6 +90,8 @@ const codeStringValidation = (codeString) => {
 const handleSendAnotherCodeClick = async () => {
   showCountdown.value = true;
   validationCodeInput.value = "";
+
+  await sendOtpEmail(signInEmailInput.value);
 };
 
 const handleValidationClick = async () => {
