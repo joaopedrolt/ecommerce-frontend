@@ -26,6 +26,7 @@ export const useDrawerStore = defineStore("navbar", {
 export const useSignInStore = defineStore("signin", {
   state: () => ({
     signInEmailInput: "",
+    otpCode: "",
   }),
   actions: {
     setSignInEmail(value) {

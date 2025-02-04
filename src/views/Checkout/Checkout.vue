@@ -473,6 +473,7 @@
         </div>
 
         <!-- Footer Left -->
+
         <div class="payment-footer mt-13">
           <v-divider color="#111111"></v-divider>
           <v-breadcrumbs class="text-caption text-center justify-center" style="justify-content: center !important;"
@@ -863,6 +864,7 @@ import formatPrice from "@/utils/formatPrice";
 import generateShippingPrice from "@/utils/generateShippingPrice";
 
 import { cepValidation, searchAdressByCEP } from "@/utils/cep.js";
+import getEstados from '@/utils/getEstados';
 
 import CircularLoading from "@/components/CircularLoading.vue";
 
@@ -1081,35 +1083,7 @@ const shippingForm = ref();
 const displayAddressPartialForm = ref(false);
 const isShippingFormLoading = ref(false);
 const mobileSummeryPanel = ref();
-const estados = [
-  { nome: 'Acre', sigla: "AC" },
-  { nome: 'Alagoas', sigla: "AL" },
-  { nome: 'Amapá', sigla: "AP" },
-  { nome: 'Amazonas', sigla: "AM" },
-  { nome: 'Bahia', sigla: "BA" },
-  { nome: 'Ceará', sigla: "CE" },
-  { nome: 'Distrito Federal', sigla: "DF" },
-  { nome: 'Espírito Santo', sigla: "ES" },
-  { nome: 'Goiás', sigla: "GO" },
-  { nome: 'Maranhão', sigla: "MA" },
-  { nome: 'Mato Grosso', sigla: "MT" },
-  { nome: 'Mato Grosso do Sul', sigla: "MS" },
-  { nome: 'Minas Gerais', sigla: "MG" },
-  { nome: 'Pará', sigla: "PA" },
-  { nome: 'Paraíba', sigla: "PB" },
-  { nome: 'Paraná', sigla: "PR" },
-  { nome: 'Pernambuco', sigla: "PE" },
-  { nome: 'Piauí', sigla: "PI" },
-  { nome: 'Rio de Janeiro', sigla: "RJ" },
-  { nome: 'Rio Grande do Norte', sigla: "RN" },
-  { nome: 'Rio Grande do Sul', sigla: "RS" },
-  { nome: 'Rondônia', sigla: "RO" },
-  { nome: 'Roraima', sigla: "RR" },
-  { nome: 'Santa Catarina', sigla: "SC" },
-  { nome: 'São Paulo', sigla: "SP" },
-  { nome: 'Sergipe', sigla: "SE" },
-  { nome: 'Tocantins', sigla: "TO" }
-];
+const estados = getEstados();
 
 const shipping = reactive({
   email: "",
@@ -1199,7 +1173,7 @@ const calculateShippingCost = async () => {
         query: { step: 1 }
       });
     } else {
-      await loadAdressDetails();
+      await loadAddressDetails();
 
       displayAddressPartialForm.value = true;
 
@@ -1216,12 +1190,12 @@ const calculateShippingCost = async () => {
 const handleCepBlur = async () => {
   if (step.value == 0 && displayAddressPartialForm.value) {
     setShippingFormLoading(true);
-    await loadAdressDetails();
+    await loadAddressDetails();
     setShippingFormLoading(false);
   }
 }
 
-const loadAdressDetails = async () => {
+/* const loadAddressDetails = async () => {
   try {
     const valid = cepValidation(shipping.cep);
 
@@ -1230,6 +1204,15 @@ const loadAdressDetails = async () => {
 
       if (lastShippingCep.value != shipping.cep)
         shipping.numero = "";
+
+      if (!returnedAdress) {
+        let cepField = shippingForm.value.items.find(item => item.id === 'cep');
+        await cepField.validate();
+
+        shippingFormValidation.cep = true;
+
+        throw new Error();
+      }
 
       lastShippingCep.value = shipping.cep;
 
@@ -1244,13 +1227,65 @@ const loadAdressDetails = async () => {
 
       return { valid: true };
     } else {
+      displayAddressPartialForm.value = false;
       lastShippingCep.value = shipping.cep;
+
+      let cepField = shippingForm.value.items.find(item => item.id === 'cep');
+      await cepField.validate();
+
+      shippingFormValidation.cep = true;
+
       return { valid: false, reason: "Formato inválido!" };
     }
   } catch (error) {
+    displayAddressPartialForm.value = false;
+
     return { valid: false, reason: "CEP não encontrado!" };
   }
-}
+} */
+
+const validateCepField = async () => {
+  alert("oi")
+  const cepField = shippingForm.value.items.find(item => item.id === 'cep');
+  await cepField.validate();
+  shippingFormValidation.cep = true;
+};
+
+const loadAddressDetails = async () => {
+  try {
+    await validateCepField();
+
+    if (!cepValidation(shipping.cep)) {
+      throw new Error("Formato inválido!");
+    }
+
+    const returnedAddress = await searchAdressByCEP(shipping.cep);
+
+    if (!returnedAddress) {
+      throw new Error("CEP não encontrado!");
+    }
+
+    if (lastShippingCep.value !== shipping.cep) {
+      shipping.numero = "";
+    }
+
+    lastShippingCep.value = shipping.cep;
+
+    Object.assign(shipping, {
+      endereco: returnedAddress.logradouro,
+      bairro: returnedAddress.bairro,
+      cidade: returnedAddress.cidade,
+      estado: estados.find(e => e.sigla.toLowerCase() === returnedAddress.uf.toLowerCase())
+    });
+
+    cartStore.setShippingData({ ...shipping });
+
+    return { valid: true };
+  } catch (error) {
+    displayAddressPartialForm.value = false;
+    return { valid: false, reason: error.message || "Erro ao buscar o endereço." };
+  }
+};
 
 const handleLogin = () => {
   router.push({
@@ -1489,20 +1524,20 @@ watch(paymentMethodRatio, (newMethod) => {
       height: 100%;
       max-width: 700px;
 
-      .parent-input-container {
-        display: flex;
-        gap: 10px;
+      // .parent-input-container {
+      //   display: flex;
+      //   gap: 10px;
 
-        .sibling-input {
-          max-height: 70px !important;
-          min-width: 223px !important;
-        }
+      //   .sibling-input {
+      //     max-height: 70px !important;
+      //     min-width: 223px !important;
+      //   }
 
-        @media (max-width: $phone) {
-          flex-direction: column;
-          gap: 0 !important;
-        }
-      }
+      //   @media (max-width: $phone) {
+      //     flex-direction: column;
+      //     gap: 0 !important;
+      //   }
+      // }
 
       .shipping-sumery {
         padding-left: 1px !important;

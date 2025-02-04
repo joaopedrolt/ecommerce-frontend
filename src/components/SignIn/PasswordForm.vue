@@ -7,21 +7,21 @@
           <SignInHeader title="Criar Senha" subtitle="Insira uma senha para sua conta" />
 
           <v-text-field v-model="passwordInputValue" class="mt-4 hide-details-replacement" :class="[
-      isPasswordValid ? 'default-input-color' : 'error-input-color',
-    ]" type="password" label="Senha" variant="outlined" :rules="passwordRules" @blur="handlePasswordValidation"
+            isPasswordValid ? 'default-input-color' : 'error-input-color',
+          ]" type="password" label="Senha" variant="outlined" :rules="passwordRules" @blur="handlePasswordValidation"
             validate-on="blur" hide-details>
           </v-text-field>
 
           <v-text-field ref="passwordConfirmationInput" v-model="passwordConfirmationInputValue" :class="[
-      isPasswordConfirmationValid
-        ? 'default-input-color'
-        : 'error-input-color',
-    ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
+            isPasswordConfirmationValid
+              ? 'default-input-color'
+              : 'error-input-color',
+          ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
             label="Repita a senha mais uma vez " variant="outlined" @click:append-inner="showPassword = !showPassword"
             validate-on="submit" :rules="isPasswordConfirmationValid
-      ? [() => true]
-      : [() => 'As senhas não são iguais!']
-      " :disabled="!isPasswordValid || passwordInputValue.length == 0">
+              ? [() => true]
+              : [() => 'As senhas não são iguais!']
+              " :disabled="!isPasswordValid || passwordInputValue.length == 0">
           </v-text-field>
 
           <validation-filler :active="!isPasswordConfirmationValid" />
@@ -33,8 +33,8 @@
           </v-btn>
 
           <div class="d-flex flex-column text-subtitle-1 font-weight-regular" :class="[
-      isPasswordValid ? 'default-input-color' : 'error-input-color',
-    ]">
+            isPasswordValid ? 'default-input-color' : 'error-input-color',
+          ]">
             Atenção!
             <div class="text-subtitle-2 font-weight-light">
               A senha requer no mínimo 8 caracteres, incluindo letras e números.
@@ -49,11 +49,17 @@
 <script setup>
 import { ref, watch } from "vue";
 import { Motion, Presence } from "motion/vue";
+import { useSignInStore } from "@/store/store";
 
 import { passwordRules } from "@/utils/rules";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
+
+import { createUser } from "@/data/user"
+
+const signInStore = useSignInStore();
+const { signInEmailInput } = storeToRefs(signInStore);
 
 const passwordForm = ref();
 
@@ -98,7 +104,7 @@ const handleCreateAccountClick = async () => {
   const valid = handlePasswordConfirmationValidation();
 
   if (valid) {
-    console.log("valido");
+    await createUser({ email: signInEmailInput.value, password: passwordInputValue.value });
   }
 };
 

@@ -13,8 +13,6 @@ export const sendOtpEmail = async (email) => {
         code: generateOtp()
     };
 
-    console.log(data.code);
-
     try {
         const response = await fetch('https://widgets-nmwnolh5hq-uc.a.run.app', {
             method: 'POST',
@@ -37,7 +35,7 @@ export const sendOtpEmail = async (email) => {
         }
 
         console.log("Email sent successfully:", responseData);
-        return { success: true, message: "Email sent successfully.", data: responseData };
+        return { success: true, message: "Email sent successfully.", code: data.code, data: responseData, };
 
     } catch (error) {
         console.error("Fetch error:", error);

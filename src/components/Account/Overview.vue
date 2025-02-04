@@ -56,7 +56,7 @@
             </v-card>
           </div>
           <div class="w-100 mt-3 mb-4">
-            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-dark" height="37px"
+            <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-light" height="37px"
               width="100%" variant="flat" style="font-size: 0.8rem !important;">
               Adicionar Endereço
             </v-btn>
@@ -99,7 +99,8 @@
                           <v-list-item :ripple="false" v-for="(item, index) in items" :key="index"
                             @click="selectedItem = index" :active="index == selectedItem">
                             <v-list-item-title>
-                              <div class="w-100 h-100 text-end font-weight-regular" style="font-size: 0.8rem;">{{ item }}
+                              <div class="w-100 h-100 text-end font-weight-regular" style="font-size: 0.8rem;">{{ item
+                                }}
                               </div>
                             </v-list-item-title>
                           </v-list-item>

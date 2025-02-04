@@ -34,7 +34,7 @@
             class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
             variant="flat" :ripple="false" :disabled="disableConfirmButton">
             Confirmar
-          </v-btn> 
+          </v-btn>
         </div>
       </v-form>
     </Motion>
@@ -59,7 +59,7 @@ const route = useRoute();
 const queryParamType = route.query.type;
 
 const signInStore = useSignInStore();
-const { signInEmailInput } = storeToRefs(signInStore);
+const { signInEmailInput, otpCode } = storeToRefs(signInStore);
 
 const showForm = ref(true);
 
@@ -102,12 +102,14 @@ const handleValidationClick = async () => {
     return;
   }
 
-  console.log(queryParamType)
+  if (otpCode.value == validationCodeInput.value) {
+    router.push({
+      name: "Password",
+      query: { type: queryParamType },
+    });
 
-  router.push({
-    name: "Password",
-    query: { type: queryParamType },
-  });
+    return;
+  }
 };
 
 watch(validationCodeInput, (newCodeInput) => {

@@ -46,10 +46,12 @@ import { Motion, Presence } from "motion/vue";
 
 import { sendOtpEmail } from "@/services/otp";
 
+import { checkEmailExists } from "@/data/user"
+
 const router = useRouter();
 
 const signInStore = useSignInStore();
-const { signInEmailInput } = storeToRefs(signInStore);
+const { signInEmailInput, otpCode } = storeToRefs(signInStore);
 
 const emailValidationForm = ref();
 
@@ -66,28 +68,22 @@ const handleContinueClick = async () => {
   if (valid) {
     showForm.value = false;
 
-    // Validacao se email exite
-
-    var isAreadyRegistered = false;
-
-    if (signInEmailInput.value == "v@gmail.com") {
-      isAreadyRegistered = true;
-    }
-
-    // Fim validacao
+    var isAreadyRegistered = await checkEmailExists(signInEmailInput.value);
 
     if (isAreadyRegistered) {
-      setTimeout(() => {
-        router.push({ name: "Login" });
-      }, 600);
+      router.push({ name: "Login" });
+      return;
     }
 
     if (!isAreadyRegistered) {
-      await sendOtpEmail(signInEmailInput.value);
+      const response = await sendOtpEmail(signInEmailInput.value);
 
-      setTimeout(() => {
+      if (response.success && response.code) {
         router.push({ name: "EmailCodeValidation", query: { type: "create" } });
-      }, 600);
+        otpCode.value = response.code;
+      }
+
+      return;
     }
   } else {
     isValidEmail.value = false;
