@@ -12,7 +12,7 @@
                   <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
                     v-bind="props" hide-details="auto" variant="outlined" placeholder="O que deseja?"
                     append-inner-icon="mdi-magnify" @click:append-inner="search()" @keypress.enter="search()" clearable
-                    @click:clear="handleClearSearchInput()">
+                    @click:clear="handleClearSearchInput()" autocomplete="off">
                   </v-text-field>
                 </div>
               </div>
@@ -21,42 +21,59 @@
             <v-card elevation="1">
               <div v-if="isSearching" class="h-100 w-100 py-12 d-flex justify-center">
                 <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
-                  <div class="mb-3 text-subtitle font-weight-regular" style="opacity: 0.6">Buscando...</div>
+                  <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;">Buscando...</div>
                   <v-progress-linear indeterminate striped></v-progress-linear>
                 </div>
               </div>
-
               <template v-else>
-                <v-list class="list-search" :items="items" item-props lines="three">
-                  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
+                <template v-if="products && products.length > 0">
+                  <v-list class="list-search" :items="products" item-props lines="three">
+                    <!--  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
                     style="max-width: 100% !important; padding: 17px 0 15px;">
                     <div style="overflow-wrap: anywhere;">Alguns produtos encontrados:</div>
+                  </div> -->
+
+                    <v-divider color="#111111"></v-divider>
+
+                    <v-list-item v-for="item in products" :key="item.title" :prepend-avatar="item.displayImage"
+                      @click="handleListProductClick(item.id)">
+
+                      <template v-slot:title>
+                        <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.name }}</div>
+                      </template>
+
+                      <template v-slot:subtitle>
+                        <div class="text-caption font-weight-regular">{{ item.displayDescription }}</div>
+                      </template>
+                    </v-list-item>
+                  </v-list>
+
+                  <button
+                    class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                    style="max-width: 100% !important;" @click="search()">
+                    <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
+
+                    <div class="right-arrow ml-3 h-100">
+                      <v-icon>mdi-arrow-right</v-icon>
+                    </div>
+                  </button>
+                </template>
+                <template v-else>
+                  <!--       <div
+                    class="w-100 pt-10 pb-9 d-flex align-center justify-center search-list-subheader v-list-subheader"
+                    style="max-width: 100% !important; ">
+                    <div style="overflow-wrap: anywhere;">Nenhum resultado encontrado!</div>
+                  </div> -->
+
+                  <div class="h-100 w-100 py-12 d-flex justify-center">
+                    <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
+                      <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;"> Nenhum resultado
+                        encontrado<v-icon class="ml-1"
+                          style="margin-bottom: 1px !important;">mdi-close-circle-outline</v-icon>
+                      </div>
+                    </div>
                   </div>
-
-                  <v-divider color="#111111"></v-divider>
-
-                  <v-list-item v-for="item in items" :key="item.title" :prepend-avatar="item.prependAvatar"
-                    @click="handleListProductClick(item.value)">
-
-                    <template v-slot:title>
-                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.title }}</div>
-                    </template>
-
-                    <template v-slot:subtitle>
-                      <div class="text-caption font-weight-regular">{{ item.subtitle }}</div>
-                    </template>
-                  </v-list-item>
-                </v-list>
-
-                <button
-                  class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
-                  style="max-width: 100% !important;" @click="search()">
-                  <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
-
-                  <div class="right-arrow ml-3 h-100">
-                    <v-icon>mdi-arrow-right</v-icon>
-                  </div>
-                </button>
+                </template>
               </template>
             </v-card>
           </v-menu>
@@ -74,7 +91,7 @@
                   <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
                     v-bind="props" hide-details="auto" placeholder="O que você deseja?" append-inner-icon="mdi-magnify"
                     @click:append-inner="search()" @keypress.enter="search()" clearable
-                    @click:clear="handleClearSearchInput()">
+                    @click:clear="handleClearSearchInput()" autocomplete="off">
                   </v-text-field>
                 </div>
 
@@ -86,42 +103,59 @@
             <v-card elevation="1">
               <div v-if="isSearching" class="h-100 w-100 py-12 d-flex justify-center">
                 <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
-                  <div class="mb-3 text-subtitle font-weight-regular" style="opacity: 0.6">Buscando...</div>
+                  <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;">Buscando...</div>
                   <v-progress-linear indeterminate striped></v-progress-linear>
                 </div>
               </div>
-
               <template v-else>
-                <v-list class="list-search" :items="items" item-props lines="three">
-                  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
+                <template v-if="products && products.length > 0">
+                  <v-list class="list-search" :items="products" item-props lines="three">
+                    <!--  <div class="w-100 d-flex align-center search-list-subheader v-list-subheader"
                     style="max-width: 100% !important; padding: 17px 0 15px;">
                     <div style="overflow-wrap: anywhere;">Alguns produtos encontrados:</div>
+                  </div> -->
+
+                    <v-divider color="#111111"></v-divider>
+
+                    <v-list-item v-for="item in products" :key="item.title" :prepend-avatar="item.displayImage"
+                      @click="handleListProductClick(item.id)">
+
+                      <template v-slot:title>
+                        <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.name }}</div>
+                      </template>
+
+                      <template v-slot:subtitle>
+                        <div class="text-caption font-weight-regular">{{ item.displayDescription }}</div>
+                      </template>
+                    </v-list-item>
+                  </v-list>
+
+                  <button
+                    class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                    style="max-width: 100% !important;" @click="search()">
+                    <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
+
+                    <div class="right-arrow ml-3 h-100">
+                      <v-icon>mdi-arrow-right</v-icon>
+                    </div>
+                  </button>
+                </template>
+                <template v-else>
+                  <!--       <div
+                    class="w-100 pt-10 pb-9 d-flex align-center justify-center search-list-subheader v-list-subheader"
+                    style="max-width: 100% !important; ">
+                    <div style="overflow-wrap: anywhere;">Nenhum resultado encontrado!</div>
+                  </div> -->
+
+                  <div class="h-100 w-100 py-12 d-flex justify-center">
+                    <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
+                      <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;"> Nenhum resultado
+                        encontrado<v-icon class="ml-1"
+                          style="margin-bottom: 1px !important;">mdi-close-circle-outline</v-icon>
+                      </div>
+                    </div>
                   </div>
-
-                  <v-divider color="#111111"></v-divider>
-
-                  <v-list-item v-for="item in items" :key="item.title" :prepend-avatar="item.prependAvatar"
-                    @click="handleListProductClick(item.value)">
-
-                    <template v-slot:title>
-                      <div class="text-subtitle-2 font-weight-regular" style="margin-top: 5px;">{{ item.title }}</div>
-                    </template>
-
-                    <template v-slot:subtitle>
-                      <div class="text-caption font-weight-regular">{{ item.subtitle }}</div>
-                    </template>
-                  </v-list-item>
-                </v-list>
-
-                <button
-                  class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
-                  style="max-width: 100% !important;" @click="search()">
-                  <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
-
-                  <div class="right-arrow ml-3 h-100">
-                    <v-icon>mdi-arrow-right</v-icon>
-                  </div>
-                </button>
+                </template>
               </template>
             </v-card>
           </v-menu>
@@ -137,6 +171,8 @@ import { useSearchStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from 'vue-router';
 
+import { getProductsByName } from "@/data/product.js"
+
 const searchStore = useSearchStore();
 const { searchInput, searchQuery, displaySearchOverlay } = storeToRefs(searchStore);
 
@@ -144,6 +180,8 @@ const isSearching = ref(false);
 const menu = ref(false);
 
 const router = useRouter();
+
+const products = ref([]);
 
 const search = () => {
   if (menu.value)
@@ -159,13 +197,14 @@ const search = () => {
   displaySearchOverlay.value = false;
 };
 
-const preSearch = () => {
+const preSearch = async () => {
   isSearching.value = true;
 
-  // Aguarda resposta
-  setTimeout(() => {
-    isSearching.value = false;
-  }, 2000);
+  if (searchInput.value != undefined && searchInput.value.length != 0) {
+    products.value = await getProductsByName(searchInput.value, 4);
+  }
+
+  isSearching.value = false;
 };
 
 const handlePreSearch = () => {
@@ -195,11 +234,24 @@ const handleClearSearchInput = () => {
   menu.value = false;
 };
 
+/* const handleListProductClick = (productId) => { */
+/* router.push({ name: "Product" }); */
+/*   router.push({ name: "Product", params: { produtoId: productId } }); */
+/*  router.push(`/produto/${productId}`); */
+/* }; */
+
 const handleListProductClick = (productId) => {
   displaySearchOverlay.value = false;
-  router.push({ name: "Product", params: { produtoId: productId } });
-  /*  router.push(`/produto/${productId}`); */
-};
+
+  setTimeout(() => {
+    router.push({
+      name: "Product",
+      params: {
+        productId,
+      },
+    });
+  }, 500);
+}
 
 let timer = null;
 

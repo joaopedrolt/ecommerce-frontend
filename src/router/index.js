@@ -121,14 +121,26 @@ const routes = [
             component: () => import("@/components/Account/Overview.vue"),
           },
           {
-            path: "novoendereco",
+            path: "endereco",
             name: "NewAddress",
             component: () => import("@/components/Account/AddressForm.vue"),
+            children: [
+              {
+                path: ":addressId",
+                name: "EditAddress",
+                component: () => import("@/components/Account/AddressForm.vue"),
+              },
+            ],
           },
           {
             path: "pedido",
-            name: "OrderDetails",
-            component: () => import("@/components/Account/OrderDetails.vue"),
+            children: [
+              {
+                path: ":orderId",
+                name: "OrderDetails",
+                component: () => import("@/components/Account/OrderDetails.vue"),
+              },
+            ],
           }
         ]
       },

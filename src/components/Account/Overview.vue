@@ -1,6 +1,6 @@
 <template>
   <div style="min-height: 100vh;" class="d-flex align-center">
-    <div class="container-limit container-size-padding pt-12 pb-16">
+    <div class="container-limit container-size-padding pt-8 pb-16">
       <div class="d-flex align-center flex-column mb-10">
         <v-avatar class="mb-2" color="surface-variant">J.T</v-avatar>
         <div class="text-center text-overline" style="font-size: 0.91rem !important;">João Pedro Lima Teixeira</div>
@@ -21,7 +21,7 @@
                 <template v-for="(a, index) in addresses" :key="index">
                   <v-list-item>
                     <v-card-item class="adress-card-item px-0">
-                      <div v-if="a.isDefaultAddress" class="text-subtitle-2"
+                      <div v-if="a.main" class="text-subtitle-2"
                         style="margin-top: 3px; margin-right: 3px; opacity: .65; transform: translateX(-2px);">
                         <v-icon style="transform: translateY(-2px);">mdi-home</v-icon> Endereço Principal
                       </div>
@@ -31,10 +31,10 @@
                           <v-btn @click="handleAddAddress(a)" elevation="0" icon size="small">
                             <v-icon>mdi-pencil</v-icon>
                           </v-btn>
-                          <v-btn v-if="!a.isDefaultAddress" elevation="0" icon size="small">
+                          <v-btn @click="handleSetMainAddress(a)" v-if="!a.main" elevation="0" icon size="small">
                             <v-icon>mdi-home</v-icon>
                           </v-btn>
-                          <v-btn elevation="0" icon size="small">
+                          <v-btn @click="handleDeleteAddress(a)" elevation="0" icon size="small">
                             <v-icon>mdi-close</v-icon>
                           </v-btn>
                         </div>
@@ -42,11 +42,11 @@
 
                       <div class="v-card-title"
                         style="font-size: 1rem; white-space: break-spaces; word-break: break-word;">
-                        {{ a.rua }}{{ a.numero.length > 0 ? `, ${a.numero}` : "" }}
+                        {{ a.endereco }}{{ a.numero.length > 0 ? `, ${a.numero}` : "" }}
                       </div>
 
                       <v-card-subtitle style="white-space: break-spaces; word-break: break-word;">
-                        {{ a.bairro }}, {{ a.cidade }}, {{ a.uf }} - {{ a.cep }}
+                        {{ a.bairro }}, {{ a.cidade }}, {{ a.estado.sigla }} - {{ a.cep }}
                       </v-card-subtitle>
                     </v-card-item>
                   </v-list-item>
@@ -83,7 +83,7 @@
                     <th v-else-if="index === props.headers[0].length - 1" class="pr-0 text-end d-flex justify-end">
                       <v-menu scroll-strategy="close" v-model="showOrderByDropdown" offset="2">
                         <template v-slot:activator="{ props }">
-                          <button
+                          <!-- <button
                             class="filter-desktop filter-button-container d-flex justify-end align-center w-100 h-100"
                             style="width: 150px; position: relative;">
                             <div class="filter-chevron-right-outwards" :class="{ 'active': showOrderByDropdown }">
@@ -91,7 +91,9 @@
                             </div>
                             Filtrar
                             <div class="h-100 w-100" style="position: absolute; left: 0;" v-bind="props"></div>
-                          </button>
+                          </button> -->
+
+
                         </template>
 
                         <v-list style="padding: 0 !important;" elevation="1" class="dropdown-orderby-list"
@@ -100,7 +102,7 @@
                             @click="selectedItem = index" :active="index == selectedItem">
                             <v-list-item-title>
                               <div class="w-100 h-100 text-end font-weight-regular" style="font-size: 0.8rem;">{{ item
-                                }}
+                              }}
                               </div>
                             </v-list-item-title>
                           </v-list-item>
@@ -127,7 +129,7 @@
                       Ver Detalhes
                     </v-btn> -->
                     <v-btn @click="handleOrderDetails(item)" elevation="0"
-                      class="font-weight-regular button-color button-dark" variant="flat" style="font-size: 0.72rem;">
+                      class="font-weight-regular button-color button-light" variant="flat" style="font-size: 0.72rem;">
                       Ver Detalhes
                     </v-btn>
                   </td>
@@ -142,123 +144,46 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onBeforeMount, reactive } from 'vue';
 import { useRouter } from "vue-router";
+
+import { getUserAddresses, deleteAddress, setMainAddress } from "@/data/address"
+import { getUserOrders } from '@/data/order';
 
 const router = useRouter();
 
+const userId = ref("rXiNPm5lXTExkVtmPcy0");
+
 const showOrderByDropdown = ref(false);
+
 const selectedItem = ref(0);
 
-const handleScroll = () => {
+/* const handleScroll = () => {
   showOrderByDropdown.value = false;
-};
+}; */
 
-watch(showOrderByDropdown, (newValue) => {
-  /*  if (newValue) {
-     window.addEventListener('scroll', handleScroll);
-   }
-   else {
-     window.removeEventListener('scroll', handleScroll);
-   } */
-});
+/* watch(showOrderByDropdown, (newValue) => {
+ 
+}); */
 
-const addresses = [{
-  cep: "09271-620",
-  rua: "Rua Etore Cataruzzi",
-  numero: "3",
-  bairro: "Capuava",
-  cidade: "Santo André",
-  uf: "SP",
-  isDefaultAddress: true
-},
-{
-  cep: "09260-840",
-  rua: "Rua Júlio Atlas",
-  numero: "171",
-  bairro: "Jardim Itapoan",
-  cidade: "Santo André",
-  uf: "SP",
-  isDefaultAddress: false
-},
-{
-  cep: "09260-840",
-  rua: "Rua Júlio Atlas",
-  numero: "171",
-  bairro: "Jardim Itapoan",
-  cidade: "Santo André",
-  uf: "SP",
-  isDefaultAddress: false
-},
-{
-  cep: "09260-840",
-  rua: "Rua Júlio Atlas",
-  numero: "171",
-  bairro: "Jardim Itapoan",
-  cidade: "Santo André",
-  uf: "SP",
-  isDefaultAddress: false
-},
-{
-  cep: "09260-840",
-  rua: "Rua Júlio Atlas",
-  numero: "171",
-  bairro: "Jardim Itapoanccc",
-  cidade: "Santo André",
-  uf: "SP",
-  isDefaultAddress: false
-}
-];
+/* isDefaultAddress */
 
-const orders = [{
+const addresses = ref([]);
+const orders = ref([]);
+
+/* {
   orderId: "GROWTH-1041668-00022",
   date: "09/10/2023 00:20:00",
   price: "R$130,00",
   status: "Pedido enviado",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$140,00",
-  status: "Pedido recebido",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$120,00",
-  status: "Pedido recebido",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$110,00",
-  status: "Pedido recebido",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$100,00",
-  status: "Pedido recebido",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$100,00",
-  status: "Pedido recebido",
-},
-{
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$100,00",
-  status: "Pedido recebido",
-}];
+}, */
 
 const headers = [
   {
     title: 'Código do Pedido',
     align: 'start',
     sortable: false,
-    key: 'orderId',
+    key: 'id',
   },
   { title: 'Data Compra', align: 'center', key: 'date', sortable: false },
   { title: 'Valor', align: 'center', key: 'price', sortable: false },
@@ -269,16 +194,55 @@ const headers = [
 const items = [`Maior Preço`, `Menor Preço`, `Nossa Seleção`];
 
 const handleAddAddress = (address) => {
+  if (address) {
+    router.push({
+      name: "EditAddress",
+      params: { addressId: address.id }
+    });
+
+    return;
+  }
+
   router.push({
     name: "NewAddress",
   });
 }
 
+const handleSetMainAddress = async (address) => {
+  const response = await setMainAddress(address.id);
+
+  if (response) {
+    await loadUserAddresses(userId.value);
+  }
+}
+
+const handleDeleteAddress = async (address) => {
+  const response = await deleteAddress(address.id);
+
+  if (response) {
+    await loadUserAddresses(userId.value);
+  }
+}
+
 const handleOrderDetails = (order) => {
   router.push({
     name: "OrderDetails",
+    params: { orderId: order.id }
   });
 }
+
+const loadUserAddresses = async (userId) => {
+  addresses.value = await getUserAddresses(userId);
+};
+
+const loadUserOrders = async (userId) => {
+  orders.value = await getUserOrders(userId);
+};
+
+onBeforeMount(async () => {
+  await loadUserAddresses(userId.value);
+  await loadUserOrders(userId.value);
+})
 </script>
 
 <style lang="scss">

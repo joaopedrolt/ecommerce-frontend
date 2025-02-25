@@ -61,7 +61,7 @@
           <div class="filter-tab" :class="{ 'active': showFilters }">
             <filter-list />
           </div>
-          <products />
+          <products :products="products" />
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeMount } from "vue";
 import { useRoute } from 'vue-router';
 
 import FilterList from "@/components/Shop/FilterList.vue";
@@ -81,6 +81,7 @@ import FilterDrawer from "@/components/Shop/FilterDrawer.vue";
 
 import { storeToRefs } from "pinia";
 import { useSearchStore, useDrawerStore } from "@/store/store";
+import { getProductsByName } from "@/data/product";
 
 const route = useRoute();
 
@@ -92,6 +93,8 @@ const { displayFilterDrawer } = storeToRefs(drawerStore);
 
 const showFilters = ref(false);
 const showOrderByDropdown = ref(false);
+
+const products = ref([]);
 
 const handleScroll = () => {
   showOrderByDropdown.value = false;
@@ -121,8 +124,15 @@ const handleFilterMobileClick = () => {
   displayFilterDrawer.value = true;
 };
 
-onMounted(() => {
+onBeforeMount(async () => {
   searchQuery.value = route.query.q;
+
+
+  if (searchQuery.value) {
+    products.value = await getProductsByName(searchQuery.value, 10);
+  /*   console.log(searchQuery.value)
+    console.log(products.value) */
+  }
 })
 </script>
 

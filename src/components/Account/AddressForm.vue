@@ -1,21 +1,21 @@
 <template>
     <div class="d-flex align-center" style="min-height: 100vh;">
-        <div class="container-limit container-size-padding adress-form">
+        <div class="container-limit container-size-padding Address-form">
             <v-card-title class="text-center mb-3">CADASTRAR ENDEREÇO</v-card-title>
 
             <v-form ref="addressForm" validate-on="layz">
                 <div class="parent-input-container">
                     <div class="d-flex flex-column" style="flex: 1;">
                         <v-text-field v-model="address.nome" class="sibling-input" label="Nome do Destinatário"
-                            variant="outlined" :rules="nomeRules" density="comfortable">
+                            variant="outlined" :rules="nomeRules" :disabled="loadingAddress" density="comfortable">
                         </v-text-field>
                         <validation-filler :active="!addressFormValidation.nome" />
                     </div>
 
                     <div class="d-flex flex-column" style="flex: 1;">
                         <v-text-field v-model="address.sobrenome" class="sibling-input"
-                            label="Sobrenome do Destinatário" variant="outlined" :rules="sobrenomeRules"
-                            density="comfortable">
+                            label="Sobrenome do Destinatário" :disabled="loadingAddress" variant="outlined"
+                            :rules="sobrenomeRules" density="comfortable">
                         </v-text-field>
                         <validation-filler :active="!addressFormValidation.sobrenome" />
                     </div>
@@ -24,14 +24,16 @@
                 <div class="parent-input-container">
                     <div class="d-flex flex-column" style="flex: 1;">
                         <v-text-field v-model="address.cpf" v-maska:[cpfMask] class="sibling-input"
-                            label="CPF do Destinatário" variant="outlined" :rules="cpfRules" density="comfortable">
+                            label="CPF do Destinatário" :disabled="loadingAddress" variant="outlined" :rules="cpfRules"
+                            density="comfortable">
                         </v-text-field>
                         <validation-filler :active="!addressFormValidation.cpf" density="compact" />
                     </div>
 
                     <div class="d-flex flex-column" style="flex: 1;">
                         <v-text-field v-model="address.telefone" v-maska:[telefoneMask] :rules="telefoneRules"
-                            label="Telefone" class="sibling-input" variant="outlined" density="comfortable">
+                            label="Telefone" :disabled="loadingAddress" class="sibling-input" variant="outlined"
+                            density="comfortable">
                         </v-text-field>
                         <validation-filler :active="!addressFormValidation.telefone" density="compact" />
                     </div>
@@ -91,6 +93,19 @@
                     </div>
                 </div>
 
+                <v-checkbox v-if="addressId == null" class="mb-5" id="main" v-model="address.main"
+                    :disabled="loadingAddress" density="compact" hide-details>
+                    <template v-slot:label>
+                        <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
+                            style="opacity: 1 !important;">
+                            <v-icon class="mr-1">mdi-home</v-icon>
+                            <div style="margin-top: 0.063rem;">
+                                Definir como endereço principal
+                            </div>
+                        </div>
+                    </template>
+                </v-checkbox>
+
                 <v-btn @click="handleSaveAddress" :loading="loadingAddress"
                     class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px"
                     width="100%" variant="flat" :ripple="false">
@@ -102,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import {
     nomeRules,
     sobrenomeRules,
@@ -119,6 +134,8 @@ import {
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import { vMaska } from "maska"
 
+import { useRouter, useRoute } from 'vue-router';
+
 import {
     cpfMask,
     cepMask,
@@ -128,9 +145,15 @@ import {
 
 import getEstados from '@/utils/getEstados';
 
-import { cepValidation, searchAdressByCEP } from "@/utils/cep.js";
+import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
+
+import { createAddress, getAddress, updateAddress } from "@/data/address"
+
+const router = useRouter();
+const route = useRoute();
 
 const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const addressId = ref();
 
 const addressForm = ref();
 
@@ -146,6 +169,7 @@ const address = reactive({
     estado: null,
     bairro: "",
     complemento: "",
+    main: true,
 });
 
 const addressFormValidation = reactive({
@@ -160,6 +184,7 @@ const addressFormValidation = reactive({
     estado: true,
     bairro: true,
     complemento: true,
+    main: true,
 });
 
 const estados = getEstados();
@@ -175,26 +200,26 @@ const clearAddressDetails = () => {
     address.estado = null;
 }
 
-const loadAdressDetails = async () => {
+const loadAddressDetails = async () => {
     try {
         const valid = cepValidation(address.cep);
 
         if (valid) {
             loadingAddress.value = true;
-            const returnedAdress = await searchAdressByCEP(address.cep);
+            const returnedAddress = await searchAddressByCEP(address.cep);
 
             address.numero = "";
 
-            if (!returnedAdress) {
+            if (!returnedAddress) {
                 throw new Error();
             }
 
             Object.assign(address, {
                 ...address,
-                endereco: returnedAdress.logradouro,
-                bairro: returnedAdress.bairro,
-                cidade: returnedAdress.cidade,
-                estado: estados.find(e => e.sigla.toLowerCase() == returnedAdress.uf.toLowerCase())
+                endereco: returnedAddress.logradouro,
+                bairro: returnedAddress.bairro,
+                cidade: returnedAddress.cidade,
+                estado: estados.find(e => e.sigla.toLowerCase() == returnedAddress.uf.toLowerCase())
             });
 
             loadingAddress.value = false;
@@ -214,11 +239,11 @@ const loadAdressDetails = async () => {
 const handleCepBlur = async () => {
     /*    if (step.value == 0 && displayAddressPartialForm.value) {
            setShippingFormLoading(true);
-            await loadAdressDetails();
+            await loadAddressDetails();
            setShippingFormLoading(false);
        } */
 
-    await loadAdressDetails();
+    await loadAddressDetails();
 }
 
 const handleSaveAddress = async () => {
@@ -234,26 +259,48 @@ const handleSaveAddress = async () => {
             valid = false;
         }
         else {
-            /*         console.log("n foi:" + keys[i])
-                    console.log(mensagemErro) */
-
             addressFormValidation[keys[i]] = true;
         }
     }
 
-    console.log(valid)
-
     if (valid) {
-        console.log(address)
-        // await createAddress(address);
+        let addressData = { ...address, userId: userId.value };
+        const response = !addressId ? await createAddress(addressData) : await updateAddress(addressData);
+
+        if (response) {
+            router.push({
+                name: "AccountOverview",
+            });
+        }
     }
 };
+
+const loadAddress = async (addressId) => {
+    const returnedAddress = await getAddress(addressId);
+
+    if (returnedAddress) {
+        Object.assign(address, returnedAddress);
+    }
+
+    loadingAddress.value = false;
+}
+
+onBeforeMount(async () => {
+    const addressIdParam = route.params.addressId
+
+    if (addressIdParam) {
+        addressId.value = addressIdParam;
+        loadingAddress.value = true;
+
+        await loadAddress(addressId.value);
+    }
+})
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/global.scss";
 
-.adress-form {
+.Address-form {
     padding-bottom: 120px;
 
     @media (max-width: $phone) {

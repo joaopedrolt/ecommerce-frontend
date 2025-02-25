@@ -1,66 +1,140 @@
 <template>
   <div class="w-100">
-    <div class="products-container">
+    <v-data-iterator v-model:items-per-page="itemsPerPage" :items="products" :items-per-page="itemsPerPage"
+      :page.sync="page" :footer-props="footerProps">
+      <template v-slot:default="{ items }">
+        <div class="products-container">
+          <div v-for="p in items" class="product-card d-flex flex-column" elevation="0"
+            @click="handleProductClick(p.value)">
+            <div class="product-card-top">
+              <img :src="p.raw.displayImage" alt="" />
+            </div>
+
+            <div class="product-card-bottom">
+              <div class="font-weight-bold">{{ p.raw.name }}</div>
+              <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                {{ p.raw.displayDescription }}
+              </p>
+              <div class="product-card-price">
+                <div class="text-subtitle-2 font-weight-regular"> {{ p.raw.price }} </div>
+                <div class="text-caption price-cents">99</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--    <v-row>
+          <v-col v-for="item in items" :key="item.raw.id" cols="12" md="4">
+            <v-card>
+              <v-card-title>{{ item.raw.name }}</v-card-title>
+              <v-card-subtitle>{{ item.raw.displayDescription }}</v-card-subtitle>
+            </v-card>
+          </v-col>
+        </v-row> -->
+      </template>
+
+      <template v-slot:footer>
+        <v-pagination v-model="page" :length="paginationLength" />
+        <!-- <v-select v-model="itemsPerPage" :items="[5, 10, 15, 20]" label="Items per page" dense hide-details /> -->
+      </template>
+    </v-data-iterator>
+
+    <!--  <v-data-iterator :items="items" :itemsPerPage="itemsPerPage">
+      <template v-slot:default="{ items }">
+        <template v-for="(item, i) in items" :key="i">
+          <v-card v-bind="item.raw"> </v-card>
+
+          <br>
+        </template>
+      </template>
+
+      <template v-slot:footer>
+        <v-pagination v-model="page"  />
+      </template>
+    </v-data-iterator> -->
+
+    <!-- <div class="products-container">
       <div v-for="p in products" class="product-card d-flex flex-column" elevation="0"
         @click="handleProductClick(p.id)">
         <div class="product-card-top">
-          <img :src="p.image" alt="" />
+          <img :src="p.displayImage" alt="" />
         </div>
 
         <div class="product-card-bottom">
-          <div class="font-weight-bold">{{ p.title }}</div>
+          <div class="font-weight-bold">{{ p.name }}</div>
           <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            {{ p.subtitle }}
+            {{ p.displayDescription }}
           </p>
           <div class="product-card-price">
             <div class="text-subtitle-2 font-weight-regular"> {{ p.price }} </div>
-            <!--             <div class="text-caption price-cents">99</div> -->
+            <div class="text-caption price-cents">99</div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <!--  <v-data-iterator :items="products" :items-per-page="itemsPerPage">
+      <template v-slot:default="{ items }">
+        <div class="w-100 d-flex flex-column" style="gap: 20px;">
+          <div v-for="p in items" class="product-item w-100 d-flex flex-column">
+            xxxx
+          </div>
+        </div>
+      </template>
+
+<template v-if="products.length > itemsPerPage" v-slot:footer="{ page, pageCount, prevPage, nextPage }">
+        <div class="d-flex align-center justify-center pa-4">
+          <v-btn :disabled="page === 1" icon="mdi-arrow-left" density="comfortable" variant="tonal" rounded
+            @click="prevPage"></v-btn>
+
+          <div class="mx-2 text-caption">
+            Página {{ page }} de {{ pageCount }}
+          </div>
+
+          <v-btn :disabled="page >= pageCount" icon="mdi-arrow-right" density="comfortable" variant="tonal" rounded
+            @click="nextPage"></v-btn>
+        </div>
+      </template>
+</v-data-iterator> -->
+
+
   </div>
 </template>
 
 <script setup>
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
+const props = defineProps({
+  products: Array
+});
 
-const products = [
-  {
-    id: 1,
-    image: "https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533",
-    title: "Macbook Air Pro",
-    subtitle: "Some small description for the product",
-    price: "R$589",
-  },
-  {
-    id: 2,
-    image: "https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533",
-    title: "Macbook Air Pro",
-    subtitle: "Some small description for the product",
-    price: "R$600",
-  },
-  {
-    id: 3,
-    image: "https://www.insiderstore.com.br/cdn/shop/files/kit666.jpg?v=1700881546&width=533",
-    title: "Macbook Air Pro",
-    subtitle: "Some small description for the product",
-    price: "R$600",
-  },
-  {
-    id: 4,
-    image: "https://www.insiderstore.com.br/cdn/shop/files/faxinaplus444.jpg?v=1700881557&width=533",
-    title: "Macbook Air Pro",
-    subtitle: "Some small description for the product",
-    price: "R$600",
-  },
-];
+const router = useRouter();
 
 const handleProductClick = (productId) => {
   router.push({ name: "Product", params: { produtoId: productId } });
 };
+
+/* -------------------------- */
+
+const itemsPerPage = ref(6); // Default items per page
+const page = ref(1); // Current page
+const paginationLength = ref(1); // Total number of pages
+
+const footerProps = computed(() => ({
+  'items-per-page-options': [5, 10, 15, 20],
+  'items-per-page-text': 'Items per page',
+}));
+
+const updatePaginationLength = () => {
+  paginationLength.value = Math.ceil(props.products.length / itemsPerPage.value);
+};
+
+watch([itemsPerPage, page], updatePaginationLength);
+
+onMounted(() => {
+  updatePaginationLength();
+});
 </script>
 
 <style lang="scss">

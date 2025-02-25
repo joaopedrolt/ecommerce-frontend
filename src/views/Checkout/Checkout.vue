@@ -320,7 +320,7 @@
                           </div>
                         </v-list-item-title>
 
-                        <template v-slot:append="{}">
+                        <template v-slot:append="{ }">
                           <v-icon class="ml-2">mdi-credit-card-outline</v-icon>
                         </template>
                       </v-list-item>
@@ -386,7 +386,7 @@
                           </div>
                         </v-list-item-title>
 
-                        <template v-slot:append="{}">
+                        <template v-slot:append="{ }">
                           <v-icon class="ml-2">mdi-qrcode</v-icon>
                         </template>
                       </v-list-item>
@@ -424,7 +424,7 @@
                           </div>
                         </v-list-item-title>
 
-                        <template v-slot:append="{}">
+                        <template v-slot:append="{ }">
                           <v-icon class="ml-2">mdi-barcode</v-icon>
                         </template>
                       </v-list-item>
@@ -857,13 +857,13 @@ import {
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import { useCartStore } from "@/store/store";
 
-import { getUserCart } from "@/data/cart"
+import { getUserCart, clearUserCart } from "@/data/cart"
 import { createOrder } from "@/data/order"
 
 import formatPrice from "@/utils/formatPrice";
 import generateShippingPrice from "@/utils/generateShippingPrice";
 
-import { cepValidation, searchAdressByCEP } from "@/utils/cep.js";
+import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
 import getEstados from '@/utils/getEstados';
 
 import CircularLoading from "@/components/CircularLoading.vue";
@@ -1200,7 +1200,7 @@ const handleCepBlur = async () => {
     const valid = cepValidation(shipping.cep);
 
     if (valid) {
-      const returnedAdress = await searchAdressByCEP(shipping.cep);
+      const returnedAdress = await searchAddressByCEP(shipping.cep);
 
       if (lastShippingCep.value != shipping.cep)
         shipping.numero = "";
@@ -1259,7 +1259,7 @@ const loadAddressDetails = async () => {
       throw new Error("Formato inválido!");
     }
 
-    const returnedAddress = await searchAdressByCEP(shipping.cep);
+    const returnedAddress = await searchAddressByCEP(shipping.cep);
 
     if (!returnedAddress) {
       throw new Error("CEP não encontrado!");
@@ -1386,6 +1386,7 @@ const processPayment = async () => {
         cidade: shippingData.value.cidade,
         estado: shippingData.value.estado,
         cep: shippingData.value.cep,
+        price: shippingData.value.price
       },
       products: products.value.length >= 0 ?
         products.value.map((product) => ({
@@ -1394,12 +1395,21 @@ const processPayment = async () => {
           quantity: product.quantity
         })) : [],
       totalPrice: totalPrice.value,
+
       userId: userId.value,
-      createdAt: new Date()
+      createdAt: new Date(),
+      status: 'Pedido Efetuado'
     }
 
     const response = await createOrder(order);
-    console.log(response)
+
+    if (response) {
+      await clearUserCart(userId.value)
+
+      router.push({
+        name: "Home",
+      });
+    }
   }
 }
 

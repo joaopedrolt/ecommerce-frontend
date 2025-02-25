@@ -5,7 +5,7 @@ export const cepValidation = (cep) => {
     return cepRegex.test(cep);
 }
 
-export const searchAdressByCEP = async (cep, validationOnly = false) => {
+export const searchAddressByCEP = async (cep, validationOnly = false) => {
     const cepFormatted = cep.replace("-", "");
 
     try {

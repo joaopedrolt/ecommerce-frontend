@@ -1,5 +1,5 @@
 import { db, collectionNames } from '../firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 import { getProduct } from './product';
 
@@ -10,6 +10,18 @@ const createUserCart = async (userId) => {
         return true;
     } catch (error) {
         console.error("Error creating cart: ", error);
+        return false;
+    }
+};
+
+export const clearUserCart = async (userId) => {
+    try {
+        const docRef = doc(db, collectionNames.carts, userId);
+        await deleteDoc(docRef);
+
+        return true;
+    } catch (error) {
+        console.error("Error clearing creating cart: ", error);
         return false;
     }
 };

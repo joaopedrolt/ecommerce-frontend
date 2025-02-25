@@ -123,12 +123,13 @@
 import { ref, watch, computed } from "vue";
 import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
-import formatPrice from "@/utils/formatPrice";
 import { useRouter } from "vue-router";
 
 import { getUserCart, updateCartProduct } from "@/data/cart"
 
 import CircularLoading from "@/components/CircularLoading.vue";
+
+import formatPrice from "@/utils/formatPrice";
 
 const drawerStore = useDrawerStore();
 const { displayCartDrawer } = storeToRefs(drawerStore);

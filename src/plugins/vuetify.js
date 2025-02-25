@@ -27,7 +27,10 @@ export default createVuetify({
   },
   locale: {
     locale: 'pt',
-    fallback: { en },
-    messages: { pt },
+    fallback: 'en',
+    messages: {
+      pt, // Portuguese translations
+      en, // English translations
+    },
   },
 });

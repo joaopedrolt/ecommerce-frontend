@@ -1,5 +1,5 @@
 import { db, collectionNames } from '../firebase';
-import { doc, getDoc, getDocs, addDoc, collection, query } from 'firebase/firestore';
+import { doc, getDoc, getDocs, addDoc, collection, query, orderBy, startAt, endAt, where } from 'firebase/firestore';
 import getRandomListItens from "@/utils/getRandomListItens";
 
 export const getProduct = async (productId) => {
@@ -23,6 +23,30 @@ export const getProduct = async (productId) => {
         console.error("Error Product: ", error);
     }
 };
+
+export const getProductsByName = async (queryString, limit) => {
+    try {
+        const productsRef = collection(db, collectionNames.products);
+        const querySnapshot = await getDocs(productsRef);
+
+        let results = [];
+        const lowerSearch = queryString.toLowerCase();
+
+        querySnapshot.forEach((doc) => {
+            let name = doc.data().name;
+            if (name.toLowerCase().includes(lowerSearch)) {
+                if (results.length < limit) {
+                    results.push({ id: doc.id, ...doc.data() });
+                }
+            }
+        });
+
+        return results;
+    } catch (error) {
+        console.error("Error fetching Recomended Products: ", error);
+        return [];
+    }
+}
 
 export const getRecomendedProducts = async (currentProductId) => {
     try {

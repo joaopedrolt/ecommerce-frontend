@@ -1,4 +1,4 @@
-import { searchAdressByCEP } from "@/utils/cep.js";
+import { searchAddressByCEP } from "@/utils/cep.js";
 
 const EMPTY_FIELD_MESSAGE = "Esse campo não pode ser vazio!";
 const INVALID_FORMAT_MESSAGE = "Formato inválido!";
@@ -257,7 +257,7 @@ export const cepRules = [
     return true;
   },
   async (value) => {
-    return await searchAdressByCEP(value, true) ? true : "Cep não encontrado!";
+    return await searchAddressByCEP(value, true) ? true : "Cep não encontrado!";
   },
 ];
 
