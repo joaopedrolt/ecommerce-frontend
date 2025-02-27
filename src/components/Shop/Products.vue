@@ -1,9 +1,9 @@
 <template>
   <div class="w-100">
-    <v-data-iterator v-model:items-per-page="itemsPerPage" :items="products" :items-per-page="itemsPerPage"
+    <v-data-iterator v-model:items-per-page="itemsPerPage" :items="filteredProducts" :items-per-page="itemsPerPage"
       :page.sync="page" :footer-props="footerProps">
       <template v-slot:default="{ items }">
-        <div class="products-container">
+        <div class="products-container"> ´
           <div v-for="p in items" class="product-card d-flex flex-column" elevation="0"
             @click="handleProductClick(p.value)">
             <div class="product-card-top">
@@ -106,7 +106,8 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-  products: Array
+  products: Array,
+  activeFilters: Object
 });
 
 const router = useRouter();
@@ -117,24 +118,65 @@ const handleProductClick = (productId) => {
 
 /* -------------------------- */
 
-const itemsPerPage = ref(6); // Default items per page
-const page = ref(1); // Current page
-const paginationLength = ref(1); // Total number of pages
+const itemsPerPage = ref(6);
+const page = ref(1);
+const paginationLength = ref(1);
 
 const footerProps = computed(() => ({
   'items-per-page-options': [5, 10, 15, 20],
   'items-per-page-text': 'Items per page',
 }));
 
+
+const filteredProducts = ref([])
+
 const updatePaginationLength = () => {
-  paginationLength.value = Math.ceil(props.products.length / itemsPerPage.value);
+  paginationLength.value = Math.ceil(filteredProducts.value.length / itemsPerPage.value);
 };
 
 watch([itemsPerPage, page], updatePaginationLength);
 
-onMounted(() => {
+/* const filterProductsByPrice = () => {
+
+};
+ */
+/* const filterProductsByCategory = () => {
+
+}; */
+
+const handleFilteredProducts = () => {
+  if (props.activeFilters.length) {
+    props.activeFilters.forEach(activeFilter => {
+      if (activeFilter.section == 'Preço') {
+        filteredProducts.value = props.products.slice().sort((a, b) => {
+          if (activeFilter.filter === "M") {
+            return a.price - b.price;
+          } else if (activeFilter.filter === "a") {
+            return b.price - a.price;
+          }
+
+          return 0;
+        });
+      }
+
+      else if (activeFilter.filter == 'Categoria') {
+
+      }
+    })
+  }
+  else {
+    filteredProducts.value = props.products;
+  }
+}
+
+watch(() => props.activeFilters, handleFilteredProducts);
+
+watch(() => props.products, () => filteredProducts.value.length == 0 ? filteredProducts.value = props.products : []);
+
+/* onMounted(() => {
+  filteredProducts.value = props.products;
   updatePaginationLength();
-});
+}); */
 </script>
 
 <style lang="scss">

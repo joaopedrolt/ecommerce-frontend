@@ -8,7 +8,8 @@
             <div class="search text-subtitle-2 font-weight-light">
               Resultados da sua pesquisa
             </div>
-            <div class="text-h5 font-weight-bold" style="overflow-wrap: break-word;">'{{ searchQuery }}'</div>
+            <div class="text-h5 font-weight-bold" style="overflow-wrap: break-word;">'{{ searchQuery }} {{ activeFilters
+            }}'</div>
           </div>
         </div>
 
@@ -59,9 +60,9 @@
 
         <div class="d-flex">
           <div class="filter-tab" :class="{ 'active': showFilters }">
-            <filter-list />
+            <filter-list :active-filters="activeFilters" @update-filters="updateActiveFilters" />
           </div>
-          <products :products="products" />
+          <products :products="products" :active-filters="activeFilters" />
         </div>
       </div>
     </div>
@@ -96,6 +97,12 @@ const showOrderByDropdown = ref(false);
 
 const products = ref([]);
 
+const activeFilters = ref([]);
+
+const updateActiveFilters = (newValue) => {
+  activeFilters.value = newValue;
+};
+
 const handleScroll = () => {
   showOrderByDropdown.value = false;
 };
@@ -127,11 +134,10 @@ const handleFilterMobileClick = () => {
 onBeforeMount(async () => {
   searchQuery.value = route.query.q;
 
-
   if (searchQuery.value) {
     products.value = await getProductsByName(searchQuery.value, 10);
-  /*   console.log(searchQuery.value)
-    console.log(products.value) */
+    /*   console.log(searchQuery.value)
+      console.log(products.value) */
   }
 })
 </script>
