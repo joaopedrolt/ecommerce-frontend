@@ -117,9 +117,9 @@ watch(validationCodeInput, (newCodeInput) => {
   else if (!disableConfirmButton.value) disableConfirmButton.value = true;
 });
 
-onUnmounted(() => {
+/* onUnmounted(() => {
   signInEmailInput.value = "";
-});
+}); */
 </script>
 
 <style lang="scss">

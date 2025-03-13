@@ -27,7 +27,7 @@
           <validation-filler :active="!isPasswordConfirmationValid" />
 
           <v-btn @click="handleCreateAccountClick"
-            class="text-subtitle-1 font-weight-regular button-color button-dark mb-4" height="45px" width="100%"
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
             variant="flat" :ripple="false" type="submit">
             Criar Conta
           </v-btn>
@@ -47,7 +47,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+
 import { Motion, Presence } from "motion/vue";
 import { useSignInStore } from "@/store/store";
 
@@ -57,6 +59,7 @@ import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
 
 import { createUser } from "@/data/user"
+import signUp from "@/auth/signUp"
 
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
@@ -104,7 +107,7 @@ const handleCreateAccountClick = async () => {
   const valid = handlePasswordConfirmationValidation();
 
   if (valid) {
-    await createUser({ email: signInEmailInput.value, password: passwordInputValue.value });
+    await signUp(signInEmailInput.value, passwordInputValue.value);
   }
 };
 
@@ -117,6 +120,10 @@ watch(passwordInputValue, () => {
       passwordConfirmationInputValue.value = "";
     }, 10);
   }
+});
+
+onMounted(() => {
+
 });
 </script>
 

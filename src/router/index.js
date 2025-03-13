@@ -12,7 +12,8 @@ import CheckoutLayout from "@/layouts/Checkout.vue";
 import { useSignInStore } from "@/store/store";
 import { useSearchStore } from "@/store/store";
 
-// Views
+// Auth
+import getCurrentUser from "@/auth/getCurrentUser";
 
 const routes = [
   {
@@ -142,7 +143,8 @@ const routes = [
               },
             ],
           }
-        ]
+        ],
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -164,6 +166,19 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 }
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const user = getCurrentUser();
+
+  console.log(user)
+
+  if (requiresAuth && !user) {
+    next({ name: 'EmailValidation' });
+  } else {
+    next();
   }
 });
 

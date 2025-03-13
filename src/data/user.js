@@ -1,9 +1,15 @@
 import { db, collectionNames } from '../firebase';
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, doc, setDoc } from "firebase/firestore";
 
-export const createUser = async (userData) => {
+export const createUser = async (userdId, email, password) => {
     try {
-        await addDoc(collection(db, collectionNames.users), userData);
+        console.log(userdId)
+        console.log(email)
+        console.log(password)
+
+        const userDocRef = doc(db, collectionNames.users, userdId);
+        await setDoc(userDocRef, { email, password });
+
         return true;
     } catch (error) {
         console.error("Error creating user: ", error);

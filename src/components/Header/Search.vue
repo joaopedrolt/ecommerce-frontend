@@ -9,9 +9,9 @@
             <template v-slot:activator="{ props }">
               <div class="d-flex h-100">
                 <div class="search-input-desktop">
-                  <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
-                    v-bind="props" hide-details="auto" variant="outlined" placeholder="O que deseja?"
-                    append-inner-icon="mdi-magnify" @click:append-inner="search()" @keypress.enter="search()" clearable
+                  <v-text-field id="search-header-desktop" v-model="searchInput" maxLength="80" v-bind="props"
+                    hide-details="auto" variant="outlined" placeholder="O que deseja?" append-inner-icon="mdi-magnify"
+                    @click:append-inner="search()" @keypress.enter="search()" clearable
                     @click:clear="handleClearSearchInput()" autocomplete="off">
                   </v-text-field>
                 </div>
@@ -59,20 +59,24 @@
                   </button>
                 </template>
                 <template v-else>
-                  <!--       <div
-                    class="w-100 pt-10 pb-9 d-flex align-center justify-center search-list-subheader v-list-subheader"
-                    style="max-width: 100% !important; ">
-                    <div style="overflow-wrap: anywhere;">Nenhum resultado encontrado!</div>
-                  </div> -->
+                  <button
+                    class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                    style="max-width: 100% !important;" @click="search()">
+                    <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
 
-                  <div class="h-100 w-100 py-12 d-flex justify-center">
+                    <div class="right-arrow ml-3 h-100">
+                      <v-icon>mdi-arrow-right</v-icon>
+                    </div>
+                  </button>
+
+                  <!-- <div class="h-100 w-100 py-12 d-flex justify-center">
                     <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
                       <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;"> Nenhum resultado
                         encontrado<v-icon class="ml-1"
                           style="margin-bottom: 1px !important;">mdi-close-circle-outline</v-icon>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </template>
               </template>
             </v-card>
@@ -88,10 +92,9 @@
             <template v-slot:activator="{ props }">
               <div class="d-flex h-100">
                 <div class="search-input-mobile">
-                  <v-text-field id="searchHeader" v-model="searchInput" @input="handlePreSearch" maxLength="80"
-                    v-bind="props" hide-details="auto" placeholder="O que você deseja?" append-inner-icon="mdi-magnify"
-                    @click:append-inner="search()" @keypress.enter="search()" clearable
-                    @click:clear="handleClearSearchInput()" autocomplete="off">
+                  <v-text-field id="search-header-mobile" v-model="searchInput" maxLength="80" v-bind="props" hide-details="auto"
+                    placeholder="O que você deseja?" append-inner-icon="mdi-magnify" @click:append-inner="search()"
+                    @keypress.enter="search()" clearable @click:clear="handleClearSearchInput()" autocomplete="off">
                   </v-text-field>
                 </div>
 
@@ -141,20 +144,24 @@
                   </button>
                 </template>
                 <template v-else>
-                  <!--       <div
-                    class="w-100 pt-10 pb-9 d-flex align-center justify-center search-list-subheader v-list-subheader"
-                    style="max-width: 100% !important; ">
-                    <div style="overflow-wrap: anywhere;">Nenhum resultado encontrado!</div>
-                  </div> -->
+                  <button
+                    class="btn-search w-100 d-flex justify-space-between align-center search-list-subheader v-list-subheader py-4 pr-6"
+                    style="max-width: 100% !important;" @click="search()">
+                    <div style="overflow-wrap: anywhere;">Buscar todos os resuldos para: {{ searchInput }}</div>
 
-                  <div class="h-100 w-100 py-12 d-flex justify-center">
+                    <div class="right-arrow ml-3 h-100">
+                      <v-icon>mdi-arrow-right</v-icon>
+                    </div>
+                  </button>
+
+                  <!-- <div class="h-100 w-100 py-12 d-flex justify-center">
                     <div class="d-flex justify-center align-center flex-column" style="width: 60%;">
                       <div class="search-list-subheader v-list-subheader" style="opacity: 0.8;"> Nenhum resultado
                         encontrado<v-icon class="ml-1"
                           style="margin-bottom: 1px !important;">mdi-close-circle-outline</v-icon>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </template>
               </template>
             </v-card>
@@ -201,12 +208,38 @@ const preSearch = async () => {
   isSearching.value = true;
 
   if (searchInput.value != undefined && searchInput.value.length != 0) {
-    products.value = await getProductsByName(searchInput.value, 4);
+    products.value = await getProductsByName(searchInput.value, 3);
   }
 
   isSearching.value = false;
 };
 
+watch(searchInput, () => {
+  clearTimeout(timer);
+
+  timer = setTimeout(() => {
+
+    if (!searchInput.value) {
+      menu.value = false;
+      return;
+    }
+
+    if (searchInput.value.length == 0) {
+      menu.value = false;
+      return;
+    }
+
+    if (!menu.value) {
+      menu.value = true;
+    }
+
+    preSearch();
+  }, 500);
+})
+
+
+/* 
+add @input
 const handlePreSearch = () => {
   clearTimeout(timer);
 
@@ -228,7 +261,7 @@ const handlePreSearch = () => {
 
     preSearch();
   }, 500);
-};
+}; */
 
 const handleClearSearchInput = () => {
   menu.value = false;
@@ -273,16 +306,19 @@ watch(menu, (newVal) => {
   }
 })
 
+const vvvvv = ref(null);
+
 watch(displaySearchOverlay, (newVal) => {
   if (newVal) {
     setTimeout(() => {
       searchInput.value = "";
-    }, 120);
 
-    setTimeout(() => {
-      const searchRef = document.querySelector("#searchHeader");
-      searchRef.focus();
-    }, 200);
+      const searchDesktopRef = document.querySelector("#search-header-desktop");
+      const searchMobileRef = document.querySelector("#search-header-mobile");
+
+      searchDesktopRef?.focus();
+      searchMobileRef?.focus();
+    }, 120);
   }
 });
 

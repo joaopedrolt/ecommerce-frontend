@@ -1,211 +1,222 @@
 <template>
-  <div v-if="renderComponent" class="product-view container-limit">
+  <div v-if="renderComponent" class="product-view container-limit align-center">
 
-    <div class="product-main container-size-padding desktop-padding">
-      <div v-if="product.images.length" class="product-left">
-        <div class="product-header hide-desktop container-size-padding">
-          <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
-            {{ product.name }}
-          </div>
-          <div class="product-price mt-1">
-            <div class="final-price font-weight-regular"> {{ formatPrice(product.price) }}</div>
-            <div class="gross-price font-weight-light" style="margin-top: 2.5px">
-              <s>{{ formatPrice(product.grossPrice) }}</s>
+    <template v-if="!loadingProduct">
+      <div class="product-main container-size-padding desktop-padding">
+        <div v-if="product.images.length" class="product-left">
+          <div class="product-header hide-desktop container-size-padding">
+            <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
+              {{ product.name }}
+            </div>
+            <div class="product-price mt-1">
+              <div class="final-price font-weight-regular"> {{ formatPrice(product.price) }}</div>
+              <div class="gross-price font-weight-light" style="margin-top: 2.5px">
+                <s>{{ formatPrice(product.grossPrice) }}</s>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="product-images">
-          <!-- <div class="product-images-grid">
+          <div class="product-images">
+            <!-- <div class="product-images-grid">
             <img v-for="image in product.images.slice(0, 2)" class="product-img" :src="image" />
           </div> -->
 
-          <div class="product-images-slide">
-            <div class="container-limit carousel-limit carousel-height-limit">
-              <Splide :has-track="false" aria-label="..." :options="{
-                arrows: true,
-                speed: 1000,
-              }">
-                <SplideTrack>
-                  <SplideSlide v-for="image in product.images" style="width: 100%" class="carousel-height-limit">
-                    <img class="carousel-height-limit carousel-img-sizing" :src="image" />
-                  </SplideSlide>
+            <div class="product-images-slide">
+              <div class="container-limit carousel-limit carousel-height-limit">
+                <Splide :has-track="false" aria-label="..." :options="{
+                  arrows: true,
+                  speed: 1000,
+                }">
+                  <SplideTrack>
+                    <SplideSlide v-for="image in product.images" style="width: 100%" class="carousel-height-limit">
+                      <img class="carousel-height-limit carousel-img-sizing" :src="image" />
+                    </SplideSlide>
 
-                  <!-- <SplideSlide style="width: 100%" class="carousel-height-limit">
+                    <!-- <SplideSlide style="width: 100%" class="carousel-height-limit">
                     <img class="carousel-height-limit carousel-img-sizing"
                       src="https://cdn-images.farfetch-contents.com/22/17/13/25/22171325_51919239_1000.jpg"
                       alt="Sample 1" />
                   </SplideSlide> -->
-                </SplideTrack>
-              </Splide>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="product-right container-size-padding mobile-padding">
-        <div class="product-header hide-mobile">
-          <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
-            {{ product.name }}
-          </div>
-          <div class="product-price mt-2">
-            <div class="final-price font-weight-regular">{{ formatPrice(product.price) }}</div>
-            <div class="gross-price font-weight-light" style="margin-top: 2.5px">
-              <s>{{ formatPrice(product.grossPrice) }}</s>
-            </div>
-          </div>
-        </div>
-        <div class="product-checkout">
-          <div class="">
-            <div class="product-amount d-flex flex-column">
-              <div class="text-subtitle-2 font-weight-regular mt-2" style="opacity: 0.6;">
-                {{ product.shortDescription }}
+                  </SplideTrack>
+                </Splide>
               </div>
-              <div class="text-body-2 font-weight-light mb-2 mt-7">Quantidade</div>
-              <div class="d-flex" style="
+            </div>
+          </div>
+        </div>
+        <div class="product-right container-size-padding mobile-padding">
+          <div class="product-header hide-mobile">
+            <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
+              {{ product.name }}
+            </div>
+            <div class="product-price mt-2">
+              <div class="final-price font-weight-regular">{{ formatPrice(product.price) }}</div>
+              <div class="gross-price font-weight-light" style="margin-top: 2.5px">
+                <s>{{ formatPrice(product.grossPrice) }}</s>
+              </div>
+            </div>
+          </div>
+          <div class="product-checkout">
+            <div class="">
+              <div class="product-amount d-flex flex-column">
+                <div class="text-subtitle-2 font-weight-regular mt-2" style="opacity: 0.6;">
+                  {{ product.shortDescription }}
+                </div>
+                <div class="text-body-2 font-weight-light mb-2 mt-7">Quantidade</div>
+                <div class="d-flex" style="
                   border: 1px solid #111111;
                   border-radius: 3px;
                   height: 44px;
                   width: fit-content;
                 ">
-                <v-btn class="h-100 px-0" elevation="0" @click="amount--" :ripple="false" style="min-width: 45px">
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
+                  <v-btn class="h-100 px-0" elevation="0" @click="amount--" :ripple="false" style="min-width: 45px">
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
 
-                <div class="d-flex justify-center align-center h-100" style="width: 50px">
-                  <div>
-                    {{ amount }}
+                  <div class="d-flex justify-center align-center h-100" style="width: 50px">
+                    <div>
+                      {{ amount }}
+                    </div>
                   </div>
-                </div>
 
-                <v-btn class="h-100 px-0" elevation="0" @click="amount++" width="45px" :ripple="false"
-                  style="min-width: 45px">
-                  <v-icon>mdi-plus</v-icon>
+                  <v-btn class="h-100 px-0" elevation="0" @click="amount++" width="45px" :ripple="false"
+                    style="min-width: 45px">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+
+              <div>
+                <v-btn class="font-weight-regular button-color button-light mt-4"
+                  @click="handleAddToCart(product.grossPrice)" height="45px" width="100%" variant="flat"
+                  :ripple="false">
+                  ADICIONAR AO CARRINHO
                 </v-btn>
               </div>
             </div>
-
-            <div>
-              <v-btn class="font-weight-regular button-color button-light mt-4"
-                @click="handleAddToCart(product.grossPrice)" height="45px" width="100%" variant="flat" :ripple="false">
-                ADICIONAR AO CARRINHO
-              </v-btn>
-            </div>
           </div>
-        </div>
 
 
-        <div class="product-details-list mt-5">
-          <v-divider color="#111111"></v-divider>
+          <div class="product-details-list mt-5">
+            <v-divider color="#111111"></v-divider>
 
-          <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
-            <v-list-group value="details">
-              <template v-slot:activator="{ isOpen, props }">
-                <v-list-item :ripple="false" v-bind="props">
-                  <v-list-item-title>
-                    <div class="d-flex align-center">
-                      <div class="d-flex align-center font-weight-medium py-2 text-overline" style="font-size: 1rem;
+            <v-list class="frete-ratio" v-model:opened="open" open-strategy="single" eager>
+              <v-list-group value="details">
+                <template v-slot:activator="{ isOpen, props }">
+                  <v-list-item :ripple="false" v-bind="props">
+                    <v-list-item-title>
+                      <div class="d-flex align-center">
+                        <div class="d-flex align-center font-weight-medium py-2 text-overline" style="font-size: 1rem;
                             -webkit-user-select: none; 
                             -ms-user-select: none; 
                              user-select: none;">
-                        Mais Detalhes do Produto
+                          Mais Detalhes do Produto
+                        </div>
                       </div>
+                    </v-list-item-title>
+                  </v-list-item>
+                </template>
+                <v-list-item>
+                  <div
+                    class="w-100 h-100 d-flex flex-column text-center py-1 text-subtitle-2 font-weight-regular text-start"
+                    style="opacity: 0.6;">
+                    <div class="pr-1">
+                      {{ product.longDescription }}
                     </div>
-                  </v-list-item-title>
-                </v-list-item>
-              </template>
-              <v-list-item>
-                <div
-                  class="w-100 h-100 d-flex flex-column text-center py-1 text-subtitle-2 font-weight-regular text-start"
-                  style="opacity: 0.6;">
-                  <div class="pr-1">
-                    {{ product.longDescription }}
-                  </div>
 
-                  <!-- <ul class="px-4 mt-4 mb-2" style=" list-style-type: square !important;">
+                    <!-- <ul class="px-4 mt-4 mb-2" style=" list-style-type: square !important;">
                     <li>Metal com acabamento dourado</li>
                     <li>Cordão em couro de vitelo marrom</li>
                     <li>Assinaturas LV Initials e Flores do Monogram</li>
                   </ul> -->
-                </div>
-              </v-list-item>
-            </v-list-group>
-          </v-list>
+                  </div>
+                </v-list-item>
+              </v-list-group>
+            </v-list>
 
-          <v-divider color="#111111"></v-divider>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-size-padding">
-      <div v-for="section in product.sections" class="showcase"
-        :class="section.position == 'right' ? 'right-side' : 'left-side'">
-        <div class="showcase-content d-flex flex-column align-center justify-center" style="flex: 7;">
-          <div class="wrapper">
-            <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
-              {{ section.title }}
-            </div>
-            <div style="opacity: 0.6; padding-left: 2px;">
-              {{ section.subtitle }}
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex align-center justify-center" style="flex: 5;">
-          <div style="width: 100%; height: 600px;">
-            <img style="width: 100%; height: 100%; object-fit: cover;" :src="section.image" />
+            <v-divider color="#111111"></v-divider>
           </div>
         </div>
       </div>
 
-      <v-divider class="mt-9" color="#111111"></v-divider>
-
-      <div class="youmaylike flex-column">
-        <div v-if="recommendedProducts.length > 0"
-          class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1"
-          style="font-size: .9rem !important;">
-          Você também pode gostar
-        </div>
-
-        <div class="product-container d-flex mt-5" style="gap: 15px;">
-          <div class="product-division d-flex" style="gap: 15px; flex: 1;">
-            <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="product-card d-flex flex-column"
-              elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
-              <div class="product-card-top">
-                <img :src="recomendedProduct.displayImage" alt="" />
+      <div class="container-size-padding">
+        <div v-for="section in product.sections" class="showcase"
+          :class="section.position == 'right' ? 'right-side' : 'left-side'">
+          <div class="showcase-content d-flex flex-column align-center justify-center" style="flex: 7;">
+            <div class="wrapper">
+              <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
+                {{ section.title }}
               </div>
-
-              <div class="product-card-bottom">
-                <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
-                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  {{ recomendedProduct.displayDescription }}
-                </p>
-                <div class="product-card-price">
-                  <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
-                </div>
+              <div style="opacity: 0.6; padding-left: 2px;">
+                {{ section.subtitle }}
               </div>
             </div>
           </div>
 
-          <div v-if="recommendedProducts.length > 2" class="product-division d-flex" style="gap: 15px; flex: 1;">
-            <div v-for="recomendedProduct in recommendedProducts.slice(2, 4)" class="product-card d-flex flex-column"
-              elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
-              <div class="product-card-top">
-                <img :src="recomendedProduct.displayImage" alt="" />
-              </div>
+          <div class="d-flex align-center justify-center" style="flex: 5;">
+            <div style="width: 100%; height: 600px;">
+              <img style="width: 100%; height: 100%; object-fit: cover;" :src="section.image" />
+            </div>
+          </div>
+        </div>
 
-              <div class="product-card-bottom">
-                <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
-                <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                  {{ recomendedProduct.displayDescription }}
-                </p>
-                <div class="product-card-price">
-                  <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
+        <v-divider class="mt-9" color="#111111"></v-divider>
+
+        <div class="youmaylike flex-column">
+          <div v-if="recommendedProducts.length > 0"
+            class="d-flex text-h6 font-weight-medium justify-center text-overline mt-5 mb-1"
+            style="font-size: .9rem !important;">
+            Você também pode gostar
+          </div>
+
+          <div class="product-container d-flex mt-5" style="gap: 15px;">
+            <div class="product-division d-flex" style="gap: 15px; flex: 1;">
+              <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="product-card d-flex flex-column"
+                elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
+                <div class="product-card-top">
+                  <img :src="recomendedProduct.displayImage" alt="" />
+                </div>
+
+                <div class="product-card-bottom">
+                  <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
+                  <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                    {{ recomendedProduct.displayDescription }}
+                  </p>
+                  <div class="product-card-price">
+                    <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="recommendedProducts.length > 2" class="product-division d-flex" style="gap: 15px; flex: 1;">
+              <div v-for="recomendedProduct in recommendedProducts.slice(2, 4)" class="product-card d-flex flex-column"
+                elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
+                <div class="product-card-top">
+                  <img :src="recomendedProduct.displayImage" alt="" />
+                </div>
+
+                <div class="product-card-bottom">
+                  <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
+                  <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                    {{ recomendedProduct.displayDescription }}
+                  </p>
+                  <div class="product-card-price">
+                    <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div class="d-flex flex-column align-center px-3 pb-9 justify-center h-100"
+        style="min-height: 400px; flex: 1;">
+        <div class="mb-2 text-subtitle-1 font-weight-light">Carregando Produto...</div>
+        <v-progress-linear indeterminate></v-progress-linear>
+      </div>
+    </template>
+
   </div>
   <loading-white-screen v-else />
 </template>
@@ -238,6 +249,7 @@ const amount = ref(1);
 const open = ref([]);
 
 const renderComponent = ref(true);
+const loadingProduct = ref(true);
 const product = ref({
   id: "",
   discount: 0,
@@ -291,8 +303,12 @@ watch(() => route.params.productId, (newVal) => {
 onBeforeMount(async () => {
   const productId = route.params.productId;
 
+  loadingProduct.value = true;
+
   product.value = await getProduct(productId);
   recommendedProducts.value = await getRecomendedProducts(productId);
+
+   loadingProduct.value = false;
 
   /*  await duplicateDocument(); */
 });

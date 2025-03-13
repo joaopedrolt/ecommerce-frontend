@@ -24,7 +24,7 @@ export const getProduct = async (productId) => {
     }
 };
 
-export const getProductsByName = async (queryString, limit) => {
+export const getProductsByName = async (queryString, limit = null) => {
     try {
         const productsRef = collection(db, collectionNames.products);
         const querySnapshot = await getDocs(productsRef);
@@ -35,7 +35,13 @@ export const getProductsByName = async (queryString, limit) => {
         querySnapshot.forEach((doc) => {
             let name = doc.data().name;
             if (name.toLowerCase().includes(lowerSearch)) {
-                if (results.length < limit) {
+
+                if (limit) {
+                    if (results.length < limit) {
+                        results.push({ id: doc.id, ...doc.data() });
+                    }
+                }
+                else {
                     results.push({ id: doc.id, ...doc.data() });
                 }
             }

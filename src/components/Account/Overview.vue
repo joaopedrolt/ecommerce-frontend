@@ -240,6 +240,9 @@ const loadUserOrders = async (userId) => {
 };
 
 onBeforeMount(async () => {
+
+  await userId
+
   await loadUserAddresses(userId.value);
   await loadUserOrders(userId.value);
 })

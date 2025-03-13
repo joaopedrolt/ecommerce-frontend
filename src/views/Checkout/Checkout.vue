@@ -1245,7 +1245,6 @@ const handleCepBlur = async () => {
 } */
 
 const validateCepField = async () => {
-  alert("oi")
   const cepField = shippingForm.value.items.find(item => item.id === 'cep');
   await cepField.validate();
   shippingFormValidation.cep = true;

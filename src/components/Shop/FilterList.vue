@@ -1,6 +1,6 @@
 <template>
   <div class="filter-list-container">
-    <v-expansion-panels eager multiple elevation="0">
+    <v-expansion-panels class="pl-2 pr-3" eager multiple elevation="0">
       <v-expansion-panel v-for="(filter, index) in filterList" :key="index" elevation="0" style="margin: 0"
         variant="accordion">
         <v-expansion-panel-title eager>
@@ -19,7 +19,7 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-    <div>
+    <div class="pl-1">
       <v-btn @click="handleClearFilters" class="text-subtitle-1 font-weight-regular mt-5 button-color button-light"
         height="35px" variant="flat" :ripple="false" style="width: 221px; font-size: 0.9rem !important;">
         Limpar Filtros
@@ -34,6 +34,7 @@ import { watch, ref } from 'vue';
 
 const props = defineProps({
   activeFilters: Object,
+  filterList: Array,
 });
 
 const emit = defineEmits(["update-filters"]);
@@ -61,25 +62,6 @@ const handleClearFilters = () => {
   localFilters.value = [];
   updateFilters();
 }
-
-const filterList = [
-  {
-    title: "Preço",
-    items: [
-      "Menor Preço",
-      "Maior Preço"
-    ],
-    multiple: false
-  },
-  {
-    title: "Categoria",
-    items: [
-      "Roupas",
-      "Bolsas"
-    ],
-    multiple: true
-  }
-]
 </script>
 
 <style lang="scss">

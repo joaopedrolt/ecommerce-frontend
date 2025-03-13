@@ -65,7 +65,7 @@ const handleLogoClick = () => {
 
 const handleSignInClick = () => {
   router.push({
-    name: "EmailValidation",
+    name: "AccountOverview",
   });
 };
 </script>

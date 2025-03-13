@@ -34,70 +34,9 @@
       </template>
 
       <template v-slot:footer>
-        <v-pagination v-model="page" :length="paginationLength" />
-        <!-- <v-select v-model="itemsPerPage" :items="[5, 10, 15, 20]" label="Items per page" dense hide-details /> -->
+        <v-pagination @update:modelValue="scrollToTop" class="mt-5 mb-8" v-model="page" :length="paginationLength" />
       </template>
     </v-data-iterator>
-
-    <!--  <v-data-iterator :items="items" :itemsPerPage="itemsPerPage">
-      <template v-slot:default="{ items }">
-        <template v-for="(item, i) in items" :key="i">
-          <v-card v-bind="item.raw"> </v-card>
-
-          <br>
-        </template>
-      </template>
-
-      <template v-slot:footer>
-        <v-pagination v-model="page"  />
-      </template>
-    </v-data-iterator> -->
-
-    <!-- <div class="products-container">
-      <div v-for="p in products" class="product-card d-flex flex-column" elevation="0"
-        @click="handleProductClick(p.id)">
-        <div class="product-card-top">
-          <img :src="p.displayImage" alt="" />
-        </div>
-
-        <div class="product-card-bottom">
-          <div class="font-weight-bold">{{ p.name }}</div>
-          <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-            {{ p.displayDescription }}
-          </p>
-          <div class="product-card-price">
-            <div class="text-subtitle-2 font-weight-regular"> {{ p.price }} </div>
-            <div class="text-caption price-cents">99</div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <!--  <v-data-iterator :items="products" :items-per-page="itemsPerPage">
-      <template v-slot:default="{ items }">
-        <div class="w-100 d-flex flex-column" style="gap: 20px;">
-          <div v-for="p in items" class="product-item w-100 d-flex flex-column">
-            xxxx
-          </div>
-        </div>
-      </template>
-
-<template v-if="products.length > itemsPerPage" v-slot:footer="{ page, pageCount, prevPage, nextPage }">
-        <div class="d-flex align-center justify-center pa-4">
-          <v-btn :disabled="page === 1" icon="mdi-arrow-left" density="comfortable" variant="tonal" rounded
-            @click="prevPage"></v-btn>
-
-          <div class="mx-2 text-caption">
-            Página {{ page }} de {{ pageCount }}
-          </div>
-
-          <v-btn :disabled="page >= pageCount" icon="mdi-arrow-right" density="comfortable" variant="tonal" rounded
-            @click="nextPage"></v-btn>
-        </div>
-      </template>
-</v-data-iterator> -->
-
-
   </div>
 </template>
 
@@ -107,13 +46,29 @@ import { useRouter } from 'vue-router';
 
 const props = defineProps({
   products: Array,
-  activeFilters: Object
+  activeFilters: Object,
+  updateRenderComponent: Function
 });
 
 const router = useRouter();
 
 const handleProductClick = (productId) => {
-  router.push({ name: "Product", params: { produtoId: productId } });
+  props.updateRenderComponent(false);
+
+  router.push({
+    name: "Product",
+    params: {
+      productId,
+    },
+  });
+};
+
+/* -------------------------- */
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+  });
 };
 
 /* -------------------------- */
@@ -126,7 +81,6 @@ const footerProps = computed(() => ({
   'items-per-page-options': [5, 10, 15, 20],
   'items-per-page-text': 'Items per page',
 }));
-
 
 const filteredProducts = ref([])
 
@@ -149,9 +103,9 @@ const handleFilteredProducts = () => {
     props.activeFilters.forEach(activeFilter => {
       if (activeFilter.section == 'Preço') {
         filteredProducts.value = props.products.slice().sort((a, b) => {
-          if (activeFilter.filter === "M") {
+          if (activeFilter.filter === "Maior Preço") {
             return a.price - b.price;
-          } else if (activeFilter.filter === "a") {
+          } else if (activeFilter.filter === "Menor Preço") {
             return b.price - a.price;
           }
 
@@ -169,14 +123,19 @@ const handleFilteredProducts = () => {
   }
 }
 
-watch(() => props.activeFilters, handleFilteredProducts);
-
-watch(() => props.products, () => filteredProducts.value.length == 0 ? filteredProducts.value = props.products : []);
-
-/* onMounted(() => {
-  filteredProducts.value = props.products;
+const handleProductsUpdate = () => {
+  /*   filteredProducts.value.length == 0 ? filteredProducts.value = props.products : []; */
+  handleFilteredProducts();
   updatePaginationLength();
-}); */
+}
+
+watch(() => props.activeFilters, handleProductsUpdate);
+
+watch(() => props.products, handleProductsUpdate);
+
+onMounted(() => {
+  handleProductsUpdate();
+});
 </script>
 
 <style lang="scss">
@@ -195,6 +154,7 @@ watch(() => props.products, () => filteredProducts.value.length == 0 ? filteredP
 .products-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  /* gap: 20px; */
+  justify-content: space-between;
 }
 </style>

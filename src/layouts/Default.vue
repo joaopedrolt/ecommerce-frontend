@@ -1,12 +1,15 @@
 <template>
-  <div :class="{ 'scrollbar-filler': displayCartDrawer }">
-    <navbar />
-    <navigation-drawer />
+  <div class="h-100" :class="{ 'scrollbar-filler': displayCartDrawer }">
+    <!-- <navigation-drawer /> -->
     <cart-drawer />
-    <v-main style="margin-top: 75px;">
-      <router-view />
-    </v-main>
-    <footer-area :cleanFooter="true" />
+    <navbar />
+
+    <div class="h-100 d-flex flex-column">
+      <v-main style="margin-top: 75px;">
+        <router-view />
+      </v-main>
+      <footer-area :cleanFooter="true" />
+    </div>
   </div>
 </template>
 

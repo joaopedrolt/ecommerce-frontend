@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { collection, getFirestore } from 'firebase/firestore';
-import AddressForm from './components/Account/AddressForm.vue';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -22,3 +22,4 @@ export const collectionNames = {
 }
 
 export const db = getFirestore(app); 
+export const auth = getAuth(app);

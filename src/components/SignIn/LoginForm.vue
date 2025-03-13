@@ -12,8 +12,8 @@
 
           <div class="signin-password-area">
             <v-text-field v-model="passwordInputValue" :class="[
-      isPasswordValid ? 'default-input-color' : 'error-input-color',
-    ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
+              isPasswordValid ? 'default-input-color' : 'error-input-color',
+            ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
               label="Senha" variant="outlined" @click:append-inner="showPassword = !showPassword" :rules="passwordRules"
               hint="A senha requer no mínimo 8 caracteres, incluindo letras e números." persistent-hint
               @keyup.enter="handleLogInClick" @keydown.enter.prevent></v-text-field>
