@@ -15,23 +15,33 @@
               isPasswordValid ? 'default-input-color' : 'error-input-color',
             ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :type="showPassword ? 'text' : 'password'"
               label="Senha" variant="outlined" @click:append-inner="showPassword = !showPassword" :rules="passwordRules"
-              hint="A senha requer no mínimo 8 caracteres, incluindo letras e números." persistent-hint
-              @keyup.enter="handleLogInClick" @keydown.enter.prevent></v-text-field>
+              persistent-hint @keyup.enter="handleLogInClick" @keydown.enter.prevent
+              :hide-details="isPasswordValid && signInErrorMessage && signInErrorMessage.length > 0"></v-text-field>
+
+            <validation-filler :active="!isPasswordValid" />
           </div>
 
-          <validation-filler :active="true" />
+          <template v-if="isPasswordValid && signInErrorMessage && signInErrorMessage.length > 0">
+            <transition name="dropdown" @before-leave="instantLeave">
+              <div v-if="isPasswordValid && signInErrorMessage && signInErrorMessage.length > 0"
+                class="dropdown-content v-messages v-messages__message my-4"
+                style="color: rgb(var(--v-theme-error)); opacity: 1 !important;">
+                {{ signInErrorMessage }}
+              </div>
+            </transition>
+          </template>
 
-          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-dark mb-4"
+          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-light mb-4"
             height="45px" width="100%" variant="flat" :ripple="false">
             Entrar
           </v-btn>
 
-          <div>
+          <!--    <div>
             <div style="height: 24px;">Esqueceu sua senha?</div>
             <router-link class="recover-link font-weight-regular"
               :to="{ name: 'EmailCodeValidation', query: { type: 'recover' } }">
               Clique aqui para recuperar sua senha!</router-link>
-          </div>
+          </div> -->
         </div>
       </v-form>
     </Motion>
@@ -52,6 +62,8 @@ import { passwordRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
 
+import signIn from "@/auth/signIn.js";
+
 const router = useRouter();
 
 const signInStore = useSignInStore();
@@ -66,7 +78,7 @@ const isPasswordValid = ref(true);
 
 const showForm = ref(true);
 
-var emailInputValue = "";
+const signInErrorMessage = ref();
 
 const handleEditClick = () => {
   router.push({
@@ -75,23 +87,54 @@ const handleEditClick = () => {
 };
 
 const handleLogInClick = async () => {
+  signInErrorMessage.value = null;
+
   const { valid } = await loginForm.value.validate();
 
   if (valid) {
     isPasswordValid.value = true;
 
-    /*     console.log(sha256(passwordInputValue.value));
-    console.log(emailInputValue); */
+    const { user, error } = await signIn(signInEmailInput.value, passwordInputValue.value);
+
+    if (error) {
+      signInErrorMessage.value = error;
+      passwordInputValue.value = "";
+      return;
+    } else {
+      router.push({ name: "Home" });
+    }
   } else isPasswordValid.value = false;
 };
 
+const instantLeave = (el) => {
+  el.style.transition = "none";
+  el.style.maxHeight = "none";
+  el.style.opacity = "0";
+};
+
 onMounted(() => {
-  emailInputValue = signInEmailInput.value;
+  /*   emailInputValue = signInEmailInput.value; */
 });
 </script>
 
 <style lang="scss">
 @import "@/styles/global.scss";
+
+.dropdown-enter-active {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+}
+
+.dropdown-enter-from {
+  max-height: 0;
+  opacity: 0;
+}
+
+.dropdown-enter-to {
+  max-height: 100px;
+  opacity: 1;
+}
+
 
 .signin-password-area {
   .v-messages__message {

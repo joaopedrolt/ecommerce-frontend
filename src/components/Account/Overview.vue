@@ -3,7 +3,8 @@
     <div class="container-limit container-size-padding pt-8 pb-16">
       <div class="d-flex align-center flex-column mb-10">
         <v-avatar class="mb-2" color="surface-variant">J.T</v-avatar>
-        <div class="text-center text-overline" style="font-size: 0.91rem !important;">João Pedro Lima Teixeira</div>
+        <div class="text-center text-overline" style="font-size: 0.91rem !important;">{{ user.email }}
+        </div>
       </div>
       <div class="d-flex flex-column" style="gap: 40px;">
 
@@ -17,7 +18,7 @@
             </div>
 
             <v-card elevation="0">
-              <v-list class="addresses-card-list">
+              <v-list v-if="addresses && addresses.length" class="addresses-card-list">
                 <template v-for="(a, index) in addresses" :key="index">
                   <v-list-item>
                     <v-card-item class="adress-card-item px-0">
@@ -53,6 +54,9 @@
                   <v-divider v-if="index < addresses.length - 1"></v-divider>
                 </template>
               </v-list>
+              <div v-else class="text-subtitle-2 font-weight-light text-center pb-5 pt-6">
+                (Nenhum endereço registrado)
+              </div>
             </v-card>
           </div>
           <div class="w-100 mt-3 mb-4">
@@ -72,8 +76,8 @@
               </span>
             </div>
 
-            <v-data-table :class="{ 'keep-height': orders.length >= 4 }" :headers="headers" :items="orders"
-              class="elevation-0" items-per-page="4">
+            <v-data-table v-if="orders && orders.length" :class="{ 'keep-height': orders.length >= 4 }"
+              :headers="headers" :items="orders" class="elevation-0" items-per-page="4">
               <template v-slot:headers="props">
                 <tr>
                   <template v-for="(item, index) in props.headers[0]">
@@ -136,6 +140,9 @@
                 </tr>
               </template>
             </v-data-table>
+            <div v-else class="text-subtitle-2 font-weight-light text-center pb-5 pt-6">
+              (Nenhum pedido realizado)
+            </div>
           </div>
         </div>
       </div>
@@ -147,12 +154,17 @@
 import { ref, watch, onBeforeMount, reactive } from 'vue';
 import { useRouter } from "vue-router";
 
+import { useAuthStore } from '@/store/store';
+
 import { getUserAddresses, deleteAddress, setMainAddress } from "@/data/address"
 import { getUserOrders } from '@/data/order';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+const userId = ref();
 
 const showOrderByDropdown = ref(false);
 
@@ -240,8 +252,12 @@ const loadUserOrders = async (userId) => {
 };
 
 onBeforeMount(async () => {
-
-  await userId
+  userId.value = authStore.getUserId()
+  if (!userId.value) {
+    router.push({
+      name: "Home",
+    });
+  }
 
   await loadUserAddresses(userId.value);
   await loadUserOrders(userId.value);

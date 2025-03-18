@@ -21,5 +21,5 @@ export const collectionNames = {
   address: "address"
 }
 
-export const db = getFirestore(app); 
+export const db = getFirestore(app);
 export const auth = getAuth(app);

@@ -6,7 +6,7 @@
         <div class="signin-content">
           <SignInHeader title="Criar Senha" subtitle="Insira uma senha para sua conta" />
 
-          <v-text-field v-model="passwordInputValue" class="mt-4 hide-details-replacement" :class="[
+          <v-text-field v-model="passwordInputValue" class="hide-details-replacement" :class="[
             isPasswordValid ? 'default-input-color' : 'error-input-color',
           ]" type="password" label="Senha" variant="outlined" :rules="passwordRules" @blur="handlePasswordValidation"
             validate-on="blur" hide-details>
@@ -53,7 +53,7 @@ import { storeToRefs } from "pinia";
 import { Motion, Presence } from "motion/vue";
 import { useSignInStore } from "@/store/store";
 
-import { passwordRules } from "@/utils/rules";
+import { passwordRules, nomeRules } from "@/utils/rules";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
@@ -80,8 +80,6 @@ const isPasswordConfirmationValid = ref(true);
 
 const handlePasswordValidation = () => {
   const validationFunction = passwordRules[0].bind(this);
-
-  console.log(validationFunction(passwordInputValue.value))
 
   if (validationFunction(passwordInputValue.value) != true) {
     isPasswordValid.value = false;

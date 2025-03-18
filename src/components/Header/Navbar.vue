@@ -7,15 +7,36 @@
         </div>
 
         <div class="nav-side-container h-100">
-          <v-btn @click="handleSignInClick" icon size="small">
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
           <v-btn @click="displayCartDrawerr" icon size="small">
             <v-icon>mdi-cart</v-icon>
           </v-btn>
           <v-btn icon size="small" @click="displaySearchOverlay">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
+
+          <v-menu location="bottom left">
+            <template v-slot:activator="{ props }">
+              <v-btn v-if="user && user.email.length > 0" v-bind="props" icon size="small">
+                <div class="d-flex align-center flex-column">
+                  <v-avatar density="compact" color="surface-variant" style="padding-bottom: 2px; padding-left: 2.1px;"> {{
+                    user.email.substring(0, 2).toUpperCase() }}</v-avatar>
+                </div>
+              </v-btn>
+              <v-btn v-else @click="handleSignInClick" icon size="small">
+                <v-icon>mdi-account</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item @click="handleSignInClick">
+                <v-list-item-title> <v-icon>mdi-account-arrow-right</v-icon> Sua Conta</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item @click="handleSignOutClick">
+                <v-list-item-title><v-icon>mdi-logout</v-icon> Sair</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
 
         <!-- Meta -->
@@ -28,13 +49,24 @@
 
 <script setup>
 import { ref } from "vue";
-import { useDrawerStore, useSearchStore } from "@/store/store";
+import { useDrawerStore, useSearchStore, useAuthStore } from "@/store/store";
 import { storeToRefs } from "pinia";
+
 
 import { useRouter } from "vue-router";
 
 import Search from "./Search.vue";
 
+import signOut from "@/auth/signOut";
+
+const items = [
+  { title: 'Click Me' },
+  { title: 'Click Me' },
+  { title: 'Click Me' },
+  { title: 'Click Me 2' },
+]
+
+const authStore = useAuthStore();
 const drawerStore = useDrawerStore();
 const searchStore = useSearchStore();
 const router = useRouter();
@@ -44,6 +76,7 @@ const secondMenu = ref(false);
 const thirdMenu = ref(false);
 
 const { displayCartDrawer } = storeToRefs(drawerStore);
+const { user } = storeToRefs(authStore);
 
 const displayNavigationDrawer = () => {
   drawerStore.displayNavigationDrawerx();
@@ -67,6 +100,16 @@ const handleSignInClick = () => {
   router.push({
     name: "AccountOverview",
   });
+};
+
+const handleSignOutClick = async () => {
+  const response = await signOut();
+
+  if (response) {
+    router.go(0);
+  } else {
+    alert("Não foi possivel finalizar sua sessão!");
+  }
 };
 </script>
 

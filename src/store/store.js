@@ -2,6 +2,22 @@
 import { defineStore } from "pinia";
 import { useStorage } from '@vueuse/core'
 
+export const useAuthStore = defineStore("auth", {
+  state: () => ({
+    user: null,
+  }),
+
+  actions: {
+    setUserState(userData) {
+      this.user = userData ? { email: userData.email, uid: userData.uid } : null;
+      console.log(this.user)
+    },
+    getUserId() {
+      return this.user && this.user.uid ? this.user.uid : null;
+    }
+  }
+});
+
 /* Drawer */
 export const useDrawerStore = defineStore("navbar", {
   state: () => ({

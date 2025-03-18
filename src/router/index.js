@@ -13,7 +13,10 @@ import { useSignInStore } from "@/store/store";
 import { useSearchStore } from "@/store/store";
 
 // Auth
-import getCurrentUser from "@/auth/getCurrentUser";
+import setUserState from "@/store/setUserState";
+import { onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+
 
 const routes = [
   {
@@ -161,6 +164,8 @@ const routes = [
   },
 ];
 
+
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
@@ -170,16 +175,23 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const user = getCurrentUser();
+  const auth = getAuth();
 
-  console.log(user)
+  onAuthStateChanged(auth, (user) => {
+    setUserState(user);
 
-  if (requiresAuth && !user) {
-    next({ name: 'EmailValidation' });
-  } else {
-    next();
-  }
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+    if (requiresAuth) {
+      if (user) {
+        next();
+      }
+      else {
+        next({ name: 'EmailValidation' });
+      }
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;
