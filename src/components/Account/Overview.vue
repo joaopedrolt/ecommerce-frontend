@@ -1,7 +1,7 @@
 <template>
-  <div style="min-height: 100vh;" class="d-flex align-center">
-    <div class="container-limit container-size-padding pt-8 pb-16">
-      <div class="d-flex align-center flex-column mb-10">
+  <div style="min-height: 100vh; position: relative;" class="d-flex align-center">
+    <div class="container-limit container-size-padding" style="padding-bottom: 125px;">
+      <div class="d-flex align-center flex-column mb-16">
         <v-avatar class="mb-2" color="surface-variant">J.T</v-avatar>
         <div class="text-center text-overline" style="font-size: 0.91rem !important;">{{ user.email }}
         </div>
@@ -32,9 +32,18 @@
                           <v-btn @click="handleAddAddress(a)" elevation="0" icon size="small">
                             <v-icon>mdi-pencil</v-icon>
                           </v-btn>
-                          <v-btn @click="handleSetMainAddress(a)" v-if="!a.main" elevation="0" icon size="small">
-                            <v-icon>mdi-home</v-icon>
-                          </v-btn>
+
+                          <v-tooltip>
+                            <template v-slot:activator="{ props }">
+                              <v-btn v-bind="props" @click="handleSetMainAddress(a)" v-if="!a.main" elevation="0" icon
+                                size="small">
+                                <v-icon>mdi-home</v-icon>
+                              </v-btn>
+                            </template>
+
+                            <div>Definir como Principal</div>
+                          </v-tooltip>
+
                           <v-btn @click="handleDeleteAddress(a)" elevation="0" icon size="small">
                             <v-icon>mdi-close</v-icon>
                           </v-btn>
@@ -61,8 +70,9 @@
           </div>
           <div class="w-100 mt-3 mb-4">
             <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-light" height="37px"
-              width="100%" variant="flat" style="font-size: 0.8rem !important;">
-              Adicionar Endereço
+              width="100%" variant="flat" style="font-size: 0.8rem !important;"
+              :disabled="addresses && addresses.length >= 4">
+              {{ addresses && addresses.length >= 4 ? 'Limite de Endereços Atingido' : 'Adicionar Endereço' }}
             </v-btn>
           </div>
         </div>
@@ -229,7 +239,7 @@ const handleSetMainAddress = async (address) => {
 }
 
 const handleDeleteAddress = async (address) => {
-  const response = await deleteAddress(address.id);
+  const response = await deleteAddress(address, userId.value);
 
   if (response) {
     await loadUserAddresses(userId.value);

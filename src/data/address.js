@@ -3,11 +3,11 @@ import { addDoc, collection, where, query, getDocs, getDoc, doc, setDoc, deleteD
 
 export const createAddress = async (addressData) => {
     try {
-        await addDoc(collection(db, collectionNames.address), addressData);
-
         if (addressData.main) {
-            await resetMainAddress(addressData.id);
+            await resetMainAddress(null);
         }
+
+        await addDoc(collection(db, collectionNames.address), addressData);
 
         return true;
     } catch (error) {
@@ -67,6 +67,8 @@ export const resetMainAddress = async (excludeAddressId) => {
         const updatePromises = querySnapshot.docs
             .filter(docSnapshot => docSnapshot.id !== excludeAddressId) // Exclude document
             .map(async (docSnapshot) => {
+                console.log(docSnapshot.id)
+
                 const docRef = doc(db, collectionNames.address, docSnapshot.id);
                 await updateDoc(docRef, { main: false });
             });
@@ -80,10 +82,19 @@ export const resetMainAddress = async (excludeAddressId) => {
     }
 };
 
-export const deleteAddress = async (addressId) => {
+export const deleteAddress = async (address, userId) => {
     try {
-        const docRef = doc(db, collectionNames.address, addressId);
+        const docRef = doc(db, collectionNames.address, address.id);
         await deleteDoc(docRef);
+
+        if (address.main) {
+            const addresses = await getUserAddresses(userId);
+
+            if (addresses && addresses.length) {
+                const randomIndex = Math.floor(Math.random() * addresses.length);
+                await setMainAddress(addresses[randomIndex].id);
+            }
+        }
 
         return true;
     } catch (error) {
@@ -100,10 +111,17 @@ export const getUserAddresses = async (userId) => {
 
         const querySnapshot = await getDocs(addressesQuery);
 
-        const addresses = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
+        const addresses = querySnapshot.docs
+            .map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }))
+            .sort((a, b) => {
+                if (a.main === b.main) {
+                    return 0;
+                }
+                return a.main ? -1 : 1;
+            });
 
         return addresses;
     } catch (error) {

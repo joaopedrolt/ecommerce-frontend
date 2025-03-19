@@ -143,6 +143,8 @@ import {
     telefoneMask
 } from "@/utils/masks";
 
+import { useAuthStore } from '@/store/store';
+
 import getEstados from '@/utils/getEstados';
 
 import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
@@ -152,7 +154,9 @@ import { createAddress, getAddress, updateAddress } from "@/data/address"
 const router = useRouter();
 const route = useRoute();
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const userId = ref();
+const authStore = useAuthStore();
+
 const addressId = ref();
 
 const addressForm = ref();
@@ -265,7 +269,7 @@ const handleSaveAddress = async () => {
 
     if (valid) {
         let addressData = { ...address, userId: userId.value };
-        const response = !addressId ? await createAddress(addressData) : await updateAddress(addressData);
+        const response = !addressId.value ? await createAddress(addressData) : await updateAddress(addressData);
 
         if (response) {
             router.push({
@@ -286,6 +290,13 @@ const loadAddress = async (addressId) => {
 }
 
 onBeforeMount(async () => {
+    userId.value = authStore.getUserId();
+    if (!userId.value) {
+        router.push({
+            name: "Home",
+        });
+    }
+    
     const addressIdParam = route.params.addressId
 
     if (addressIdParam) {
