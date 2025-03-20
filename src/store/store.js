@@ -69,7 +69,7 @@ export const useSearchStore = defineStore("search", {
 });
 
 /* Cart */
-var cartlocalStorageKeys = ["shippingData", "isShippingDataValid", "freteData", "isFreteDataValid"];
+var cartlocalStorageKeys = ["shippingData", "isShippingDataValid", "freteData", "isFreteDataValid", "localCart"];
 export const useCartStore = defineStore("cart", {
   state: () => ({
     shippingData: useStorage(cartlocalStorageKeys[0], {
@@ -89,12 +89,20 @@ export const useCartStore = defineStore("cart", {
       cep: "",
       price: 0.0,
     }),
+
     isShippingDataValid: useStorage(cartlocalStorageKeys[1], false),
 
     freteData: useStorage(cartlocalStorageKeys[2], {
       method: null,
     }),
     isFreteDataValid: useStorage(cartlocalStorageKeys[3], true),
+
+    localCart: useStorage(cartlocalStorageKeys[4], {
+      items: [{
+        productId: "GaAp5SyjPCTC7ufuEPWG",
+        quantity: 5
+      }]
+    }),
   }),
   actions: {
     clearCartLocalStorage() {
@@ -102,6 +110,7 @@ export const useCartStore = defineStore("cart", {
         localStorage.removeItem(key);
       });;
     },
+
     // Shipping
     setShippingDataStatus(isValid) {
       if (!isValid) this.clearCartLocalStorage();
@@ -119,6 +128,7 @@ export const useCartStore = defineStore("cart", {
 
       this.setShippingDataStatus(true);
     },
+
     // Frete
     setFreteDataStatus(isValid) {
       if (!isValid) this.clearCartLocalStorage();
@@ -129,6 +139,37 @@ export const useCartStore = defineStore("cart", {
 
       this.setFreteDataStatus(true);
       this.freteData = obj;
+    },
+
+    // Local Cart
+    getLocalCart() {
+      return this.localCart.items ?? [];
+    },
+    updateCartProduct(productId, operation) {
+      try {
+        const product = this.localCart.items.find(item => item.productId === productId);
+
+        if (operation === "subtraction" && product.quantity === 1) {
+          operation = "remove";
+        } else if (operation === "sum" && product.quantity >= 10) {
+          return false;
+        }
+
+        const updatedItems = operation === "remove"
+          ? this.localCart.items.filter(item => item.productId !== productId)
+          : this.localCart.items.map(item =>
+            item.productId === productId
+              ? { ...item, quantity: item.quantity + (operation === "subtraction" ? -1 : 1) }
+              : item
+          );
+
+        this.localCart.items = updatedItems;
+
+        return true;
+      }
+      catch {
+        return false;
+      }
     }
   },
 });

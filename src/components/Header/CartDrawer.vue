@@ -121,17 +121,20 @@
 
 <script setup>
 import { ref, watch, computed } from "vue";
-import { useDrawerStore } from "@/store/store.js";
+import { useDrawerStore, useAuthStore, useCartStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
-import { getUserCart, updateCartProduct } from "@/data/cart"
+import { getUserCart, getProductsDetails, updateCartProduct } from "@/data/cart"
 
 import CircularLoading from "@/components/CircularLoading.vue";
 
 import formatPrice from "@/utils/formatPrice";
 
+const authStore = useAuthStore();
 const drawerStore = useDrawerStore();
+const cartStore = useCartStore();
+
 const { displayCartDrawer } = storeToRefs(drawerStore);
 
 const router = useRouter();
@@ -140,6 +143,7 @@ const loading = ref(false);
 const loadingProductQuantity = ref({ productId: null, loading: false });
 
 const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const cartMethod = ref();
 
 const products = ref([]);
 const isCartEmpty = computed(() => {
@@ -163,17 +167,37 @@ const handleCheckout = async () => {
   router.go(0);
 };
 
-const loadUserCart = async (userId, params) => {
+const loadCart = async (userId, params) => {
   if (params.type == "general") {
     loading.value = true;
-    products.value = await getUserCart(userId);
+
+    if (cartMethod.value == 'online') {
+      products.value = await getUserCart(userId);
+    }
+    else {
+      const localCart = cartStore.getLocalCart();
+
+      if (localCart && localCart.length) {
+        products.value = await getProductsDetails(localCart);
+      }
+    }
+
     loading.value = false;
   }
 
   else if (params.type == "qtd") {
     loadingProductQuantity.value = { productId: params.productId, loading: true };
 
-    products.value = await getUserCart(userId);
+    if (cartMethod.value == 'online') {
+      products.value = await getUserCart(userId);
+    }
+    else {
+      const localCart = cartStore.getLocalCart();
+
+      if (localCart && localCart.length) {
+        products.value = await getProductsDetails(localCart);
+      }
+    }
 
     setTimeout(() => {
       loadingProductQuantity.value = { productId: null, loading: false } // Efect
@@ -182,14 +206,36 @@ const loadUserCart = async (userId, params) => {
 };
 
 const handleUpdateProductQuantity = async (productId, operation) => {
-  if (await updateCartProduct(userId.value, productId, operation)) {
-    await loadUserCart(userId.value, { type: "qtd", productId });
+  var response;
+
+  if (cartMethod.value == 'online') {
+    response = await updateCartProduct(userId.value, productId, operation);
+  }
+  else {
+    response = cartStore.updateCartProduct(productId, operation);
+    console.log("response")
+    console.log(response)
+
+    /* ARRUMAR REMOVER */
+  }
+
+  if (response) {
+    await loadCart(userId.value, { type: "qtd", productId });
   }
 };
 
 const handleRemoveProduct = async (productId) => {
-  if (await updateCartProduct(userId.value, productId, "remove")) {
-    await loadUserCart(userId.value, { type: "general" });
+  var response;
+
+  if (cartMethod.value == 'online') {
+    response = await updateCartProduct(userId.value, productId, "remove");
+  }
+  else {
+    response = cartStore.updateCartProduct(productId, "remove");
+  }
+
+  if (response) {
+    await loadCart(userId.value, { type: "general" });
   }
 };
 
@@ -199,7 +245,11 @@ watch(displayCartDrawer, async (newValue) => {
   if (!newValue) {
     htmlElement[0].style.overflow = "";
   } else {
-    await loadUserCart(userId.value, { type: "general" });
+    userId.value = authStore.getUserId();
+    cartMethod.value = userId.value ? 'online' : 'local';
+
+    await loadCart(userId.value, { type: "general" });
+
     htmlElement[0].style.overflow = "hidden";
   }
 });

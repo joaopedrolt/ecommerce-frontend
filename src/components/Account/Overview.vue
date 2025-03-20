@@ -18,7 +18,7 @@
             </div>
 
             <v-card elevation="0">
-              <v-list v-if="addresses && addresses.length" class="addresses-card-list">
+              <v-list v-if="addresses && addresses.length && !loadingAddresses" class="addresses-card-list">
                 <template v-for="(a, index) in addresses" :key="index">
                   <v-list-item>
                     <v-card-item class="adress-card-item px-0">
@@ -29,11 +29,17 @@
 
                       <template v-slot:append>
                         <div class="d-flex">
-                          <v-btn @click="handleAddAddress(a)" elevation="0" icon size="small">
-                            <v-icon>mdi-pencil</v-icon>
-                          </v-btn>
+                          <v-tooltip location="top">
+                            <template v-slot:activator="{ props }">
+                              <v-btn v-bind="props" @click="handleAddAddress(a)" elevation="0" icon size="small">
+                                <v-icon>mdi-pencil</v-icon>
+                              </v-btn>
+                            </template>
 
-                          <v-tooltip>
+                            <div>Editar</div>
+                          </v-tooltip>
+
+                          <v-tooltip location="top">
                             <template v-slot:activator="{ props }">
                               <v-btn v-bind="props" @click="handleSetMainAddress(a)" v-if="!a.main" elevation="0" icon
                                 size="small">
@@ -44,9 +50,15 @@
                             <div>Definir como Principal</div>
                           </v-tooltip>
 
-                          <v-btn @click="handleDeleteAddress(a)" elevation="0" icon size="small">
-                            <v-icon>mdi-close</v-icon>
-                          </v-btn>
+                          <v-tooltip location="top">
+                            <template v-slot:activator="{ props }">
+                              <v-btn v-bind="props" @click="handleDeleteAddress(a)" elevation="0" icon size="small">
+                                <v-icon>mdi-close</v-icon>
+                              </v-btn>
+                            </template>
+
+                            <div>Remover</div>
+                          </v-tooltip>
                         </div>
                       </template>
 
@@ -63,15 +75,15 @@
                   <v-divider v-if="index < addresses.length - 1"></v-divider>
                 </template>
               </v-list>
-              <div v-else class="text-subtitle-2 font-weight-light text-center pb-5 pt-6">
-                (Nenhum endereço registrado)
+              <div v-else class="text-subtitle-2 font-weight-light text-center pb-10 pt-11">
+                {{ loadingAddresses ? 'Carregando Endereços...' : '(Nenhum endereço registrado)' }}
               </div>
             </v-card>
           </div>
           <div class="w-100 mt-3 mb-4">
             <v-btn @click="handleAddAddress()" class="font-weight-regular button-color button-light" height="37px"
               width="100%" variant="flat" style="font-size: 0.8rem !important;"
-              :disabled="addresses && addresses.length >= 4">
+              :disabled="addresses && addresses.length >= 4 && !loadingAddresses" :loading="loadingAddresses">
               {{ addresses && addresses.length >= 4 ? 'Limite de Endereços Atingido' : 'Adicionar Endereço' }}
             </v-btn>
           </div>
@@ -150,7 +162,7 @@
                 </tr>
               </template>
             </v-data-table>
-            <div v-else class="text-subtitle-2 font-weight-light text-center pb-5 pt-6">
+            <div v-else class="text-subtitle-2 font-weight-light text-center pb-10 pt-11">
               (Nenhum pedido realizado)
             </div>
           </div>
@@ -169,6 +181,8 @@ import { useAuthStore } from '@/store/store';
 import { getUserAddresses, deleteAddress, setMainAddress } from "@/data/address"
 import { getUserOrders } from '@/data/order';
 import { storeToRefs } from 'pinia';
+
+import CircularLoading from "@/components/CircularLoading.vue";
 
 const router = useRouter();
 
@@ -191,7 +205,10 @@ const selectedItem = ref(0);
 /* isDefaultAddress */
 
 const addresses = ref([]);
+const loadingAddresses = ref(false);
+
 const orders = ref([]);
+const loadingOrders = ref(false);
 
 /* {
   orderId: "GROWTH-1041668-00022",
@@ -254,7 +271,9 @@ const handleOrderDetails = (order) => {
 }
 
 const loadUserAddresses = async (userId) => {
+  loadingAddresses.value = true;
   addresses.value = await getUserAddresses(userId);
+  loadingAddresses.value = false;
 };
 
 const loadUserOrders = async (userId) => {

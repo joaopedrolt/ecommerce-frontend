@@ -51,7 +51,19 @@ export const getUserCart = async (userId) => {
             return [];
         }
 
-        return await Promise.all(items.map(async (cartProduct) => {
+        return getProductsDetails(items);
+    } catch (error) {
+        console.error("Error fetching cart:", error);
+        return [];
+    }
+};
+
+export const getProductsDetails = async (basicProductList) => {
+    if (!basicProductList) return [];
+
+    try {
+        return await Promise.all(basicProductList.map(async (cartProduct) => {
+
             const productId = cartProduct.productId;
             const product = await getProduct(productId);
 
@@ -65,11 +77,12 @@ export const getUserCart = async (userId) => {
                     quantity: cartProduct.quantity
                 };
         }));
-    } catch (error) {
-        console.error("Error fetching cart:", error);
+    }
+    catch (error) {
+        console.error("Error fetching products details:", error);
         return [];
     }
-};
+}
 
 export const updateCartProduct = async (userId, productId, operation) => {
     try {
