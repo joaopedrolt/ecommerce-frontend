@@ -192,3 +192,16 @@ html {
     gap: 0 !important;
   }
 }
+
+.v-checkbox .v-selection-control {
+  min-height: 31px !important;
+  height: 31px !important;
+}
+
+.v-input {
+  font-size: 0.9rem !important;
+}
+
+.v-breadcrumbs-item {
+  padding-left: 0 !important;
+}

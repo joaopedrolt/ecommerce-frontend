@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex align-center" style="min-height: 100vh;">
-        <div class="order-hist container-limit container-size-padding pt-7 pb-16 d-flex flex-column">
+        <div v-if="loading" class="order-hist container-limit container-size-padding pt-7 pb-16 d-flex flex-column">
             <div class="w-100">
                 <v-card-title class="text-center mb-9">FURVANA-1041668-00022</v-card-title>
 
@@ -70,7 +70,7 @@
                             </div>
                         </template>
 
-                        <template v-if="order.products.length > itemsPerPage"
+                        <template v-if="order.products && order.products.length > itemsPerPage"
                             v-slot:footer="{ page, pageCount, prevPage, nextPage }">
                             <div class="d-flex align-center justify-center pa-4">
                                 <v-btn :disabled="page === 1" icon="mdi-arrow-left" density="comfortable"
@@ -162,57 +162,16 @@ import formatPrice from "@/utils/formatPrice";
 
 const route = useRoute();
 
-const order = ref({});
+const order = ref();
+const orderId = ref();
+
+const loading = ref(false);
+
 const paymentTextFormatted = ref("");
 
 const loadingConfirmDelivery = ref(false);
 
 const orderProgress = ref(33);
-
-const products = ref([
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_gal-o-preto-2-litros-growth-supplements-1.png',
-        title: 'Galão de dois litros growth',
-        price: 'R$99,00',
-        amount: 1,
-        total: 'R$99,00',
-    },
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_top-whey-protein-concentrado-1kg-growth-supplements-9.png',
-        title: 'Whey Protein Concentrado 1kg',
-        price: 'R$120,00',
-        amount: 2,
-        total: 'R$240,00',
-    },
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_albumina-1kg-growth-supplements-2.png',
-        title: 'Albumina 1kg',
-        price: 'R$77,00',
-        amount: 1,
-        total: 'R$77,00',
-    },
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_strap-com-munhequeira-growth-par-growth-supplements.jpeg',
-        title: 'Strap com Munhequeira',
-        price: 'R$77,00',
-        amount: 1,
-        total: 'R$77,00',
-    },
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_col-geno-verisol-1000mg-120comp-growth-supplements.png',
-        title: 'COLÁGENO VERISOL 1000MG 120COMP',
-        price: 'R$60,00',
-        amount: 1,
-        total: 'R$60,00',
-    },
-    {
-        img: 'https://www.gsuplementos.com.br/upload/produto/imagem/m_col-geno-verisol-1000mg-120comp-growth-supplements.png',
-        title: 'COLÁGENO VERISOL 1000MG 120COMP',
-        price: 'R$60,00',
-        amount: 1,
-        total: 'R$60,00',
-    },
-]);
 
 const itemsPerPage = 4;
 
@@ -256,8 +215,11 @@ const handleConfirmDelivery = async (orderId) => {
 }
 
 onBeforeMount(async () => {
-    const orderId = route.params.orderId;
-    await loadUserOrder(orderId)
+    orderId.value = route.params.orderId;
+
+    loading.value = false;
+    await loadUserOrder(orderId.value)
+    loading.value = true;
 })
 </script>
 

@@ -83,7 +83,7 @@ const displayNavigationDrawer = () => {
 };
 
 const displayCartDrawerr = () => {
-  drawerStore.displayCartDrawerx();
+  drawerStore.displayCartDrawerOverlay();
 };
 
 const displaySearchOverlay = () => {

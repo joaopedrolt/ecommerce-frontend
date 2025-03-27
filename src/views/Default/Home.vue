@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { useDrawerStore } from "@/store/store";
+import { useDrawerStore, useCartStore, useAuthStore } from "@/store/store";
 import { useRoute, useRouter } from "vue-router";
 import { ref, onBeforeMount } from "vue";
 
@@ -58,17 +58,29 @@ const featuredProducts = ref([]);
 
 const queryParamCart = route.query.cart;
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const userId = ref();
 
 const drawerStore = useDrawerStore();
+const cartStore = useCartStore();
+const authStore = useAuthStore();
 
 const displayCartDrawerr = () => {
-  drawerStore.displayCartDrawerx();
+  drawerStore.displayCartDrawerOverlay();
 };
 
 const handleAddToCart = async (productId) => {
-  if (await addProductToCart(userId.value, productId, 1)) {
-    drawerStore.displayCartDrawerx();
+  var response;
+  userId.value = authStore.getUserId();
+
+  if (userId.value) {
+    response = await addProductToCart(userId.value, productId, 1);
+  }
+  else {
+    response = cartStore.addProductToCart(productId, 1);
+  }
+
+  if (response) {
+    drawerStore.displayCartDrawerOverlay();
   }
 }
 

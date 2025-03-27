@@ -210,8 +210,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="d-flex flex-column align-center px-3 pb-9 justify-center h-100"
-        style="min-height: 400px; flex: 1;">
+      <div class="d-flex flex-column align-center px-3 pb-9 justify-center h-100" style="min-height: 400px; flex: 1;">
         <div class="mb-2 text-subtitle-1 font-weight-light">Carregando Produto...</div>
         <v-progress-linear indeterminate></v-progress-linear>
       </div>
@@ -227,7 +226,7 @@ import { onBeforeMount, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { storeToRefs } from "pinia";
-import { useDrawerStore } from "@/store/store";
+import { useDrawerStore, useAuthStore, useCartStore } from "@/store/store";
 
 import LoadingWhiteScreen from "@/components/LoadingWhiteScreen.vue";
 
@@ -244,6 +243,9 @@ const router = useRouter();
 
 const drawerStore = useDrawerStore();
 const { displayCartDrawer } = storeToRefs(drawerStore);
+
+const authStore = useAuthStore();
+const cartStore = useCartStore();
 
 const amount = ref(1);
 const open = ref([]);
@@ -266,7 +268,7 @@ const product = ref({
 
 const recommendedProducts = ref([]);
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const userId = ref();
 
 const handleRecommendedProductClick = (productId) => {
   router.push({
@@ -278,8 +280,18 @@ const handleRecommendedProductClick = (productId) => {
 }
 
 const handleAddToCart = async () => {
-  if (await addProductToCart(userId.value, product.value.id, amount.value)) {
-    drawerStore.displayCartDrawerx();
+  var response;
+  userId.value = authStore.getUserId();
+
+  if (userId.value) {
+    response = await addProductToCart(userId.value, product.value.id, amount.value);
+  }
+  else {
+    response = cartStore.addProductToCart(product.value.id, amount.value);
+  }
+
+  if (response) {
+    drawerStore.displayCartDrawerOverlay();
   }
 }
 
@@ -308,7 +320,7 @@ onBeforeMount(async () => {
   product.value = await getProduct(productId);
   recommendedProducts.value = await getRecomendedProducts(productId);
 
-   loadingProduct.value = false;
+  loadingProduct.value = false;
 
   /*  await duplicateDocument(); */
 });

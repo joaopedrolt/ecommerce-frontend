@@ -142,7 +142,7 @@ const router = useRouter();
 const loading = ref(false);
 const loadingProductQuantity = ref({ productId: null, loading: false });
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const userId = ref();
 const cartMethod = ref();
 
 const products = ref([]);
@@ -177,7 +177,7 @@ const loadCart = async (userId, params) => {
     else {
       const localCart = cartStore.getLocalCart();
 
-      if (localCart && localCart.length) {
+      if (localCart) {
         products.value = await getProductsDetails(localCart);
       }
     }
@@ -194,7 +194,7 @@ const loadCart = async (userId, params) => {
     else {
       const localCart = cartStore.getLocalCart();
 
-      if (localCart && localCart.length) {
+      if (localCart) {
         products.value = await getProductsDetails(localCart);
       }
     }
@@ -213,10 +213,6 @@ const handleUpdateProductQuantity = async (productId, operation) => {
   }
   else {
     response = cartStore.updateCartProduct(productId, operation);
-    console.log("response")
-    console.log(response)
-
-    /* ARRUMAR REMOVER */
   }
 
   if (response) {

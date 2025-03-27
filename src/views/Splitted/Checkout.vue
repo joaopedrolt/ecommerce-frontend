@@ -1,10 +1,10 @@
 <template>
-  <div v-if="render" class="h-100 w-100 checkout">
+  <template v-if="render">
     <!-- Left side -->
     <div class="left-side border-right">
       <div class="wrapper">
         <!-- Header Left -->
-        <div class="payment-header desktop mb-4">
+        <div class="splitted-header desktop mb-4">
           <div style="height: 33px; width: 160px;">
             <v-img class="h-100 w-100" src="/logo.svg"></v-img>
           </div>
@@ -34,23 +34,23 @@
                 <div class="d-flex justify-center-between w-100 pb-4">
                   <div class="d-flex flex-column w-100" style="gap: 8px">
                     <div class="d-flex align-center">
-                      <v-icon class="mr-4">mdi-account</v-icon>
+                      <v-icon class="mr-3">mdi-account</v-icon>
                       <div>{{ shippingData.nome }} {{ shippingData.sobrenome }}</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-4">mdi-id-card</v-icon>
+                      <v-icon class="mr-3">mdi-id-card</v-icon>
                       <div>{{ shippingData.cpf }}</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-4">mdi-phone</v-icon>
+                      <v-icon class="mr-3">mdi-phone</v-icon>
                       <div>{{ shippingData.telefone }}</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-4">mdi-email</v-icon>
+                      <v-icon class="mr-3">mdi-email</v-icon>
                       <div>{{ shippingData.email }}</div>
                     </div>
                     <div class="d-flex align-center">
-                      <v-icon class="mr-4">mdi-map-marker</v-icon>
+                      <v-icon class="mr-3">mdi-map-marker</v-icon>
                       <div>
                         {{ shippingData.endereco }}, {{ shippingData.numero }} -
                         {{ shippingData.bairro }}, {{ shippingData.cidade }}, {{ shippingData.estado.sigla }}
@@ -486,7 +486,7 @@
     <div class="right-side">
       <!-- Edit Cart - Top -->
 
-      <div class="payment-header mobile mb-2">
+      <div class="splitted-header mobile mb-2">
         <div style="height: 33px; width: 160px;">
           <v-img class="h-100 w-100" src="/logo.svg"></v-img>
         </div>
@@ -666,7 +666,7 @@
       </div>
 
       <div class="wrapper">
-        <div class="payment-header mobile mb-7">
+        <div class="splitted-header mobile mb-7">
           <div style="height: 33px; width: 160px;">
             <v-img class="h-100 w-100" src="/logo.svg"></v-img>
           </div>
@@ -817,7 +817,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script setup>
@@ -855,9 +855,9 @@ import {
 } from "@/utils/masks";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
-import { useCartStore } from "@/store/store";
+import { useCartStore, useAuthStore } from "@/store/store";
 
-import { getUserCart, clearUserCart } from "@/data/cart"
+import { getUserCart, clearUserCart, getProductsDetails } from "@/data/cart"
 import { createOrder } from "@/data/order"
 
 import formatPrice from "@/utils/formatPrice";
@@ -866,9 +866,9 @@ import generateShippingPrice from "@/utils/generateShippingPrice";
 import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
 import getEstados from '@/utils/getEstados';
 
-import CircularLoading from "@/components/CircularLoading.vue";
-
 const cartStore = useCartStore();
+const authStore = useAuthStore();
+
 const { shippingData, isShippingDataValid,
   freteData, isFreteDataValid } = storeToRefs(cartStore);
 
@@ -876,26 +876,11 @@ const router = useRouter();
 const route = useRoute();
 const render = ref(false);
 
-const userId = ref("rXiNPm5lXTExkVtmPcy0");
+const userId = ref();
+const cartMethod = ref();
+
 const products = ref([]);
 const lastShippingCep = ref("");
-
-// const totalPrice = computed(() => {
-//   if (!products.value.length) {
-//     return 0;
-//   }
-
-//   const productTotal = products.value.reduce((sum, product) => {
-//     const price = Number(product.price) || 0;
-//     const quantity = Number(product.quantity) || 0;
-//     return sum + price * quantity;
-//   }, 0);
-
-//   const shipping = Number(shippingPrice.value) > 0 ? Number(shippingPrice.value) : 0;
-
-//   const total = productTotal + shipping;
-//   return Math.round(total * 100) / 100;
-// });
 
 const totalPriceWithoutShipping = computed(() => {
   if (!products.value.length) {
@@ -1012,8 +997,17 @@ const handleNextStep = () => {
   }
 }
 
-const loadUserCart = async (userId) => {
-  products.value = await getUserCart(userId);
+const loadCart = async (userId) => {
+  if (cartMethod.value == 'online') {
+    products.value = await getUserCart(userId);
+  }
+  else {
+    const localCart = cartStore.getLocalCart();
+
+    if (localCart) {
+      products.value = await getProductsDetails(localCart);
+    }
+  }
 };
 
 const handleCartEdit = () => {
@@ -1038,7 +1032,17 @@ const handlePreviousStep = () => {
 }
 
 onBeforeMount(async () => {
-  await loadUserCart(userId.value);
+  userId.value = authStore.getUserId();
+  cartMethod.value = userId.value ? 'online' : 'local';
+
+  await loadCart(userId.value);
+  if (!products.value || !products.value.length) {
+    router.push({
+      name: "Home",
+    });
+
+    return;
+  }
 
   if (isShippingDataValid.value) {
     Object.assign(shipping, shippingData.value);
@@ -1194,55 +1198,6 @@ const handleCepBlur = async () => {
     setShippingFormLoading(false);
   }
 }
-
-/* const loadAddressDetails = async () => {
-  try {
-    const valid = cepValidation(shipping.cep);
-
-    if (valid) {
-      const returnedAdress = await searchAddressByCEP(shipping.cep);
-
-      if (lastShippingCep.value != shipping.cep)
-        shipping.numero = "";
-
-      if (!returnedAdress) {
-        let cepField = shippingForm.value.items.find(item => item.id === 'cep');
-        await cepField.validate();
-
-        shippingFormValidation.cep = true;
-
-        throw new Error();
-      }
-
-      lastShippingCep.value = shipping.cep;
-
-      Object.assign(shipping, {
-        endereco: returnedAdress.logradouro,
-        bairro: returnedAdress.bairro,
-        cidade: returnedAdress.cidade,
-        estado: estados.find(e => e.sigla.toLowerCase() == returnedAdress.uf.toLowerCase())
-      });
-
-      cartStore.setShippingData(JSON.parse(JSON.stringify(shipping)));
-
-      return { valid: true };
-    } else {
-      displayAddressPartialForm.value = false;
-      lastShippingCep.value = shipping.cep;
-
-      let cepField = shippingForm.value.items.find(item => item.id === 'cep');
-      await cepField.validate();
-
-      shippingFormValidation.cep = true;
-
-      return { valid: false, reason: "Formato inválido!" };
-    }
-  } catch (error) {
-    displayAddressPartialForm.value = false;
-
-    return { valid: false, reason: "CEP não encontrado!" };
-  }
-} */
 
 const validateCepField = async () => {
   const cepField = shippingForm.value.items.find(item => item.id === 'cep');
@@ -1451,16 +1406,6 @@ watch(paymentMethodRatio, (newMethod) => {
 <style lang="scss">
 @import "@/styles/global.scss";
 
-/* .v-label .v-field-label .v-field-label--floating {
-  font-size: 0.9rem !important;
-} */
-
-/* .v-field__field {
-  .v-label.v-field-label {
-    font-size: 0.9rem !important;
-  }
-} */
-
 .frete-ratio {
   .v-label {
     width: 100% !important;
@@ -1493,213 +1438,6 @@ watch(paymentMethodRatio, (newMethod) => {
 
   .v-list-item {
     padding: 0 !important;
-  }
-}
-
-.v-checkbox .v-selection-control {
-  min-height: 31px !important;
-  height: 31px !important;
-}
-
-.v-input {
-  font-size: 0.9rem !important;
-}
-
-.v-breadcrumbs-item {
-  padding-left: 0 !important;
-}
-
-.border-right {
-  border-right: 1px solid $color-border;
-}
-
-.checkout {
-  display: flex;
-
-  .left-side {
-    display: flex;
-    width: 55%;
-    justify-content: end;
-    height: 100%;
-    padding-top: 40px;
-    padding-right: 36px;
-    padding-left: 36px;
-    padding-bottom: 4px;
-
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      max-width: 700px;
-
-      // .parent-input-container {
-      //   display: flex;
-      //   gap: 10px;
-
-      //   .sibling-input {
-      //     max-height: 70px !important;
-      //     min-width: 223px !important;
-      //   }
-
-      //   @media (max-width: $phone) {
-      //     flex-direction: column;
-      //     gap: 0 !important;
-      //   }
-      // }
-
-      .shipping-sumery {
-        padding-left: 1px !important;
-      }
-    }
-
-    .v-list-item {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-
-  .right-side {
-    display: flex;
-    justify-content: start;
-    height: 100%;
-    position: fixed;
-    width: 45%;
-    right: 0;
-    top: 0;
-    padding-top: 40px;
-    padding-bottom: 36px;
-    padding-right: 36px;
-    padding-left: 36px;
-
-    .mobile-expansion-summary {
-      display: none;
-    }
-
-    .wrapper {
-      height: 100%;
-      width: 100%;
-      max-width: 513px;
-    }
-
-    .cart-itens {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-
-      padding-top: 20px;
-      padding-bottom: 16px;
-    }
-
-    .order-sum {
-      padding: 18px 0;
-    }
-
-    .order-summery {
-      display: none;
-    }
-  }
-
-  @media (max-width: $tablet) {
-    flex-direction: column-reverse;
-
-    .left-side {
-      display: flex;
-      width: 100%;
-      justify-content: center;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
-      padding-top: 20px !important;
-
-      .wrapper {
-        max-width: none !important;
-
-        .-sumery {}
-
-        /*       .payment-footer {
-          .v-breadcrumbs {
-            padding-right: 12px !important;
-          }
-        } */
-      }
-    }
-
-    .right-side {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: fit-content;
-      width: 100%;
-      position: relative;
-      right: auto;
-      top: auto;
-      padding-bottom: 0 !important;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
-
-      .mobile-expansion-summary {
-        display: block;
-        width: 100%;
-
-        .v-expansion-panel-title {
-          padding-left: 0;
-          padding-right: 0;
-        }
-
-        .v-expansion-panel-text__wrapper {
-          padding: 2px 0 !important;
-        }
-
-        .v-expansion-panel-title__overlay {
-          opacity: 0 !important;
-        }
-      }
-
-      .wrapper {
-        display: none;
-        max-width: none !important;
-      }
-
-      .order-summery {
-        display: block !important;
-        margin-left: -2px;
-      }
-
-      .v-expansion-panel-title__icon {
-        margin-right: -3px;
-      }
-
-      .order-sum {
-        padding: 13px 0 !important;
-      }
-
-      /* .edit-cart {
-        display: none !important;
-      } */
-
-      .cart-itens {
-        padding-top: 25px !important;
-        padding-bottom: 19px !important;
-      }
-    }
-  }
-
-  .payment-header {
-    &.desktop {
-      display: block !important;
-
-      @media (max-width: $tablet) {
-        display: none !important;
-      }
-    }
-
-    &.mobile {
-      display: block !important;
-
-      @media (min-width: $tablet) {
-        display: none !important;
-      }
-    }
   }
 }
 

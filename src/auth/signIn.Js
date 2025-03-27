@@ -1,6 +1,11 @@
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { addProductToCart } from "@/data/cart.js"
+import { useCartStore } from "@/store/store.js";
+
+const cartStore = useCartStore();
+
 const getSignInMessage = (errorCode) => {
   const errorMessages = {
     "auth/invalid-credential": "E-mail ou senha incorretos! Por favor tente novamente!",
@@ -20,7 +25,21 @@ const getSignInMessage = (errorCode) => {
 export default async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return { user: userCredential.user, error: null };
+    const user = userCredential.user;
+
+    const localCart = cartStore.getLocalCart();
+
+    if (localCart && localCart.length && user.uid) {
+      localCart.forEach(async item => {
+        const response = await addProductToCart(user.uid, item.productId, item.quantity);
+
+        if (response) {
+          cartStore.updateCartProduct(item.productId, "remove");
+        }
+      });
+    }
+
+    return { user, error: null };
   } catch (error) {
     console.error("Erro ao fazer login:", error); // Log para depuração
     return { user: null, error: getSignInMessage(error.code || error.message) };

@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import DefaultLayout from "@/layouts/Default.vue";
 import CleanLayout from "@/layouts/Clean.vue";
-import CheckoutLayout from "@/layouts/Checkout.vue";
+import SplittedLayout from "@/layouts/Splitted.vue";
 
 // Stores
 
@@ -13,10 +13,11 @@ import { useSignInStore } from "@/store/store";
 import { useSearchStore } from "@/store/store";
 
 // Auth
-import setUserState from "@/store/setUserState";
-import { onAuthStateChanged } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import authRouteValidation from "@/auth/authRouteValidation";
 
+/* import setUserState from "@/store/setUserState";
+import { onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth"; */
 
 const routes = [
   {
@@ -153,12 +154,17 @@ const routes = [
   },
   {
     path: "/checkout",
-    component: CheckoutLayout,
+    component: SplittedLayout,
     children: [
       {
         path: "",
         name: "Checkout",
-        component: () => import("@/views/Checkout/Checkout.vue"),
+        component: () => import("@/views/Splitted/Checkout.vue"),
+      },
+      {
+        path: "payment",
+        name: "Payment",
+        component: () => import("@/views/Splitted/Payment.vue"),
       }
     ],
   },
@@ -174,12 +180,11 @@ const router = createRouter({
   }
 });
 
-router.beforeEach((to, from, next) => {
-  const auth = getAuth();
-
+/*  const auth = getAuth();
+ 
   onAuthStateChanged(auth, (user) => {
     setUserState(user);
-
+ 
     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
     if (requiresAuth) {
       if (user) {
@@ -191,7 +196,24 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
-  });
+  }); */
+
+router.beforeEach(async (to, from, next) => {
+  const isValid = await authRouteValidation();
+
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth) {
+    if (isValid) {
+      next();
+      return;
+    }
+    else {
+      next({ name: 'EmailValidation' });
+      return;
+    }
+  }
+
+  next();
 });
 
 export default router;

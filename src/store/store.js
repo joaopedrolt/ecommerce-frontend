@@ -10,7 +10,6 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     setUserState(userData) {
       this.user = userData ? { email: userData.email, uid: userData.uid } : null;
-      console.log(this.user)
     },
     getUserId() {
       return this.user && this.user.uid ? this.user.uid : null;
@@ -29,7 +28,7 @@ export const useDrawerStore = defineStore("navbar", {
     displayNavigationDrawerx() {
       this.displayNavigationDrawer = true;
     },
-    displayCartDrawerx() {
+    displayCartDrawerOverlay() {
       this.displayCartDrawer = true;
     },
     hideNavigationDrawer() {
@@ -95,13 +94,11 @@ export const useCartStore = defineStore("cart", {
     freteData: useStorage(cartlocalStorageKeys[2], {
       method: null,
     }),
+    
     isFreteDataValid: useStorage(cartlocalStorageKeys[3], true),
 
     localCart: useStorage(cartlocalStorageKeys[4], {
-      items: [{
-        productId: "GaAp5SyjPCTC7ufuEPWG",
-        quantity: 5
-      }]
+      items: []
     }),
   }),
   actions: {
@@ -147,6 +144,8 @@ export const useCartStore = defineStore("cart", {
     },
     updateCartProduct(productId, operation) {
       try {
+        if (!productId || !operation) return false;
+
         const product = this.localCart.items.find(item => item.productId === productId);
 
         if (operation === "subtraction" && product.quantity === 1) {
@@ -165,6 +164,39 @@ export const useCartStore = defineStore("cart", {
 
         this.localCart.items = updatedItems;
 
+        return true;
+      }
+      catch {
+        return false;
+      }
+    },
+    addProductToCart(productId, quantity) {
+      try {
+        if (!productId || !quantity) return false;
+
+        var updatedItems = [];
+
+        const product = this.localCart.items.find(item => item.productId === productId);
+
+        if (!product) {
+          const cartItem = {
+            productId,
+            quantity
+          }
+
+          updatedItems = [...this.localCart.items, cartItem];
+        }
+        else {
+          quantity = (product.quantity + quantity) >= 10 ? 10 : product.quantity + quantity;
+
+          updatedItems = this.localCart.items.map(item =>
+            item.productId === productId
+              ? { ...item, quantity }
+              : item
+          );
+        }
+
+        this.localCart.items = updatedItems;
         return true;
       }
       catch {
