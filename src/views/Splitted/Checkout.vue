@@ -256,7 +256,24 @@
                 </div>
 
                 <v-radio-group class="frete-ratio" hide-details v-model="freteMethod" density="compact">
-                  <v-radio :value="0">
+                  <v-radio v-for="(option, index) in shippingOptions" :value="index">
+                    <template v-slot:label="{ items }">
+                      <div class="d-flex flex-column w-100 h-100 ml-2">
+                        <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
+                          <div>{{ option.title }}</div>
+                        </div>
+                        <div class="w-100 text-subtitle-2 font-weight-regular">
+                          {{ option.days }} dias úteis
+                        </div>
+                      </div>
+
+                      <div class="d-flex text-subtitle-2 align-flex font-weight-regular" style="word-break: keep-all;">
+                        {{ option.price != 0 ? formatPrice(option.price) : 'GRATIS' }}
+                      </div>
+                    </template>
+                  </v-radio>
+
+                  <!--  <v-radio :value="0">
                     <template v-slot:label="{ items }">
                       <div class="d-flex flex-column w-100 h-100 ml-2">
                         <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
@@ -288,7 +305,7 @@
                         {{ formatPrice(shippingData.price) }}
                       </div>
                     </template>
-                  </v-radio>
+                  </v-radio> -->
                 </v-radio-group>
               </div>
             </div>
@@ -989,7 +1006,7 @@ const handleNextStep = () => {
       calculateShippingCost();
       break;
     case 1:
-      paymenteee(freteMethod.value);
+      paymenteSection(freteMethod.value);
       break;
     case 2:
       processPayment();
@@ -1007,6 +1024,15 @@ const loadCart = async (userId) => {
     if (localCart) {
       products.value = await getProductsDetails(localCart);
     }
+  }
+};
+
+const clearCart = async () => {
+  if (cartMethod.value == 'online') {
+    await clearUserCart(userId.value)
+  }
+  else {
+    cartStore.clearCartLocalStorage(true);
   }
 };
 
@@ -1030,57 +1056,6 @@ const handlePreviousStep = () => {
       break;
   }
 }
-
-onBeforeMount(async () => {
-  userId.value = authStore.getUserId();
-  cartMethod.value = userId.value ? 'online' : 'local';
-
-  await loadCart(userId.value);
-  if (!products.value || !products.value.length) {
-    router.push({
-      name: "Home",
-    });
-
-    return;
-  }
-
-  if (isShippingDataValid.value) {
-    Object.assign(shipping, shippingData.value);
-    displayAddressPartialForm.value = true;
-
-    if (shipping.cep && shipping.cep.length > 0) {
-      lastShippingCep.value = shipping.cep
-    }
-
-    setFreteSection(false);
-  }
-
-  if (isFreteDataValid.value && isShippingDataValid.value) {
-    freteMethod.value = freteData.value.method;
-    setPaymentSection(false);
-  } else cartStore.setFreteDataStatus(false);
-
-  let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
-  if (
-    !stepParam ||
-    (stepParam.step == 1 && !isShippingDataValid.value) ||
-    (stepParam.step == 2 && !isShippingDataValid.value)
-  ) {
-    router.push({
-      name: "Checkout",
-      query: { step: 0 }
-    });
-  } else if (stepParam.step == 2 && !isFreteDataValid.value) {
-    router.push({
-      name: "Checkout",
-      query: { step: 1 }
-    });
-  } else step.value = stepParam.step;
-
-  setTimeout(() => {
-    render.value = true;
-  }, 100);
-})
 
 // Shipping Form
 const shippingForm = ref();
@@ -1168,14 +1143,11 @@ const calculateShippingCost = async () => {
       if (freteBreadcrumbs.value)
         setFreteSection(false);
 
-      shipping.price = generateShippingPrice();
+      /* shipping.price = generateShippingPrice(); */
 
       cartStore.setShippingData(JSON.parse(JSON.stringify(shipping)));
 
-      router.push({
-        name: "Checkout",
-        query: { step: 1 }
-      });
+      updateStep(1);
     } else {
       await loadAddressDetails();
 
@@ -1251,18 +1223,23 @@ const handleLogin = () => {
 // Frete Form
 const freteMethod = ref(null);
 
-const paymenteee = (method) => {
+const shippingOptions = ref(
+  [
+    { title: 'Pac', price: 0, days: 7 },
+    { title: 'Sedex', price: generateShippingPrice(), days: 3 },
+    { title: 'Total Express', price: generateShippingPrice(), days: 5 }
+  ]
+);
+
+const paymenteSection = (method) => {
   if (method == null && isShippingDataValid.value) return;
 
   if (freteBreadcrumbs.value)
     setPaymentSection(false);
 
-  cartStore.setFreteData({ method });
+  cartStore.setFreteData(shippingOptions.value[method]);
 
-  router.push({
-    name: "Checkout",
-    query: { step: 2 }
-  });
+  updateStep(2);
 }
 
 // Payment Form
@@ -1355,13 +1332,14 @@ const processPayment = async () => {
       status: 'Pedido Efetuado'
     }
 
-    const response = await createOrder(order);
+    const responseOrderId = await createOrder(order);
 
-    if (response) {
-      await clearUserCart(userId.value)
+    if (responseOrderId) {
+      await clearCart();
 
       router.push({
-        name: "Home",
+        name: "Payment",
+        query: { o: responseOrderId }
       });
     }
   }
@@ -1401,6 +1379,61 @@ watch(paymentMethodRatio, (newMethod) => {
     }, 3000);
   }
 });
+
+onBeforeMount(async () => {
+  userId.value = authStore.getUserId();
+  cartMethod.value = userId.value ? 'online' : 'local';
+
+  await loadCart(userId.value);
+
+  if (!products.value || !products?.value?.length) {
+    router.push({
+      name: "Home",
+    });
+
+    return;
+  }
+
+  if (isShippingDataValid.value) {
+    Object.assign(shipping, shippingData.value);
+    displayAddressPartialForm.value = true;
+
+    if (shipping.numero == null || shipping.numero.length == 0) {
+      alert(`popo`)
+      cartStore.setShippingDataStatus(false);
+      console.log(isShippingDataValid.value)
+    }
+
+    if (shipping.cep && shipping.cep.length > 0) {
+      lastShippingCep.value = shipping.cep
+    }
+
+    setFreteSection(false);
+  }
+
+  if (isFreteDataValid.value && isShippingDataValid.value) {
+    freteMethod.value = freteData.value.method;
+    setPaymentSection(false);
+  } else {
+    cartStore.setFreteDataStatus(false);
+  }
+
+  let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
+
+  if (
+    !stepParam ||
+    (stepParam.step == 1 && !isShippingDataValid.value) ||
+    (stepParam.step == 2 && !isShippingDataValid.value)
+  ) {
+    updateStep(0);
+  } else if (stepParam.step == 2 && !isFreteDataValid.value) {
+    updateStep(1);
+  } else step.value = stepParam.step;
+
+  setTimeout(() => {
+    render.value = true;
+  }, 100);
+})
 </script>
 
 <style lang="scss">
@@ -1438,37 +1471,6 @@ watch(paymentMethodRatio, (newMethod) => {
 
   .v-list-item {
     padding: 0 !important;
-  }
-}
-
-.checkout-navigation-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .previous-section-btn {
-    display: flex;
-    justify-content: start;
-    flex: 3;
-  }
-
-  .next-section-btn {
-    flex: 4;
-  }
-
-  @media (max-width: $tablet) {
-    flex-direction: column-reverse;
-    gap: 15px;
-
-    .previous-section-btn {
-      justify-content: center;
-      align-items: center;
-      flex: auto;
-    }
-
-    .next-section-btn {
-      flex: auto;
-    }
   }
 }
 </style>

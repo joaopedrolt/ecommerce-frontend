@@ -205,3 +205,34 @@ html {
 .v-breadcrumbs-item {
   padding-left: 0 !important;
 }
+
+.checkout-navigation-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .previous-section-btn {
+    display: flex;
+    justify-content: start;
+    flex: 3;
+  }
+
+  .next-section-btn {
+    flex: 4;
+  }
+
+  @media (max-width: $tablet) {
+    flex-direction: column-reverse;
+    gap: 15px;
+
+    .previous-section-btn {
+      justify-content: center;
+      align-items: center;
+      flex: auto;
+    }
+
+    .next-section-btn {
+      flex: auto;
+    }
+  }
+}

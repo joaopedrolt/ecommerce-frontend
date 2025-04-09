@@ -94,7 +94,7 @@ export const useCartStore = defineStore("cart", {
     freteData: useStorage(cartlocalStorageKeys[2], {
       method: null,
     }),
-    
+
     isFreteDataValid: useStorage(cartlocalStorageKeys[3], true),
 
     localCart: useStorage(cartlocalStorageKeys[4], {
@@ -102,16 +102,24 @@ export const useCartStore = defineStore("cart", {
     }),
   }),
   actions: {
-    clearCartLocalStorage() {
+    clearCartLocalStorage(total = false) {
+      if (total)
+        this.localCart.items = [];
+
       cartlocalStorageKeys.forEach(key => {
-        localStorage.removeItem(key);
-      });;
+        if (total || key !== "localCart") {
+          localStorage.removeItem(key);
+        }
+      });
     },
 
     // Shipping
     setShippingDataStatus(isValid) {
-      if (!isValid) this.clearCartLocalStorage();
-      else this.isShippingDataValid = isValid;
+      if (!isValid) {
+        this.clearCartLocalStorage();
+      } 
+     
+      this.isShippingDataValid = isValid;
     },
     setShippingData(obj) {
       if (!obj) return;
@@ -128,8 +136,11 @@ export const useCartStore = defineStore("cart", {
 
     // Frete
     setFreteDataStatus(isValid) {
-      if (!isValid) this.clearCartLocalStorage();
-      else this.isFreteDataValid = isValid;
+      if (!isValid) {
+        this.clearCartLocalStorage();
+      } 
+     
+      this.isFreteDataValid = isValid;
     },
     setFreteData(obj) {
       if (!obj) return;

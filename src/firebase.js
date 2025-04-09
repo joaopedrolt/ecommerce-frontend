@@ -2,6 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 
+import { Timestamp } from 'firebase/firestore';
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -19,6 +21,10 @@ export const collectionNames = {
   orders: "orders",
   users: "users",
   address: "address"
+}
+
+export const convertToFirebaseTimestamp = (date) => {
+  return Timestamp.fromDate(date);
 }
 
 export const db = getFirestore(app);
