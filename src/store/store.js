@@ -92,7 +92,8 @@ export const useCartStore = defineStore("cart", {
     isShippingDataValid: useStorage(cartlocalStorageKeys[1], false),
 
     freteData: useStorage(cartlocalStorageKeys[2], {
-      method: null,
+      title: null,
+      price: null
     }),
 
     isFreteDataValid: useStorage(cartlocalStorageKeys[3], true),
@@ -117,8 +118,8 @@ export const useCartStore = defineStore("cart", {
     setShippingDataStatus(isValid) {
       if (!isValid) {
         this.clearCartLocalStorage();
-      } 
-     
+      }
+
       this.isShippingDataValid = isValid;
     },
     setShippingData(obj) {
@@ -137,9 +138,10 @@ export const useCartStore = defineStore("cart", {
     // Frete
     setFreteDataStatus(isValid) {
       if (!isValid) {
-        this.clearCartLocalStorage();
-      } 
-     
+        this.freteData = null;
+        localStorage.removeItem('freteData');
+      }
+
       this.isFreteDataValid = isValid;
     },
     setFreteData(obj) {

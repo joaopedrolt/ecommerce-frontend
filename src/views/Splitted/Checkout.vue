@@ -72,7 +72,11 @@
                     <div class="d-flex flex-column w-100" style="gap: 8px">
                       <div class="d-flex align-center" style="padding-left: 2px;">
                         <v-icon class="mr-4">mdi-truck</v-icon>
-                        <div style="margin-left: -2px;">Sedex - <span>RS20,00</span>
+                        <div style="margin-left: -2px;">
+                          {{ freteData?.title }} - <span>
+                            {{ freteData?.price === 0 ? 'GRÁTIS' : freteData?.price ? formatPrice(freteData.price) : ''
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -233,12 +237,12 @@
               </div>
 
               <!-- <div class="d-flex justify-space-between align-center">
-                <v-btn v-if="step == 0" @click="calculateShippingCost()"
+                <v-btn v-if="step == 0" @click="firstShippingDataValidation()"
                   class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar aaa
                 </v-btn>
-                <v-btn v-else @click="calculateShippingCost()"
+                <v-btn v-else @click="firstShippingDataValidation()"
                   class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
                   width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
                   Continuar bbb
@@ -255,7 +259,7 @@
                   Escolha o Frete
                 </div>
 
-                <v-radio-group class="frete-ratio" hide-details v-model="freteMethod" density="compact">
+                <v-radio-group class="frete-ratio" hide-details v-model="freteMethodRatio" density="compact">
                   <v-radio v-for="(option, index) in shippingOptions" :value="index">
                     <template v-slot:label="{ items }">
                       <div class="d-flex flex-column w-100 h-100 ml-2">
@@ -641,7 +645,7 @@
                 </div> -->
               </div>
 
-              <template v-if="shippingData.price && shippingData.price > 0 && step > 0">
+              <template v-if="freteData?.price || freteData?.price == 0 && step > 1">
                 <v-divider color="#111111"></v-divider>
 
                 <div class="order-sum d-flex flex-column" style="gap: 4px;">
@@ -652,13 +656,9 @@
 
                   <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
                     <div>Frete:</div>
-                    <div class="font-weight-regular">{{ formatPrice(shippingData.price) }}</div>
+                    <div class="font-weight-regular">{{ freteData.price > 0 ? formatPrice(freteData.price) : 'GRATIS' }}
+                    </div>
                   </div>
-
-                  <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-                  <div>Desconto:</div>
-                  <div class="font-weight-regular">-R$300</div>
-                  </div> -->
                 </div>
               </template>
 
@@ -804,7 +804,7 @@
           </div> -->
         </div>
 
-        <template v-if="shippingData.price && shippingData.price > 0 && step > 0">
+        <template v-if="freteData?.price || freteData?.price == 0 && step > 1">
           <v-divider color="#111111"></v-divider>
 
           <div class="order-sum d-flex flex-column pr-2 pl-2" style="gap: 4px;">
@@ -815,13 +815,9 @@
 
             <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
               <div>Frete:</div>
-              <div class="font-weight-regular"> {{ formatPrice(shippingData.price) }}</div>
+              <div class="font-weight-regular">{{ freteData.price > 0 ? formatPrice(freteData.price) : 'GRATIS' }}
+              </div>
             </div>
-
-            <!-- <div class="d-flex justify-space-between text-subtitle-2 font-weight-regular">
-            <div>Desconto:</div>
-            <div class="font-weight-regular">-R$300</div>
-          </div> -->
           </div>
         </template>
 
@@ -913,7 +909,7 @@ const totalPriceWithoutShipping = computed(() => {
 });
 
 const totalPrice = computed(() => {
-  const shipping = parseFloat(shippingData.value.price) > 0 ? parseFloat(shippingData.value.price) : 0;
+  const shipping = parseFloat(freteData.value?.price ?? 0) > 0 ? parseFloat(freteData.value?.price ?? 0) : 0;
   const total = totalPriceWithoutShipping.value + shipping;
 
   return Math.round(total * 100) / 100;
@@ -991,22 +987,22 @@ const updateStep = (itemStep) => {
   });
 }
 
-const setFreteSection = (isLocked) => {
-  if (isLocked) setPaymentSection(isLocked)
+const lockFreteBreadcrum = (isLocked) => {
+  if (isLocked) lockPaymentBreadcrum(isLocked)
   freteBreadcrumbs.value.disabled = isLocked;
 }
 
-const setPaymentSection = (isLocked) => {
+const lockPaymentBreadcrum = (isLocked) => {
   paymentBreadcrumbs.value.disabled = isLocked;
 }
 
 const handleNextStep = () => {
   switch (step.value) {
     case 0:
-      calculateShippingCost();
+      firstShippingDataValidation();
       break;
     case 1:
-      paymenteSection(freteMethod.value);
+      moveToPaymenteSection(freteMethodRatio.value);
       break;
     case 2:
       processPayment();
@@ -1104,7 +1100,7 @@ const setShippingFormLoading = (load) => {
   isShippingFormLoading.value = load;
 }
 
-const calculateShippingCost = async () => {
+const firstShippingDataValidation = async () => {
   if (!displayAddressPartialForm.value)
     setShippingFormLoading(true);
 
@@ -1130,7 +1126,7 @@ const calculateShippingCost = async () => {
       shippingFormValidation[fieldValidation] = true;
 
       if (freteBreadcrumbs.value)
-        setFreteSection(true)
+        lockFreteBreadcrum(true)
 
       valid = false;
     } else {
@@ -1141,7 +1137,7 @@ const calculateShippingCost = async () => {
   if (valid) {
     if (displayAddressPartialForm.value) {
       if (freteBreadcrumbs.value)
-        setFreteSection(false);
+        lockFreteBreadcrum(false);
 
       /* shipping.price = generateShippingPrice(); */
 
@@ -1221,7 +1217,7 @@ const handleLogin = () => {
 }
 
 // Frete Form
-const freteMethod = ref(null);
+const freteMethodRatio = ref(null);
 
 const shippingOptions = ref(
   [
@@ -1231,15 +1227,20 @@ const shippingOptions = ref(
   ]
 );
 
-const paymenteSection = (method) => {
+const moveToPaymenteSection = (method) => {
   if (method == null && isShippingDataValid.value) return;
-
-  if (freteBreadcrumbs.value)
-    setPaymentSection(false);
 
   cartStore.setFreteData(shippingOptions.value[method]);
 
-  updateStep(2);
+  setTimeout(() => {
+    if (freteData.value.title && freteData.value.price || freteData.value.price == 0) {
+
+      if (freteBreadcrumbs.value)
+        lockPaymentBreadcrum(false);
+
+      updateStep(2);
+    }
+  }, 10);
 }
 
 // Payment Form
@@ -1358,6 +1359,13 @@ const loadInstallments = () => {
   installments.value = listInstallments;
 }
 
+watch(freteMethodRatio, (newMethod, oldMethod) => {
+  if (newMethod != oldMethod) {
+    lockPaymentBreadcrum(true);
+    cartStore.setFreteDataStatus(false);
+  }
+});
+
 watch(paymentMethodRatio, (newMethod) => {
   if (newMethod == "card") {
     Object.assign(payment, {
@@ -1399,36 +1407,59 @@ onBeforeMount(async () => {
     displayAddressPartialForm.value = true;
 
     if (shipping.numero == null || shipping.numero.length == 0) {
-      alert(`popo`)
       cartStore.setShippingDataStatus(false);
-      console.log(isShippingDataValid.value)
     }
 
     if (shipping.cep && shipping.cep.length > 0) {
       lastShippingCep.value = shipping.cep
     }
-
-    setFreteSection(false);
-  }
-
-  if (isFreteDataValid.value && isShippingDataValid.value) {
-    freteMethod.value = freteData.value.method;
-    setPaymentSection(false);
-  } else {
-    cartStore.setFreteDataStatus(false);
   }
 
   let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
+  if (stepParam?.step == 1 || stepParam?.step == 2) {
+    cartStore.setFreteDataStatus(false);
 
-  if (
-    !stepParam ||
-    (stepParam.step == 1 && !isShippingDataValid.value) ||
-    (stepParam.step == 2 && !isShippingDataValid.value)
-  ) {
+    if (!isShippingDataValid.value) {
+      lockFreteBreadcrum(true);
+
+      updateStep(0);
+      step.value = 0;
+    }
+    else {
+      lockFreteBreadcrum(false);
+      updateStep(1);
+      step.value = 1;
+    }
+  } else {
     updateStep(0);
-  } else if (stepParam.step == 2 && !isFreteDataValid.value) {
-    updateStep(1);
-  } else step.value = stepParam.step;
+    step.value = 0;
+  }
+
+  /* switch (stepParam?.step) {
+    case 1:
+
+
+      if (!isShippingDataValid.value) {
+        lockFreteBreadcrum(true);
+
+        updateStep(0);
+        step.value = 0;
+      }
+      else {
+        lockFreteBreadcrum(false);
+        updateStep(1);
+        step.value = 1;
+      }
+
+      break;
+    case 2:
+
+      break;
+    default:
+      updateStep(0);
+      step.value = 0;
+      break;
+  } */
 
   setTimeout(() => {
     render.value = true;
