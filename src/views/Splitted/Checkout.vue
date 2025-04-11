@@ -451,9 +451,18 @@
                       </v-list-item>
                     </template>
                     <v-list-item>
-                      <div
+                      <!--     <div
                         class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-7 mb-2">
                         <img style="filter: grayscale(100%); width: 175px; height: 150px;" src="/boleto.svg" />
+                        <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar
+                          em
+                          "Finalizar a compra", o boleto será gerado para efetuar o pagamento.
+                        </div>
+                      </div> -->
+
+                      <div
+                        class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-6 mb-2">
+                        <img style="filter: grayscale(100%); width: 195px; height: 150px;" src="/payment.svg" />
                         <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar
                           em
                           "Finalizar a compra", o boleto será gerado para efetuar o pagamento.

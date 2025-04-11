@@ -22,14 +22,14 @@
           </div>
         </div>
 
-        <div class="d-flex flex-column justify-space-between mb-6">
-          <div class="text-h5 font-weight-regular mb-6">
+        <div class="d-flex flex-column justify-space-between">
+          <div class="text-h5 font-weight-regular">
             <v-icon style="transform: translateY(-2px); font-size: 2rem !important;">mdi-check-circle-outline</v-icon>
             {{ paymentMessageMap[order.payment.method].title || 'Pedido Confirmado!' }}
           </div>
 
-          <ul style="list-style-position: inside; padding-left: 7px;">
-            <li class="text-subtitle-2 font-weight-regular">
+          <ul class="my-6 mb-5" style="list-style-position: inside; padding-left: 7px;">
+            <li class="text-subtitle-2 font-weight-regular mb-2">
               <span class="text-subtitle-2 font-weight-regular mt-1">
                 {{ paymentMessageMap[order.payment.method].subtitle || 'Recebemos seu pedido com sucesso e ele já está '
                   + ' sendo processado.' }}
@@ -45,7 +45,86 @@
 
         </div>
 
-        <div class="d-flex flex-column justify-space-between mb-5">
+        <div class="mobile-expansion-summary">
+          <v-expansion-panels v-model="mobileDetailsPanel" :flat="true">
+            <v-expansion-panel elevation="0" height="40">
+              <v-expansion-panel-title>
+                <div class="text-h5 font-weight-regular">
+                  Dados e Contato
+                </div>
+              </v-expansion-panel-title>
+
+              <v-expansion-panel-text>
+                <v-divider color="#111111"></v-divider>
+
+                <div class="d-flex w-100 flex-column mt-5 mb-5" style="gap: 13px;">
+
+                  <div class="d-flex align-center w-100">
+                    <div class="d-flex text-subtitle-2 font-weight-bold">
+                      <v-icon class="mr-2">mdi-id-card</v-icon>
+                      CPF:
+                    </div>
+
+                    <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
+                      {{ order.shipping.cpf }}
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-center w-100">
+                    <div class="d-flex text-subtitle-2 font-weight-bold">
+                      <v-icon class="mr-2">mdi-account</v-icon>
+                      Destinatario:
+                    </div>
+
+                    <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
+                      {{ order.shipping.nome }}
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-center w-100">
+                    <div class="d-flex text-subtitle-2 font-weight-bold">
+                      <v-icon class="mr-2">mdi-email</v-icon>
+                      Email:
+                    </div>
+
+                    <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
+                      jpltgamer@gmail.com
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-center w-100">
+                    <div class="d-flex text-subtitle-2 font-weight-bold">
+                      <v-icon class="mr-2">mdi-phone</v-icon>
+                      Telefone:
+                    </div>
+
+                    <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
+                      {{ order.shipping.telefone }}
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-start w-100">
+                    <div class="d-flex align-start text-subtitle-2 font-weight-bold">
+                      <v-icon class="mr-2">mdi-map-marker</v-icon>
+                      Endereço:
+                    </div>
+
+                    <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
+                      {{ order.shipping.endereco }}, {{ order.shipping.numero }} -
+                      {{ order.shipping.bairro }}, {{ order.shipping.cidade }}, {{ order.shipping.estado.sigla
+                      }}
+                      - {{ order.shipping.cep }}
+                    </div>
+                  </div>
+                </div>
+
+               
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+
+        <div class="d-flex flex-column justify-space-between mb-5 mt-5">
           <div class="text-h5 font-weight-regular">
             Pagamento
           </div>
@@ -55,7 +134,7 @@
           </span>
         </div>
 
-        <div class="w-100 d-flex flex-column text-subtitle-2 font-weight-regular mb-7" style="gap: 10px;">
+        <div class="w-100 d-flex flex-column text-subtitle-2 font-weight-regular mb-10" style="gap: 10px;">
           <div class="d-flex align-center">
             <v-icon class="mr-3">mdi-credit-card-outline</v-icon>
             <div class="d-flex align-center">
@@ -77,7 +156,7 @@
         </div>
 
         <template v-if="formattedMethod == 'Boleto Bancário'">
-          <v-tooltip close-on-content-click v-model="clipboardSuccess" location="end" :open-on-hover="false">
+          <v-tooltip close-on-content-click v-model="clipboardSuccess" location="bottom" :open-on-hover="false">
             <template v-slot:activator="{ props }">
               <div class="w-100 d-flex flex-column align-center mb-5">
                 <div class="font-weight-medium text-overline">
@@ -118,10 +197,10 @@
                 </div>
                 <div @click="handleCopyToClipboard(pixCode)" v-bind="props"
                   class="payment-code-container border-outlined-dotted">
-                  <div class="pr-2" style="flex: 1; overflow-wrap: anywhere;">
+                  <div class="pr-4" style="flex: 1; overflow-wrap: anywhere;">
                     {{ pixCode }}
                   </div>
-                  <div>
+                  <div class="d-flex align-center">
                     <v-icon>mdi-content-copy</v-icon>
                   </div>
                 </div>
@@ -158,24 +237,23 @@
       <!-- Edit Cart - Top -->
 
       <div class="splitted-header mobile mb-2">
-        <!--      <header-top /> -->
+        <header-top />
         <div>
-          XXXXXXxxxxxxxxx
+          <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="navBreadcrumbs">
+            <template v-slot:divider>
+              <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+            <template v-slot:title="{ item }">
+              <div>
+                {{ item.title }} <v-icon class="pl-2" style="transform: translateY(-1.2px);" v-if="item.icon">{{
+                  item.icon }}</v-icon>
+              </div>
+            </template>
+          </v-breadcrumbs>
         </div>
-      </div>
-
-      <div class="mobile-expansion-summary">
-        xxxxx
       </div>
 
       <div class="wrapper">
-        <div class="splitted-header mobile mb-7">
-          <!--   <header-top /> -->
-          <div>
-
-          </div>
-        </div>
-
         <div class="top-summary w-100 d-flex justify-space-between mb-2">
           <div class="text-h6 font-weight-regular">
             Dados e Contato
@@ -281,6 +359,8 @@ const render = ref(false);
 const authStore = useAuthStore();
 
 const order = ref();
+
+const mobileDetailsPanel = ref();
 
 const paymentMessageMap = {
   boleto: { title: 'Pedido Reservado!', subtitle: 'Assim que o banco confirmar o pagamento, daremos continuidade no preparo do seu pedido! 😊' },
