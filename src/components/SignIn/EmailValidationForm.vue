@@ -66,8 +66,6 @@ const handleContinueClick = async () => {
   const { valid } = await emailValidationForm.value.validate();
 
   if (valid) {
-    showForm.value = false;
-
     var isAreadyRegistered = await checkEmailExists(signInEmailInput.value);
 
     if (isAreadyRegistered) {
@@ -79,11 +77,16 @@ const handleContinueClick = async () => {
       const response = await sendOtpEmail(signInEmailInput.value);
 
       if (response.success && response.code) {
-        router.push({ name: "EmailCodeValidation", query: { type: "create" } });
         otpCode.value = response.code;
-      }
+        showForm.value = false;
 
-      return;
+        setTimeout(() => {
+          router.push({ name: "EmailCodeValidation", query: { type: "create" } });
+        }, 100);
+      }
+      else {
+        signInEmailInput.value = "";
+      }
     }
   } else {
     isValidEmail.value = false;
@@ -96,6 +99,10 @@ onBeforeRouteLeave((to, from) => {
   if (to.name != "EmailCodeValidation" && to.name != "Login") {
     signInEmailInput.value = "";
   }
+
+  /* if (otpCode.value && otpCode.value.length > 0) {
+    router.push({ name: "EmailValidation" });
+  } */
 });
 </script>
 

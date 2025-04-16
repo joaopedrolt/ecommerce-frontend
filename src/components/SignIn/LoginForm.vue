@@ -94,7 +94,7 @@ const handleLogInClick = async () => {
   if (valid) {
     isPasswordValid.value = true;
 
-    const { user, error } = await signIn(signInEmailInput.value, passwordInputValue.value);
+    const { error } = await signIn(signInEmailInput.value, passwordInputValue.value);
 
     if (error) {
       signInErrorMessage.value = error;
@@ -119,23 +119,6 @@ onMounted(() => {
 
 <style lang="scss">
 @import "@/styles/global.scss";
-
-.dropdown-enter-active {
-  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-  overflow: hidden;
-}
-
-.dropdown-enter-from {
-  max-height: 0;
-  opacity: 0;
-}
-
-.dropdown-enter-to {
-  max-height: 100px;
-  opacity: 1;
-}
-
-
 .signin-password-area {
   .v-messages__message {
     height: 24px !important;

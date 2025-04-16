@@ -28,7 +28,7 @@
             {{ paymentMessageMap[order.payment.method].title || 'Pedido Confirmado!' }}
           </div>
 
-          <ul class="my-6 mb-5" style="list-style-position: inside; padding-left: 7px;">
+          <ul class="my-6" style="list-style-position: inside; padding-left: 7px;">
             <li class="text-subtitle-2 font-weight-regular mb-2">
               <span class="text-subtitle-2 font-weight-regular mt-1">
                 {{ paymentMessageMap[order.payment.method].subtitle || 'Recebemos seu pedido com sucesso e ele já está '
@@ -118,7 +118,7 @@
                   </div>
                 </div>
 
-               
+
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -145,6 +145,12 @@
             <v-icon class="mr-3">mdi-ticket-confirmation-outline</v-icon>
             <div class="d-flex align-center">
               <div class="font-weight-bold pr-2">Código do Pedido:</div> {{ order.id }}
+            </div>
+          </div>
+          <div class="d-flex align-center">
+            <v-icon class="mr-3">mdi-currency-usd</v-icon>
+            <div class="d-flex align-center">
+              <div class="font-weight-bold pr-2">Valor:</div> {{ formatPrice(order.totalPrice) }}
             </div>
           </div>
           <div v-if="formattedMethod != 'Cartão de Crédito'" class="d-flex align-center">
@@ -327,7 +333,7 @@
 
         <div class="d-flex align-center justify-space-between pt-4 pr-1 pl-2">
           <div style="margin-top: 1px;">Total:</div>
-          <div class="text-h6 font-weight-regular ">RS 10,00</div>
+          <div class="text-h6 font-weight-regular ">{{ formatPrice(order.totalPrice) }}</div>
         </div>
       </div>
     </div>
@@ -350,6 +356,7 @@ import generatePixCode from '@/utils/generatePixCode';
 import formatDate from "@/utils/formatDate";
 
 import { convertToFirebaseTimestamp } from '@/firebase';
+import formatPrice from '@/utils/formatPrice';
 
 const route = useRoute();
 const router = useRouter();
