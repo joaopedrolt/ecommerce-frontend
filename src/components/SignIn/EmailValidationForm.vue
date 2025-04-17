@@ -32,10 +32,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
@@ -49,6 +49,9 @@ import { sendOtpEmail } from "@/services/otp";
 import { checkEmailExists } from "@/data/user"
 
 const router = useRouter();
+const route = useRoute()
+
+const fromQuery = computed(() => route.query.from)
 
 const signInStore = useSignInStore();
 const { signInEmailInput, otpCode } = storeToRefs(signInStore);
@@ -69,7 +72,15 @@ const handleContinueClick = async () => {
     var isAreadyRegistered = await checkEmailExists(signInEmailInput.value);
 
     if (isAreadyRegistered) {
-      router.push({ name: "Login" });
+      let routeParams = {
+        name: "Login",
+      }
+
+      if (fromQuery.value != null && fromQuery.value?.length > 0) {
+        routeParams.query = { from: fromQuery.value }
+      }
+
+      router.push(routeParams);
       return;
     }
 
@@ -81,7 +92,17 @@ const handleContinueClick = async () => {
         showForm.value = false;
 
         setTimeout(() => {
-          router.push({ name: "EmailCodeValidation", query: { type: "create" } });
+          let routeParams = {
+            name: "EmailCodeValidation",
+            query: { type: "create" },
+          }
+
+          if (fromQuery.value != null && fromQuery.value?.length > 0) {
+            routeParams.query['from'] = fromQuery.value;
+            console.log(routeParams.query['from'])
+          }
+
+          router.push(routeParams);
         }, 100);
       }
       else {

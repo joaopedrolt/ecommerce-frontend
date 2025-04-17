@@ -39,6 +39,6 @@ export const sendOtpEmail = async (email) => {
 
     } catch (error) {
         console.error("Fetch error:", error);
-        return { success: false, message: "An error occurred while sending the email." };
+        return { success: false, message: "Ocorreu um erro ao enviar o e-mail!" };
     }
 };

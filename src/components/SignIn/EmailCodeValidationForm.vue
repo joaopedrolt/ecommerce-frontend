@@ -6,7 +6,17 @@
         <div class="signin-content">
           <SignInHeader title="Validação" subtitle="Insira o código de segurança recebido" />
 
-          <v-otp-input v-model="validationCodeInput" class="my-1" type="number" :error="validationError"></v-otp-input>
+          <v-otp-input v-model="validationCodeInput" class="my-1" type="number" :disabled="loading" :error="validationError"></v-otp-input>
+
+          <template v-if="validationErrorMessage && validationErrorMessage.length > 0">
+            <transition name="dropdown" @before-leave="instantLeave">
+              <div v-if="validationErrorMessage && validationErrorMessage.length > 0"
+                class="dropdown-content v-messages v-messages__message mb-4"
+                style="color: rgb(var(--v-theme-error)); opacity: 1 !important;">
+                {{ validationErrorMessage }}
+              </div>
+            </transition>
+          </template>
 
           <div class="text-subtitle-2 font-weight-light">
             Enviamos um código para o e-mail
@@ -24,15 +34,15 @@
             </b>
           </div>
 
-          <v-btn v-if="!showCountdown" @click="handleSendAnotherCodeClick"
-            class="text-subtitle-1 font-weight-regular button-color button-dark mt-4 mb-2" color="#111111" height="45px"
-            width="100%" variant="flat" :ripple="false">
+          <v-btn v-if="!showCountdown && !loading" @click="handleSendAnotherCodeClick"
+            class="text-subtitle-1 font-weight-regular button-color button-dark mt-4 mb-2" :loading="loading"
+            color="#111111" height="45px" width="100%" variant="outlined" :ripple="false">
             Solicitar Novo Código
           </v-btn>
 
           <v-btn @click="handleValidationClick"
-            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
-            variant="flat" :ripple="false" :disabled="disableConfirmButton">
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" :loading="loading" height="45px"
+            :class="loading ? 'mt-4' : ''" width="100%" variant="flat" :ripple="false" :disabled="disableConfirmButton">
             Confirmar
           </v-btn>
         </div>
@@ -42,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from "vue";
+import { ref, watch, computed, onUnmounted } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "vue-router";
@@ -56,7 +66,8 @@ import { sendOtpEmail } from "@/services/otp";
 const router = useRouter();
 const route = useRoute();
 
-const queryParamType = route.query.type;
+const queryParamType = computed(() => route.query.type)
+const fromQuery = computed(() => route.query.from)
 
 const signInStore = useSignInStore();
 const { signInEmailInput, otpCode } = storeToRefs(signInStore);
@@ -68,6 +79,10 @@ const validationCodeInput = ref("");
 const validationError = ref(false);
 
 const disableConfirmButton = ref(true);
+
+const validationErrorMessage = ref();
+
+const loading = ref(false);
 
 const formattedTime = (props) => {
   const formattedProps = {};
@@ -88,34 +103,67 @@ const codeStringValidation = (codeString) => {
 };
 
 const handleSendAnotherCodeClick = async () => {
-  showCountdown.value = true;
+  loading.value = true;
+
+  validationErrorMessage.value = null;
+  validationError.value = false;
   validationCodeInput.value = "";
 
-  await sendOtpEmail(signInEmailInput.value);
+  const response = await sendOtpEmail(signInEmailInput.value);
+
+  if (response.success) {
+    showCountdown.value = true;
+    otpCode.value = response.code;
+  }
+  else {
+    validationErrorMessage.value = response.message;
+  }
+
+  loading.value = false;
 };
 
 const handleValidationClick = async () => {
-  //validacoes
-
   if (!codeStringValidation(validationCodeInput.value)) {
     validationError.value = true;
     return;
   }
 
   if (otpCode.value == validationCodeInput.value) {
-    router.push({
+    let routeParams = {
       name: "Password",
-      query: { type: queryParamType },
-    });
+      query: { type: queryParamType.value },
+    }
 
+    if (fromQuery.value != null && fromQuery.value?.length > 0) {
+      routeParams.query['from'] = fromQuery.value;
+      console.log(routeParams.query['from'])
+    }
+
+    validationErrorMessage.value = null;
+    validationError.value = false;
+
+    router.push(routeParams);
     return;
+  }
+  else {
+    validationError.value = true;
+    validationErrorMessage.value = "Código Inválido!";
   }
 };
 
 watch(validationCodeInput, (newCodeInput) => {
+  validationErrorMessage.value = null;
+  validationError.value = false;
+
   if (codeStringValidation(newCodeInput)) disableConfirmButton.value = false;
   else if (!disableConfirmButton.value) disableConfirmButton.value = true;
 });
+
+const instantLeave = (el) => {
+  el.style.transition = "none";
+  el.style.maxHeight = "none";
+  el.style.opacity = "0";
+};
 
 /* onUnmounted(() => {
   signInEmailInput.value = "";

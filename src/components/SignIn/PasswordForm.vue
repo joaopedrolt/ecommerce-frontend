@@ -9,8 +9,8 @@
 
           <v-text-field ref="passwordInput" v-model="passwordInputValue" :class="[
             isPasswordValid ? 'default-input-color' : 'error-input-color',
-          ]" type="password" label="Senha" variant="outlined" :rules="passwordRules"
-            @blur="handlePasswordValidation(true)" validate-on="blur">
+          ]" type="password" label="Senha" variant="outlined" :rules="passwordRules" 
+            @blur="handlePasswordValidation(true)" validate-on="blur" :disabled="loading">
           </v-text-field>
 
           <validation-filler :active="!isPasswordValid" />
@@ -24,7 +24,7 @@
             validate-on="submit" :rules="isPasswordConfirmationValid
               ? [() => true]
               : [() => 'As senhas não são iguais!']
-              " :disabled="!isPasswordValid || passwordInputValue.length == 0">
+              " :disabled="!isPasswordValid || passwordInputValue.length == 0 || loading">
           </v-text-field>
 
           <validation-filler :active="!isPasswordConfirmationValid" />
@@ -39,26 +39,10 @@
           </template>
 
           <v-btn @click="handleCreateAccountClick"
-            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
-            variant="flat" :ripple="false" :disabled="!isPasswordValid" type="submit">
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" :loading="loading" height="45px"
+            width="100%" variant="flat" :ripple="false" :disabled="!isPasswordValid" type="submit">
             Criar Conta
           </v-btn>
-
-          <!--   <div class="d-flex flex-column text-subtitle-1 font-weight-regular" :class="[
-            isPasswordValid ? 'default-input-color' : 'error-input-color',
-          ]">
-            Atenção!
-            <div class="text-subtitle-2 font-weight-light">
-              {{ signUpErrorMessage }}
-            </div>
-          </div> -->
-
-          <!--  <div style="visibility: hidden;" class="d-flex flex-column text-subtitle-1 font-weight-regular">
-            Atenção!
-            <div class="text-subtitle-2 font-weight-light">
-              A senha requer no mínimo 8 caracteres, incluindo letras e números.
-            </div>
-          </div> -->
         </div>
       </v-form>
     </Motion>
@@ -66,10 +50,10 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeMount } from "vue";
+import { ref, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 import { Motion, Presence } from "motion/vue";
 import { useSignInStore } from "@/store/store";
@@ -82,6 +66,9 @@ import SignInHeader from "./SignInHeader.vue";
 import signUp from "@/auth/signUp"
 
 const router = useRouter();
+const route = useRoute()
+
+const fromQuery = computed(() => route.query.from)
 
 const signInStore = useSignInStore();
 const { signInEmailInput, otpCode } = storeToRefs(signInStore);
@@ -102,6 +89,8 @@ const isPasswordValid = ref(true);
 const isPasswordConfirmationValid = ref(true);
 
 const signUpErrorMessage = ref();
+
+const loading = ref(false);
 
 const handlePasswordValidation = async (blur = false) => {
   if (blur) {
@@ -137,6 +126,7 @@ const handlePasswordConfirmationValidation = () => {
 };
 
 const handleCreateAccountClick = async () => {
+  loading.value = true;
   signUpErrorMessage.value = null;
 
   var valid = await handlePasswordValidation();
@@ -147,12 +137,22 @@ const handleCreateAccountClick = async () => {
   if (valid) {
     const { success, error } = await signUp(signInEmailInput.value, passwordInputValue.value);
 
-    if (!success) {
+    if (success) {
+      if (fromQuery.value != null && fromQuery.value?.length > 0) {
+        try {
+          router.push({ name: fromQuery.value });
+        } catch (error) {
+          console.log(error);
+          router.push({ name: "Home" });
+        }
+      }
+    }
+    else {
       signUpErrorMessage.value = error;
-
-      console.log(signUpErrorMessage.value)
     }
   }
+
+  loading.value = false;
 };
 
 watch(passwordInputValue, () => {
@@ -163,22 +163,6 @@ watch(passwordInputValue, () => {
     setTimeout(() => {
       passwordConfirmationInputValue.value = "";
     }, 10);
-  }
-});
-
-const instantLeave = (el) => {
-  el.style.transition = "none";
-  el.style.maxHeight = "none";
-  el.style.opacity = "0";
-};
-
-onBeforeMount(() => {
-  if (!signInEmailInput.value ||
-    signInEmailInput.value.length == 0 ||
-    !otpCode.value ||
-    otpCode.value.length == 0) {
-    router.push({ name: "EmailValidation" });
-    return;
   }
 });
 </script>

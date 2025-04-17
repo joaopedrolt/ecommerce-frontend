@@ -35,6 +35,14 @@ const routes = [
             name: "EmailValidation",
             component: () =>
               import("@/components/SignIn/EmailValidationForm.vue"),
+            beforeEnter(to, from, next) {
+              if (!to.query.from && from.name && !from.path?.includes("entrar")) {
+                next({ name: 'EmailValidation', query: { from: from.name } });
+              }
+              else {
+                next();
+              }
+            },
           },
 
           {
@@ -46,6 +54,8 @@ const routes = [
               const signInStore = useSignInStore();
 
               if (signInStore.signInEmailInput.length == 0) {
+                console.log(signInStore.signInEmailInput)
+
                 next(from.path);
                 return;
               }
@@ -81,6 +91,16 @@ const routes = [
             component: () => import("@/components/SignIn/PasswordForm.vue"),
             beforeEnter(to, from, next) {
               if (to.query.type != "create" && to.query.type != "recover") {
+                next(from.path);
+                return;
+              }
+
+              const signInStore = useSignInStore();
+
+              if (!signInStore.signInEmailInput ||
+                signInStore.signInEmailInput.length == 0 ||
+                !signInStore.otpCode ||
+                signInStore.otpCode.length == 0) {
                 next(from.path);
                 return;
               }

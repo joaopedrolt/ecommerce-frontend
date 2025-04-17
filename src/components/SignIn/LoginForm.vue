@@ -31,8 +31,9 @@
             </transition>
           </template>
 
-          <v-btn @click="handleLogInClick" class="text-subtitle-1 font-weight-regular button-color button-light mb-4"
-            height="45px" width="100%" variant="flat" :ripple="false">
+          <v-btn @click="handleLogInClick" :loading="loading"
+            class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
+            variant="flat" :ripple="false">
             Entrar
           </v-btn>
 
@@ -49,10 +50,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { sha256 } from "js-sha256";
 
 import SignInHeader from "./SignInHeader.vue";
@@ -65,6 +66,9 @@ import { Motion, Presence } from "motion/vue";
 import signIn from "@/auth/signIn.js";
 
 const router = useRouter();
+const route = useRoute()
+
+const fromQuery = computed(() => route.query.from)
 
 const signInStore = useSignInStore();
 const { signInEmailInput } = storeToRefs(signInStore);
@@ -80,13 +84,22 @@ const showForm = ref(true);
 
 const signInErrorMessage = ref();
 
+const loading = ref(false);
+
 const handleEditClick = () => {
-  router.push({
+  let routeParams = {
     name: "EmailValidation",
-  });
+  }
+
+  if (fromQuery.value != null && fromQuery.value?.length > 0) {
+    routeParams.query = { from: fromQuery.value }
+  }
+
+  router.push(routeParams);
 };
 
 const handleLogInClick = async () => {
+  loading.value = true;
   signInErrorMessage.value = null;
 
   const { valid } = await loginForm.value.validate();
@@ -99,11 +112,19 @@ const handleLogInClick = async () => {
     if (error) {
       signInErrorMessage.value = error;
       passwordInputValue.value = "";
-      return;
     } else {
-      router.push({ name: "Home" });
+      if (fromQuery.value != null && fromQuery.value?.length > 0) {
+        try {
+          router.push({ name: fromQuery.value });
+        } catch (error) {
+          console.error(error);
+          router.push({ name: "Home" });
+        }
+      }
     }
   } else isPasswordValid.value = false;
+
+  loading.value = false;
 };
 
 const instantLeave = (el) => {
@@ -119,6 +140,7 @@ onMounted(() => {
 
 <style lang="scss">
 @import "@/styles/global.scss";
+
 .signin-password-area {
   .v-messages__message {
     height: 24px !important;
