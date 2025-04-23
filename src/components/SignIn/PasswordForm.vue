@@ -9,7 +9,7 @@
 
           <v-text-field ref="passwordInput" v-model="passwordInputValue" :class="[
             isPasswordValid ? 'default-input-color' : 'error-input-color',
-          ]" type="password" label="Senha" variant="outlined" :rules="passwordRules" 
+          ]" type="password" label="Senha" variant="outlined" :rules="passwordRules"
             @blur="handlePasswordValidation(true)" validate-on="blur" :disabled="loading">
           </v-text-field>
 
@@ -38,10 +38,10 @@
             </div>
           </template>
 
-          <v-btn @click="handleCreateAccountClick"
+          <v-btn @click="handleSubmitPasswordFormClick"
             class="text-subtitle-1 font-weight-regular button-color button-light mb-4" :loading="loading" height="45px"
             width="100%" variant="flat" :ripple="false" :disabled="!isPasswordValid" type="submit">
-            Criar Conta
+            {{ typeQuery == "recover" ? "Alterar Senha" : "Criar Conta" }}
           </v-btn>
         </div>
       </v-form>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useRouter, useRoute } from "vue-router";
@@ -58,20 +58,27 @@ import { useRouter, useRoute } from "vue-router";
 import { Motion, Presence } from "motion/vue";
 import { useSignInStore } from "@/store/store";
 
-import { passwordRules, nomeRules } from "@/utils/rules";
+import { passwordRules, emailRules } from "@/utils/rules";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
 
 import signUp from "@/auth/signUp"
+import updatePassword from "@/auth/updatePassword"
+import signOut from "@/auth/signOut";
+import { recoverPasswordIn } from "@/auth/recoverPassword"
 
 const router = useRouter();
 const route = useRoute()
 
 const fromQuery = computed(() => route.query.from)
+const typeQuery = computed(() => route.query.type)
+const emailQuery = computed(() => route.query.email)
+
+const url = computed(() => window.location.href);
 
 const signInStore = useSignInStore();
-const { signInEmailInput, otpCode } = storeToRefs(signInStore);
+const { signInEmailInput } = storeToRefs(signInStore);
 
 const passwordForm = ref();
 
@@ -125,7 +132,7 @@ const handlePasswordConfirmationValidation = () => {
   }
 };
 
-const handleCreateAccountClick = async () => {
+const handleSubmitPasswordFormClick = async () => {
   loading.value = true;
   signUpErrorMessage.value = null;
 
@@ -135,20 +142,48 @@ const handleCreateAccountClick = async () => {
     valid = handlePasswordConfirmationValidation();
 
   if (valid) {
-    const { success, error } = await signUp(signInEmailInput.value, passwordInputValue.value);
+    if (typeQuery.value == "recover") {
+      alert("Recuperar senha");
+      const { success, user, error } = await recoverPasswordIn(url.value, signInEmailInput.value);
 
-    if (success) {
-      if (fromQuery.value != null && fromQuery.value?.length > 0) {
-        try {
-          router.push({ name: fromQuery.value });
-        } catch (error) {
-          console.log(error);
-          router.push({ name: "Home" });
+      if (success) {
+        alert("Senha recuperada com sucesso!");
+        valid = await updatePassword(user, passwordInputValue.value);
+
+        if (valid) {
+          alert("popo");
+          await signOut()
+
+          router.push({ name: "EmailValidation" });
+          return;
         }
+        else {
+          signUpErrorMessage.value = "Erro ao atualizar a senha!";
+        }
+      }
+      else {
+        signUpErrorMessage.value = error;
+      }
+    }
+    else if (typeQuery.value == "create") {
+      const { success, error } = await signUp(signInEmailInput.value, passwordInputValue.value);
+
+      if (success) {
+        if (fromQuery.value != null && fromQuery.value?.length > 0) {
+          try {
+            router.push({ name: fromQuery.value });
+          } catch (error) {
+            console.log(error);
+            router.push({ name: "Home" });
+          }
+        }
+      }
+      else {
+        signUpErrorMessage.value = error;
       }
     }
     else {
-      signUpErrorMessage.value = error;
+      router.push({ name: "Home" });
     }
   }
 
@@ -165,6 +200,17 @@ watch(passwordInputValue, () => {
     }, 10);
   }
 });
+
+onBeforeMount(async () => {
+  if (typeQuery.value == "recover") {
+    signInEmailInput.value = decodeURIComponent(emailQuery.value);
+
+    const isEmailValid = emailRules.every((rule) => rule(signInEmailInput.value) === true);
+    if (!isEmailValid) {
+      router.push({ name: "Home" });
+    }
+  }
+})
 </script>
 
 <style lang="scss"></style>

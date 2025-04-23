@@ -95,14 +95,23 @@ const routes = [
                 return;
               }
 
+              if (to.query.type == "recover") {
+                if (!to.query.email || to.query.email.length == 0) {
+                  next({ name: 'Home' });
+                  return;
+                }
+              }
+
               const signInStore = useSignInStore();
 
-              if (!signInStore.signInEmailInput ||
-                signInStore.signInEmailInput.length == 0 ||
-                !signInStore.otpCode ||
-                signInStore.otpCode.length == 0) {
-                next(from.path);
-                return;
+              if (to.query.type == "create") {
+                if (!signInStore.signInEmailInput ||
+                  signInStore.signInEmailInput.length == 0 ||
+                  !signInStore.otpCode ||
+                  signInStore.otpCode.length == 0) {
+                  next(from.path);
+                  return;
+                }
               }
 
               next();

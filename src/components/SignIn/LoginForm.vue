@@ -37,12 +37,12 @@
             Entrar
           </v-btn>
 
-          <!--    <div>
+          <div>
             <div style="height: 24px;">Esqueceu sua senha?</div>
-            <router-link class="recover-link font-weight-regular"
+            <span @click="handleRecoveryClick" class="recover-link font-weight-regular text-underline"
               :to="{ name: 'EmailCodeValidation', query: { type: 'recover' } }">
-              Clique aqui para recuperar sua senha!</router-link>
-          </div> -->
+              Clique aqui para recuperar sua senha!</span>
+          </div>
         </div>
       </v-form>
     </Motion>
@@ -64,6 +64,9 @@ import { passwordRules } from "@/utils/rules";
 import { Motion, Presence } from "motion/vue";
 
 import signIn from "@/auth/signIn.js";
+import { recoverPasswordOut } from "@/auth/recoverPassword"
+
+import { sendOtpEmail } from "@/services/otp";
 
 const router = useRouter();
 const route = useRoute()
@@ -71,7 +74,7 @@ const route = useRoute()
 const fromQuery = computed(() => route.query.from)
 
 const signInStore = useSignInStore();
-const { signInEmailInput } = storeToRefs(signInStore);
+const { signInEmailInput, otpCode } = storeToRefs(signInStore);
 
 const loginForm = ref();
 
@@ -127,15 +130,39 @@ const handleLogInClick = async () => {
   loading.value = false;
 };
 
+const handleRecoveryClick = async () => {
+/*   const response = await sendOtpEmail(signInEmailInput.value); */
+  const response = await recoverPasswordOut(signInEmailInput.value);
+
+ /*  if (response.success && response.code) {
+    otpCode.value = response.code;
+    showForm.value = false;
+
+    setTimeout(() => {
+      let routeParams = {
+        name: "EmailCodeValidation",
+        query: { type: "recover" },
+      }
+
+      if (fromQuery.value != null && fromQuery.value?.length > 0) {
+        routeParams.query['from'] = fromQuery.value;
+        console.log(routeParams.query['from'])
+      }
+
+      router.push(routeParams);
+    }, 100);
+  }; */
+}
+
+onMounted(() => {
+  /*   emailInputValue = signInEmailInput.value; */
+});
+
 const instantLeave = (el) => {
   el.style.transition = "none";
   el.style.maxHeight = "none";
   el.style.opacity = "0";
 };
-
-onMounted(() => {
-  /*   emailInputValue = signInEmailInput.value; */
-});
 </script>
 
 <style lang="scss">
