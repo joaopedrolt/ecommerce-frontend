@@ -69,7 +69,7 @@ const handleContinueClick = async () => {
   const { valid } = await emailValidationForm.value.validate();
 
   if (valid) {
-    var isAreadyRegistered = await checkEmailExists(signInEmailInput.value);
+    var isAreadyRegistered = await checkEmailExists(signInEmailInput.value.toLowerCase());
 
     if (isAreadyRegistered) {
       let routeParams = {
@@ -85,7 +85,7 @@ const handleContinueClick = async () => {
     }
 
     if (!isAreadyRegistered) {
-      const response = await sendOtpEmail(signInEmailInput.value);
+      const response = await sendOtpEmail(signInEmailInput.value.toLowerCase());
 
       if (response.success && response.code) {
         otpCode.value = response.code;

@@ -101,13 +101,91 @@
                     Contato
                   </div>
                   <div style="word-break: break-word;">
-                    <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
-                      Já é nosso cliente? Pule esta etapa!
-                    </span>
-                    <a @click="handleLogin()"
-                      class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
-                      Clique aqui para fazer login agora!
-                    </a>
+                    <template v-if="cartMethod == 'local'">
+                      <span class="text-subtitle-2 font-weight-regular mr-1 mt-1" style="opacity: 0.6;">
+                        Já é nosso cliente? Pule esta etapa!
+                      </span>
+
+                      <a @click="handleLogin()"
+                        class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
+                        Clique aqui para fazer login agora!
+                      </a>
+                    </template>
+                    <template v-else-if="cartMethod == 'online'">
+
+                      <v-dialog transition="fade-transition" width="auto" scrollable>
+                        <template v-slot:activator="{ props: activatorProps }">
+                          <div v-bind="activatorProps"
+                            class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
+                            Clique aqui selecionar um endereço de entrega já cadastrado!
+                          </div>
+                        </template>
+
+                        <template v-slot:default="{ isActive }">
+                          <v-card style="max-width: 680px;">
+                            <v-card-title
+                              class="d-flex align-center justify-center pt-4 pb-4 px-6 text-h5 font-weight-regular"
+                              style="white-space: break-spaces; word-break: break-word; ">
+                              <div>
+                                <div class="d-flex align-center justify-center text-center font-weight-regular mb-1">
+                                  <span>
+                                    Selecione um Endereço Cadastrado
+                                  </span>
+                                </div>
+
+                                <div class="text-center font-weight-regular mt-1"
+                                  style="font-size: 0.8rem; opacity: 0.6; white-space: break-spaces; word-break: break-word; line-height: 1;">
+                                  Voce pode adicionar um novo endereço no painel de usuario, ou ao finalizar a compra
+                                  com um novo endereço.
+                                </div>
+                              </div>
+                            </v-card-title>
+
+                            <v-divider></v-divider>
+
+                            <v-card-text style="max-height: 381px; padding: 0;">
+                              <v-list style="padding: 0;">
+
+                                <template v-for="(address, index) in userAddresses" :key="index">
+                                  <v-list-item class="text-center" style="padding-top: 23px; padding-bottom: 23px; "
+                                    @click="isActive.value = false"
+                                    :class="{ 'bg-light-blue-lighten-5': selectedIndex === index }">
+                                    <v-list-item-title>
+                                      <div
+                                        class="d-flex align-start justify-center text-subtitle-2 font-weight-regular mb-1">
+                                        <v-icon class="mr-1 pb-1">mdi-account</v-icon>
+                                        <div style=" white-space: break-spaces; word-break: break-word;">{{ address.nome
+                                        }} {{ address.sobrenome }}</div>
+                                      </div>
+                                      <div
+                                        class="d-flex align-start justify-center text-subtitle-2 font-weight-regular">
+                                        <v-icon class="mr-1">mdi-map-marker</v-icon>
+                                        <div style=" white-space: break-spaces; word-break: break-word;">
+                                          {{ address.endereco }}, {{ address.numero }} -
+                                          {{ address.bairro }}, {{ address.cidade }}, {{ address.estado.sigla }}
+                                          - {{ address.cep }}
+                                        </div>
+                                      </div>
+                                    </v-list-item-title>
+                                  </v-list-item>
+                                  <v-divider></v-divider>
+                                </template>
+
+                              </v-list>
+                            </v-card-text>
+
+                            <v-card-actions class="pt-3 pb-3 px-4">
+                              <v-btn @click="isActive.value = false"
+                                class="w-100 next-section-btn text-subtitle-1 font-weight-regular button-color button-light"
+                                color="#111111" variant="flat" :ripple="false">
+                                Fechar
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </template>
+                      </v-dialog>
+
+                    </template>
                   </div>
                 </div>
                 <v-text-field id="email" v-model="shipping.email" :rules="emailRules" label="E-mail" variant="outlined"
@@ -235,19 +313,6 @@
                   </v-checkbox>
                 </div>
               </div>
-
-              <!-- <div class="d-flex justify-space-between align-center">
-                <v-btn v-if="step == 0" @click="firstShippingDataValidation()"
-                  class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
-                  Continuar aaa
-                </v-btn>
-                <v-btn v-else @click="firstShippingDataValidation()"
-                  class="text-subtitle-1 font-weight-regular button-color button-dark" color="#111111" height="45px"
-                  width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
-                  Continuar bbb
-                </v-btn>
-              </div> -->
             </v-form>
           </v-window-item>
 
@@ -276,40 +341,6 @@
                       </div>
                     </template>
                   </v-radio>
-
-                  <!--  <v-radio :value="0">
-                    <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-2">
-                        <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
-                          <div>Sedex</div>
-                        </div>
-                        <div class="w-100 text-subtitle-2 font-weight-regular">
-                          7 dias úteis
-                        </div>
-                      </div>
-
-                      <div class="d-flex text-subtitle-2 align-flex font-weight-regular" style="word-break: keep-all;">
-                        GRATIS
-                      </div>
-                    </template>
-                  </v-radio>
-                  <v-radio :value="1">
-                    <template v-slot:label="{ items }">
-                      <div class="d-flex flex-column w-100 h-100 ml-2">
-                        <div class="w-100 d-flex justify-space-between font-weight-medium" style="font-size: 0.9rem;">
-                          <div>Total Express</div>
-                        </div>
-                        <div class="w-100 text-subtitle-2 font-weight-regular">
-                          3 dias úteis
-                        </div>
-                      </div>
-
-                      <div class="d-flex text-subtitle-2 align-flex font-weight-regular"
-                        style="word-break: keep-all; white-space: nowrap;">
-                        {{ formatPrice(shippingData.price) }}
-                      </div>
-                    </template>
-                  </v-radio> -->
                 </v-radio-group>
               </div>
             </div>
@@ -451,15 +482,6 @@
                       </v-list-item>
                     </template>
                     <v-list-item>
-                      <!--     <div
-                        class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-7 mb-2">
-                        <img style="filter: grayscale(100%); width: 175px; height: 150px;" src="/boleto.svg" />
-                        <div class="text-subtitle-2 font-weight-regular" style="max-width: 500px">Depois de clicar
-                          em
-                          "Finalizar a compra", o boleto será gerado para efetuar o pagamento.
-                        </div>
-                      </div> -->
-
                       <div
                         class="w-100 h-100 d-flex flex-column justify-center align-center text-center px-2 pb-6 mb-2">
                         <img style="filter: grayscale(100%); width: 195px; height: 150px;" src="/payment.svg" />
@@ -586,72 +608,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-space-between w-100">
-                  <div style="height: 90px; width: 90px;">
-                    <v-img class="h-100 w-100" style="border-radius: 10px;"
-                      src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-                  </div>
-
-                  <div class="d-flex w-100 justify-space-between">
-                    <div class="d-flex flex-column justify-center ml-4">
-                      <div class="font-weight-bold">
-                        Tech T-Shirt
-                      </div>
-                      <div class="text-subtitle-2 font-weight-light">
-                        Preta / PP
-                      </div>
-                    </div>
-
-                    <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                      R$ 159,00
-                    </div>
-                  </div>
-                </div> -->
               </div>
 
               <template v-if="freteData?.price || freteData?.price == 0 && step > 1">
@@ -745,72 +701,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <div class="d-flex justify-space-between w-100">
-            <div style="height: 90px; width: 90px;">
-              <v-img class="h-100 w-100" style="border-radius: 10px;"
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-            </div>
-
-            <div class="d-flex w-100 justify-space-between">
-              <div class="d-flex flex-column justify-center ml-4">
-                <div class="font-weight-bold">
-                  Tech T-Shirt
-                </div>
-                <div class="text-subtitle-2 font-weight-light">
-                  Preta / PP
-                </div>
-              </div>
-
-              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                R$ 159,00
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-space-between w-100">
-            <div style="height: 90px; width: 90px;">
-              <v-img class="h-100 w-100" style="border-radius: 10px;"
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-            </div>
-
-            <div class="d-flex w-100 justify-space-between">
-              <div class="d-flex flex-column justify-center ml-4">
-                <div class="font-weight-bold">
-                  Tech T-Shirt
-                </div>
-                <div class="text-subtitle-2 font-weight-light">
-                  Preta / PP
-                </div>
-              </div>
-
-              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                R$ 159,00
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-space-between w-100">
-            <div style="height: 90px; width: 90px;">
-              <v-img class="h-100 w-100" style="border-radius: 10px;"
-                src="https://cdn.shopify.com/s/files/1/0526/4123/5093/files/1_d99de45e-9f94-4fbb-a3bf-13cdf2a7373e_small.jpg?v=1700691687"></v-img>
-            </div>
-
-            <div class="d-flex w-100 justify-space-between">
-              <div class="d-flex flex-column justify-center ml-4">
-                <div class="font-weight-bold">
-                  Tech T-Shirt
-                </div>
-                <div class="text-subtitle-2 font-weight-light">
-                  Preta / PP
-                </div>
-              </div>
-
-              <div class="text-subtitle-2 font-weight-regular d-flex align-center">
-                R$ 159,00
-              </div>
-            </div>
-          </div> -->
         </div>
 
         <template v-if="freteData?.price || freteData?.price == 0 && step > 1">
@@ -844,6 +734,7 @@
 
 <script setup>
 import { ref, reactive, watch, computed, onBeforeMount } from 'vue';
+
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from "pinia";
 import { vMaska } from "maska"
@@ -881,6 +772,8 @@ import { useCartStore, useAuthStore } from "@/store/store";
 
 import { getUserCart, clearUserCart, getProductsDetails } from "@/data/cart"
 import { createOrder } from "@/data/order"
+
+import { getUserAddresses } from "@/data/address"
 
 import formatPrice from "@/utils/formatPrice";
 import generateShippingPrice from "@/utils/generateShippingPrice";
@@ -1074,6 +967,7 @@ const shipping = reactive({
   telefone: "",
   newsletter: true,
   wpp: true,
+  /*   telefone: "", */
   nome: "",
   sobrenome: "",
   cpf: "",
@@ -1397,9 +1291,25 @@ watch(paymentMethodRatio, (newMethod) => {
   }
 });
 
+const userAddresses = ref([]);
+
+const indexMainUserAddress = computed(() => {
+  const index = userAddresses.value.findIndex(address => address.main === true);
+  return index !== -1 ? index : -1;
+});
+
+const selectedUserAddressIndex = ref();
+
 onBeforeMount(async () => {
   userId.value = authStore.getUserId();
-  cartMethod.value = userId.value ? 'online' : 'local';
+
+  if (userId.value) {
+    userAddresses.value = await getUserAddresses(userId.value);
+
+    cartMethod.value = 'online';
+  } else {
+    cartMethod.value = 'local';
+  }
 
   await loadCart(userId.value);
 
@@ -1423,6 +1333,28 @@ onBeforeMount(async () => {
       lastShippingCep.value = shipping.cep
     }
   }
+  else if (indexMainUserAddress.value != -1) {
+    const mainAddress = userAddresses.value[indexMainUserAddress.value];
+
+    Object.assign(shipping, {
+      email: authStore.getUserEmail(),
+      telefone: mainAddress.telefone,
+      newsletter: false,
+      wpp: false,
+      nome: mainAddress.nome,
+      sobrenome: mainAddress.sobrenome,
+      cpf: mainAddress.cpf,
+      endereco: mainAddress.endereco,
+      numero: mainAddress.numero,
+      bairro: mainAddress.bairro,
+      complemento: mainAddress.complemento,
+      cidade: mainAddress.cidade,
+      estado: estados.find(e => e.sigla.toLowerCase() == mainAddress.estado.sigla.toLowerCase()),
+      cep: mainAddress.cep
+    });
+
+    displayAddressPartialForm.value = true;
+  }
 
   let stepParam = items.value.find(item => item.step === parseInt(route.query.step));
   if (stepParam?.step == 1 || stepParam?.step == 2) {
@@ -1443,32 +1375,6 @@ onBeforeMount(async () => {
     updateStep(0);
     step.value = 0;
   }
-
-  /* switch (stepParam?.step) {
-    case 1:
-
-
-      if (!isShippingDataValid.value) {
-        lockFreteBreadcrum(true);
-
-        updateStep(0);
-        step.value = 0;
-      }
-      else {
-        lockFreteBreadcrum(false);
-        updateStep(1);
-        step.value = 1;
-      }
-
-      break;
-    case 2:
-
-      break;
-    default:
-      updateStep(0);
-      step.value = 0;
-      break;
-  } */
 
   setTimeout(() => {
     render.value = true;

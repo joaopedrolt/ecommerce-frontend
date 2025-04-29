@@ -11,6 +11,9 @@ export const useAuthStore = defineStore("auth", {
     setUserState(userData) {
       this.user = userData ? { email: userData.email, uid: userData.uid } : null;
     },
+    getUserEmail() {
+      return this.user && this.user.email ? this.user.email : null;
+    },
     getUserId() {
       return this.user && this.user.uid ? this.user.uid : null;
     }

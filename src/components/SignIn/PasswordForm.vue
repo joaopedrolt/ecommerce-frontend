@@ -1,8 +1,8 @@
 <template>
-  <Presence>
-    <Motion tag="div" style="width: 100%;" v-show="showForm" :initial="{ opacity: 0, width: '100%' }"
+  <TransitionGroup>
+    <Motion key="update" tag="div" style="width: 100%;" v-show="showForm" :initial="{ opacity: 0, width: '100%' }"
       :animate="{ opacity: 1 }" :exit="{ opacity: 0, width: '100%', scale: 0.6 }"
-      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }">
+      :transition-="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }">
       <v-form ref="passwordForm" class="signin-form-container" @submit.prevent>
         <div class="signin-content">
           <SignInHeader title="Criar Senha" subtitle="Insira uma senha para sua conta" />
@@ -46,7 +46,28 @@
         </div>
       </v-form>
     </Motion>
-  </Presence>
+
+    <Motion key="updated" tag="div" style="width: 100%;" v-show="!showForm && passwordUpdated && typeQuery == 'recover'"
+      :initial="{ opacity: 0, width: '100%' }" :animate="{ opacity: 1 }"
+      :exit="{ opacity: 0, width: '100%', scale: 0.6 }"
+      :transition="{ delay: 0.5, duration: 0.3, easing: 'ease-in-out' }">
+      <div class="signin-form-container">
+        <div class="signin-content">
+          <div class="d-flex justify-center" style="height: 100%; width: 100%;">
+            <v-icon size="80" class="pb-4" style=" flex: 2;">mdi-check-circle</v-icon>
+            <div class="d-flex flex-column justify-center align-center" style="height: 100%; flex: 6;">
+              <SignInHeader title="Senha Alterada" subtitle="Sua senha foi alterada com sucesso!" />
+            </div>
+          </div>
+
+          <v-btn @click="handleTabClose" class="text-subtitle-1 font-weight-regular button-color button-light mb-4"
+            height="45px" width="100%" variant="flat" :ripple="false">
+            Continuar
+          </v-btn>
+        </div>
+      </div>
+    </Motion>
+  </TransitionGroup>
 </template>
 
 <script setup>
@@ -63,10 +84,13 @@ import { passwordRules, emailRules } from "@/utils/rules";
 import ValidationFiller from '@/components/ValidationFiller.vue';
 import SignInHeader from "./SignInHeader.vue";
 
-import signUp from "@/auth/signUp"
 import updatePassword from "@/auth/updatePassword"
+import { updatePassword as updatePasswordDB } from "@/data/user"
+
+import signUp from "@/auth/signUp"
 import signOut from "@/auth/signOut";
 import { recoverPasswordIn } from "@/auth/recoverPassword"
+import { set } from "@vueuse/core";
 
 const router = useRouter();
 const route = useRoute()
@@ -74,6 +98,8 @@ const route = useRoute()
 const fromQuery = computed(() => route.query.from)
 const typeQuery = computed(() => route.query.type)
 const emailQuery = computed(() => route.query.email)
+
+const passwordUpdated = ref(false);
 
 const url = computed(() => window.location.href);
 
@@ -143,18 +169,18 @@ const handleSubmitPasswordFormClick = async () => {
 
   if (valid) {
     if (typeQuery.value == "recover") {
-      alert("Recuperar senha");
       const { success, user, error } = await recoverPasswordIn(url.value, signInEmailInput.value);
 
       if (success) {
-        alert("Senha recuperada com sucesso!");
         valid = await updatePassword(user, passwordInputValue.value);
 
         if (valid) {
-          alert("popo");
           await signOut()
 
-          router.push({ name: "EmailValidation" });
+          passwordUpdated.value = true;
+          showForm.value = false;
+
+          updatePasswordDB(signInEmailInput.value, passwordInputValue.value);
           return;
         }
         else {
@@ -188,6 +214,12 @@ const handleSubmitPasswordFormClick = async () => {
   }
 
   loading.value = false;
+};
+
+const handleTabClose = () => {
+  /*   window.close(); */
+
+  router.push({ name: "EmailValidation" });
 };
 
 watch(passwordInputValue, () => {
