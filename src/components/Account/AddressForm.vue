@@ -1,6 +1,14 @@
 <template>
     <div class="d-flex align-center" style="min-height: 100vh;">
-        <div class="container-limit container-size-padding Address-form">
+        <div class="container-limit container-size-padding floating-form">
+            <div class="d-flex">
+                <v-btn @click="handleGoBack" elevation="0" class="font-weight-regular button-color button-dark "
+                    variant="flat" style="font-size: 0.72rem; padding-left: 0; padding-right: 8px;">
+                    <v-icon style="font-size: 1.5rem !important;" icon="mdi-chevron-left"></v-icon>
+                    Voltar
+                </v-btn>
+            </div>
+
             <v-card-title class="text-center mb-3">CADASTRAR ENDEREÇO</v-card-title>
 
             <v-form ref="addressForm" validate-on="layz">
@@ -93,7 +101,7 @@
                     </div>
                 </div>
 
-                <v-checkbox v-if="addressId == null" class="mb-5" id="main" v-model="address.main"
+                <v-checkbox v-if="addressId == null && !isFirstAddressForUser" class="mb-5" id="main" v-model="address.main"
                     :disabled="loadingAddress" density="compact" hide-details>
                     <template v-slot:label>
                         <div class="d-flex text-subtitle-2 font-weight-regular mr-1 pl-1"
@@ -117,7 +125,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onBeforeMount } from "vue";
+import { ref, reactive, onBeforeMount, computed } from "vue";
 import {
     nomeRules,
     sobrenomeRules,
@@ -149,13 +157,18 @@ import getEstados from '@/utils/getEstados';
 
 import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
 
-import { createAddress, getAddress, updateAddress } from "@/data/address"
+import { createAddress, getAddress, updateAddress, checkFirstAddressForUser } from "@/data/address"
+import { tr } from "vuetify/lib/locale/index.mjs";
 
 const router = useRouter();
 const route = useRoute();
 
+const queryCheckout = computed(() => route.query.checkout)
+
 const userId = ref();
 const authStore = useAuthStore();
+
+const isFirstAddressForUser = ref(true);
 
 const addressId = ref();
 
@@ -194,6 +207,15 @@ const addressFormValidation = reactive({
 const estados = getEstados();
 
 const loadingAddress = ref(false);
+
+const handleGoBack = () => {
+    router.push({
+        name: "AccountOverview",
+        query: queryCheckout.value === 'true' ? { checkout: true } : {}
+    });
+
+    return;
+}
 
 const clearAddressDetails = () => {
     address.numero = "";
@@ -241,12 +263,6 @@ const loadAddressDetails = async () => {
 }
 
 const handleCepBlur = async () => {
-    /*    if (step.value == 0 && displayAddressPartialForm.value) {
-           setShippingFormLoading(true);
-            await loadAddressDetails();
-           setShippingFormLoading(false);
-       } */
-
     await loadAddressDetails();
 }
 
@@ -272,9 +288,7 @@ const handleSaveAddress = async () => {
         const response = !addressId.value ? await createAddress(addressData) : await updateAddress(addressData);
 
         if (response) {
-            router.push({
-                name: "AccountOverview",
-            });
+            handleGoBack();
         }
     }
 };
@@ -297,6 +311,14 @@ onBeforeMount(async () => {
         });
     }
 
+    try {
+        const response = await checkFirstAddressForUser(userId.value);
+        isFirstAddressForUser.value = response;
+    } catch (error) {
+        console.error("Error checking first address for user:", error);
+        isFirstAddressForUser.value = false;
+    }
+
     const addressIdParam = route.params.addressId
 
     if (addressIdParam) {
@@ -311,7 +333,7 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 @import "@/styles/global.scss";
 
-.Address-form {
+.floating-form {
     padding-bottom: 120px;
 
     @media (max-width: $phone) {

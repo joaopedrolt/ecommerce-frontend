@@ -117,7 +117,7 @@ import { Motion, Presence } from "motion/vue";
 import signIn from "@/auth/signIn.js";
 import { recoverPasswordOut } from "@/auth/recoverPassword"
 
-import { sendOtpEmail } from "@/services/otp";
+import { sendOtpEmail } from "@/services/emailService";
 import { set } from "@vueuse/core";
 
 const router = useRouter();

@@ -16,7 +16,8 @@
 
       <template v-if="window == 0">
         <div class="pl-1 d-flex align-center h-100 logo-black">
-          <v-img src="/logo.svg" width="120px"></v-img>
+          <!--  <v-img src="/logo.svg" width="120px"></v-img> -->
+          <logo width="120px" height="auto" />
         </div>
       </template>
 
@@ -113,6 +114,8 @@
 import { ref, watch } from "vue";
 import { useDrawerStore } from "@/store/store.js";
 import { storeToRefs } from "pinia";
+
+import Logo from "@/components/Logo.vue";
 
 const drawerStore = useDrawerStore();
 const { displayNavigationDrawer } = storeToRefs(drawerStore);

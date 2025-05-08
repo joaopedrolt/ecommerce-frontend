@@ -28,7 +28,7 @@
             {{ paymentMessageMap[order.payment.method].title || 'Pedido Confirmado!' }}
           </div>
 
-          <ul class="my-6" style="list-style-position: inside; padding-left: 7px;">
+          <ul class="mb-6 mt-3" style="list-style-position: inside; padding-left: 7px;">
             <li class="text-subtitle-2 font-weight-regular mb-2">
               <span class="text-subtitle-2 font-weight-regular mt-1">
                 {{ paymentMessageMap[order.payment.method].subtitle || 'Recebemos seu pedido com sucesso e ele já está '
@@ -45,7 +45,7 @@
 
         </div>
 
-        <div class="mobile-expansion-summary">
+        <div class="mobile-expansion-summary mb-5">
           <v-expansion-panels v-model="mobileDetailsPanel" :flat="true">
             <v-expansion-panel elevation="0" height="40">
               <v-expansion-panel-title>
@@ -77,7 +77,7 @@
                     </div>
 
                     <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
-                      {{ order.shipping.nome }}
+                      {{ order.shipping.nome }} {{ order.shipping.sobrenome }}
                     </div>
                   </div>
 
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
-                      jpltgamer@gmail.com
+                      {{ order.shipping.email }}
                     </div>
                   </div>
 
@@ -124,7 +124,7 @@
           </v-expansion-panels>
         </div>
 
-        <div class="d-flex flex-column justify-space-between mb-5 mt-5">
+        <div class="d-flex flex-column justify-space-between mb-5">
           <div class="text-h5 font-weight-regular">
             Pagamento
           </div>
@@ -134,7 +134,7 @@
           </span>
         </div>
 
-        <div class="w-100 d-flex flex-column text-subtitle-2 font-weight-regular mb-10" style="gap: 10px;">
+        <div class="w-100 d-flex flex-column text-subtitle-2 font-weight-regular mb-5" style="gap: 10px;">
           <div class="d-flex align-center">
             <v-icon class="mr-3">mdi-credit-card-outline</v-icon>
             <div class="d-flex align-center">
@@ -217,7 +217,8 @@
           </v-tooltip>
         </template>
 
-        <div class="checkout-navigation-container">
+        <div class="checkout-navigation-container"
+          :style="formattedMethod == 'Cartão de Crédito' ? 'margin-top: 60px' : ''">
           <div class="previous-section-btn">
             <v-icon icon="mdi-chevron-left"></v-icon>
             <button @click="handlePageExit('Home')" class="d-flex align-center text-subtitle-2 font-weight-regular"
@@ -288,7 +289,7 @@
             </div>
 
             <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
-              {{ order.shipping.nome }}
+              {{ order.shipping.nome }} {{ order.shipping.sobrenome }}
             </div>
           </div>
 
@@ -299,7 +300,7 @@
             </div>
 
             <div class="ml-2 text-subtitle-2 font-weight-regular d-flex align-center">
-              jpltgamer@gmail.com
+              {{ order.shipping.email }}
             </div>
           </div>
 

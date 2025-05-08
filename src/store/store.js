@@ -90,6 +90,7 @@ export const useCartStore = defineStore("cart", {
       estado: null,
       cep: "",
       price: 0.0,
+      save: false,
     }),
 
     isShippingDataValid: useStorage(cartlocalStorageKeys[1], false),

@@ -2,8 +2,9 @@
   <v-app-bar class="nav-component" absolute style="z-index: 1003 !important" :elevation="0" height="75px">
     <div class="container-limit container-size-padding navbar-padding nav-container">
       <div id="navbar-anchor" class="h-100 w-100 d-flex justify-space-between align-center">
-        <div @click="handleLogoClick" class="h-100 logo-black">
-          <v-img src="/logo.svg" width="120px" height="75px"></v-img>
+        <div class="d-flex align-center h-100 logo-black">
+          <!-- <v-img src="/logo.svg" width="120px" height="75px"></v-img> -->
+          <logo width="120px" height="40px" />
         </div>
 
         <div class="nav-side-container h-100">
@@ -52,12 +53,13 @@ import { ref } from "vue";
 import { useDrawerStore, useSearchStore, useAuthStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 
-
 import { useRouter } from "vue-router";
 
 import Search from "./Search.vue";
 
 import signOut from "@/auth/signOut";
+
+import Logo from "@/components/Logo.vue";
 
 const items = [
   { title: 'Click Me' },
@@ -88,12 +90,6 @@ const displayCartDrawerr = () => {
 
 const displaySearchOverlay = () => {
   searchStore.displaySearchOverlayx();
-};
-
-const handleLogoClick = () => {
-  router.push({
-    name: "Home",
-  });
 };
 
 const handleSignInClick = () => {

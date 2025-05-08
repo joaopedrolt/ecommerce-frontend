@@ -197,6 +197,18 @@ const routes = [
       }
     ],
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: DefaultLayout,
+    children: [
+      {
+        path: "",
+        name: "NotFound",
+        component: () => import("@/views/Default/NotFound.vue"),
+      }
+    ]
+  },
 ];
 
 

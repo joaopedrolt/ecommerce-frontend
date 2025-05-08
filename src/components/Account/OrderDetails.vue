@@ -2,6 +2,14 @@
     <div class="d-flex align-center" style="min-height: 100vh;">
         <div v-if="loading" class="order-hist container-limit container-size-padding pt-7 pb-16 d-flex flex-column">
             <div class="w-100">
+                <div class="d-flex">
+                    <v-btn @click="handleGoBack" elevation="0" class="font-weight-regular button-color button-dark "
+                        variant="flat" style="font-size: 0.72rem; padding-left: 0; padding-right: 8px;">
+                        <v-icon style="font-size: 1.5rem !important;" icon="mdi-chevron-left"></v-icon>
+                        Voltar
+                    </v-btn>
+                </div>
+
                 <v-card-title class="text-center mb-9">FURVANA-1041668-00022</v-card-title>
 
                 <div class="bg-white text--primary">
@@ -154,13 +162,16 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, reactive } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onBeforeMount, reactive, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import { getOrder, setOrderStatus } from '@/data/order';
 import formatPrice from "@/utils/formatPrice";
 
 const route = useRoute();
+const router = useRouter();
+
+const queryCheckout = computed(() => route.query.checkout)
 
 const order = ref();
 const orderId = ref();
@@ -212,6 +223,15 @@ const handleConfirmDelivery = async (orderId) => {
     await setOrderStatus(orderId, 'Pedido Recebido')
     await loadUserOrder(orderId)
     loadingConfirmDelivery.value = false;
+}
+
+const handleGoBack = () => {
+    router.push({
+        name: "AccountOverview",
+        query: queryCheckout.value === 'true' ? { checkout: true } : {}
+    });
+
+    return;
 }
 
 onBeforeMount(async () => {

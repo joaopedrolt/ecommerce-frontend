@@ -1,6 +1,23 @@
 <template>
   <div style="min-height: 100vh; position: relative;" class="d-flex align-center">
     <div class="container-limit container-size-padding" style="padding-bottom: 125px;">
+
+      <div class="d-flex mb-1 pt-5 mb-3">
+        <v-btn @click="handleGoBack" elevation="0" class="font-weight-regular button-color button-dark " variant="flat"
+          style="font-size: 0.72rem; padding-left: 0; padding-right: 8px;">
+          <v-icon style="font-size: 1.5rem !important;" icon="mdi-chevron-left"></v-icon>
+          {{ queryCheckout == 'true' ? "Voltar Para sua Compra" : "Voltar para Loja" }}
+        </v-btn>
+      </div>
+
+      <!-- <div class="d-flex align-center">
+          <v-icon icon="mdi-chevron-left"></v-icon>
+          <button class="d-flex align-center text-subtitle-2 font-weight-regular text-overline"
+            style="opacity: 0.65; cursor: pointer">
+            Voltar para sua compra
+          </button>
+        </div> -->
+
       <div class="d-flex align-center flex-column mb-16">
         <v-avatar class="mb-2" color="surface-variant">J.T</v-avatar>
         <div class="text-center text-overline" style="font-size: 0.91rem !important;">{{ user.email }}
@@ -173,8 +190,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeMount, reactive } from 'vue';
-import { useRouter } from "vue-router";
+import { ref, watch, onBeforeMount, reactive, computed } from 'vue';
+import { useRouter, useRoute } from "vue-router";
 
 import { useAuthStore } from '@/store/store';
 
@@ -185,6 +202,9 @@ import { storeToRefs } from 'pinia';
 import CircularLoading from "@/components/CircularLoading.vue";
 
 const router = useRouter();
+const route = useRoute();
+
+const queryCheckout = computed(() => route.query.checkout)
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -194,28 +214,11 @@ const showOrderByDropdown = ref(false);
 
 const selectedItem = ref(0);
 
-/* const handleScroll = () => {
-  showOrderByDropdown.value = false;
-}; */
-
-/* watch(showOrderByDropdown, (newValue) => {
- 
-}); */
-
-/* isDefaultAddress */
-
 const addresses = ref([]);
 const loadingAddresses = ref(false);
 
 const orders = ref([]);
 const loadingOrders = ref(false);
-
-/* {
-  orderId: "GROWTH-1041668-00022",
-  date: "09/10/2023 00:20:00",
-  price: "R$130,00",
-  status: "Pedido enviado",
-}, */
 
 const headers = [
   {
@@ -233,17 +236,14 @@ const headers = [
 const items = [`Maior Preço`, `Menor Preço`, `Nossa Seleção`];
 
 const handleAddAddress = (address) => {
-  if (address) {
-    router.push({
-      name: "EditAddress",
-      params: { addressId: address.id }
-    });
-
-    return;
-  }
+  const routeName = address ? "EditAddress" : "NewAddress";
+  const params = address ? { addressId: address.id } : {};
+  const query = queryCheckout.value === 'true' ? { checkout: true } : {};
 
   router.push({
-    name: "NewAddress",
+    name: routeName,
+    params,
+    query
   });
 }
 
@@ -268,6 +268,22 @@ const handleOrderDetails = (order) => {
     name: "OrderDetails",
     params: { orderId: order.id }
   });
+}
+
+const handleGoBack = () => {
+  if (queryCheckout.value == 'true') {
+    router.push({
+      name: "Checkout",
+    });
+
+    return;
+  }
+
+  router.push({
+    name: "Home",
+  });
+
+  return;
 }
 
 const loadUserAddresses = async (userId) => {

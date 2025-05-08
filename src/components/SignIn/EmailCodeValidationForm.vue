@@ -61,7 +61,7 @@ import SignInHeader from "./SignInHeader.vue";
 
 import { Motion, Presence } from "motion/vue";
 
-import { sendOtpEmail } from "@/services/otp";
+import { sendOtpEmail } from "@/services/emailService";
 
 const router = useRouter();
 const route = useRoute();

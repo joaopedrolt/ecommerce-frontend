@@ -6,7 +6,8 @@
         <!-- Header Left -->
         <div class="splitted-header desktop mb-4">
           <div style="height: 33px; width: 160px;">
-            <v-img class="h-100 w-100" src="/logo.svg"></v-img>
+            <!-- <v-img class="h-100 w-100" src="/logo.svg"></v-img> -->
+            <logo width="100%" height="100%" />
           </div>
           <div>
             <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
@@ -107,17 +108,26 @@
                       </span>
 
                       <a @click="handleLogin()"
-                        class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
+                        class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1"
+                        style="cursor: pointer;">
                         Clique aqui para fazer login agora!
                       </a>
                     </template>
-                    <template v-else-if="cartMethod == 'online'">
+                    <template v-else-if="cartMethod == 'online' && userAddresses?.length > 0">
 
                       <v-dialog transition="fade-transition" width="auto" scrollable>
                         <template v-slot:activator="{ props: activatorProps }">
-                          <div v-bind="activatorProps"
-                            class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1">
-                            Clique aqui selecionar um endereço de entrega já cadastrado!
+                          <div>
+                            <span class="text-subtitle-2 font-weight-regular mt-1"
+                              style="opacity: 0.6; display: inline;">
+                              Você possui endereços cadastrados.
+                            </span>
+
+                            <div v-bind="activatorProps"
+                              class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1"
+                              style="cursor: pointer; display: inline;">
+                              Clique aqui para selecionar um endereço.
+                            </div>
                           </div>
                         </template>
 
@@ -133,10 +143,11 @@
                                   </span>
                                 </div>
 
-                                <div class="text-center font-weight-regular mt-1"
-                                  style="font-size: 0.8rem; opacity: 0.6; white-space: break-spaces; word-break: break-word; line-height: 1;">
-                                  Voce pode adicionar um novo endereço no painel de usuario, ou ao finalizar a compra
-                                  com um novo endereço.
+                                <div @click="handleAccountOverview()"
+                                  class="text-center text-decoration-underline font-weight-regular"
+                                  style="font-size: 0.8rem; opacity: 0.6; white-space: break-spaces; word-break: break-word; line-height: 1; cursor: pointer;">
+                                  Você pode gerenciar, editar ou adicionar novos endereços à sua conta a qualquer
+                                  momento clicando aqui.
                                 </div>
                               </div>
                             </v-card-title>
@@ -148,8 +159,7 @@
 
                                 <template v-for="(address, index) in userAddresses" :key="index">
                                   <v-list-item class="text-center" style="padding-top: 23px; padding-bottom: 23px; "
-                                    @click="isActive.value = false"
-                                    :class="{ 'bg-light-blue-lighten-5': selectedIndex === index }">
+                                    @click="isActive.value = false; handleUserAddressClick(index)">
                                     <v-list-item-title>
                                       <div
                                         class="d-flex align-start justify-center text-subtitle-2 font-weight-regular mb-1">
@@ -185,6 +195,17 @@
                         </template>
                       </v-dialog>
 
+                    </template>
+                    <template v-else-if="cartMethod == 'online' && userAddresses?.length == 0">
+                      <span class="text-subtitle-2 font-weight-regular mt-1" style="opacity: 0.6;">
+                        Você ainda não tem endereços cadastrados.
+                      </span>
+
+                      <a @click="handleAccountOverview()"
+                        class="font-weight-regular text-subtitle-2 text-decoration-underline mt-1"
+                        style="cursor: pointer;">
+                        Clique aqui para cadastrar um endereço agora!
+                      </a>
                     </template>
                   </div>
                 </div>
@@ -517,7 +538,8 @@
 
           <v-btn @click="handleNextStep()"
             class="next-section-btn text-subtitle-1 font-weight-regular button-color button-light" color="#111111"
-            height="45px" width="100%" variant="flat" :ripple="false" :loading="isShippingFormLoading">
+            height="45px" width="100%" variant="flat" :ripple="false"
+            :loading="isShippingFormLoading || isLoadingPayment">
             <template v-if="step == 0">Continuar com o Frete</template>
             <template v-if="step == 1">Continuar Pagamento</template>
             <template v-if="step == 2">Finalizar a compra</template>
@@ -540,7 +562,8 @@
 
       <div class="splitted-header mobile mb-2">
         <div style="height: 33px; width: 160px;">
-          <v-img class="h-100 w-100" src="/logo.svg"></v-img>
+          <!-- <v-img class="h-100 w-100" src="/logo.svg"></v-img> -->
+          <logo width="100%" height="100%" />
         </div>
         <div>
           <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
@@ -650,7 +673,8 @@
       <div class="wrapper">
         <div class="splitted-header mobile mb-7">
           <div style="height: 33px; width: 160px;">
-            <v-img class="h-100 w-100" src="/logo.svg"></v-img>
+            <!--  <v-img class="h-100 w-100" src="/logo.svg"></v-img> -->
+            <logo width="100%" height="100%" />
           </div>
           <div>
             <v-breadcrumbs class="pl-0 text-subtitle-2 font-weight-regular" :items="items">
@@ -768,18 +792,21 @@ import {
 } from "@/utils/masks";
 
 import ValidationFiller from '@/components/ValidationFiller.vue';
+import Logo from "@/components/Logo.vue";
 import { useCartStore, useAuthStore } from "@/store/store";
 
 import { getUserCart, clearUserCart, getProductsDetails } from "@/data/cart"
 import { createOrder } from "@/data/order"
 
-import { getUserAddresses } from "@/data/address"
+import { getUserAddresses, createAddress, checkIfAddressExists } from "@/data/address"
 
 import formatPrice from "@/utils/formatPrice";
 import generateShippingPrice from "@/utils/generateShippingPrice";
 
 import { cepValidation, searchAddressByCEP } from "@/utils/cep.js";
 import getEstados from '@/utils/getEstados';
+
+import { sendOrderEmail } from "@/services/emailService";
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
@@ -927,6 +954,7 @@ const loadCart = async (userId) => {
 
 const clearCart = async () => {
   if (cartMethod.value == 'online') {
+    cartStore.clearCartLocalStorage();
     await clearUserCart(userId.value)
   }
   else {
@@ -956,6 +984,61 @@ const handlePreviousStep = () => {
 }
 
 // Shipping Form
+const selectedUserAddress = ref();
+const selectedUserAddressIndex = ref();
+
+const userAddresses = ref([]);
+
+const indexMainUserAddress = computed(() => {
+  const index = userAddresses.value.findIndex(address => address.main === true);
+  return index !== -1 ? index : -1;
+});
+
+const clearAddress = () => {
+  Object.assign(shipping, {
+    email: "",
+    telefone: "",
+    newsletter: true,
+    wpp: true,
+    nome: "",
+    sobrenome: "",
+    cpf: "",
+    endereco: "",
+    numero: "",
+    bairro: "",
+    complemento: "",
+    cidade: "",
+    estado: null,
+    cep: "",
+    save: false,
+  });
+}
+
+const handleUserAddressClick = (userAddressIndex) => {
+  clearAddress();
+
+  const selectedAddress = userAddresses.value[userAddressIndex];
+
+  Object.assign(shipping, {
+    email: authStore.getUserEmail(),
+    telefone: selectedAddress.telefone,
+    newsletter: false,
+    wpp: false,
+    nome: selectedAddress.nome,
+    sobrenome: selectedAddress.sobrenome,
+    cpf: selectedAddress.cpf,
+    endereco: selectedAddress.endereco,
+    numero: selectedAddress.numero,
+    bairro: selectedAddress.bairro,
+    complemento: selectedAddress.complemento,
+    cidade: selectedAddress.cidade,
+    estado: estados.find(e => e.sigla.toLowerCase() == selectedAddress.estado.sigla.toLowerCase()),
+    cep: selectedAddress.cep
+  });
+
+  displayAddressPartialForm.value = true;
+}
+
 const shippingForm = ref();
 const displayAddressPartialForm = ref(false);
 const isShippingFormLoading = ref(false);
@@ -978,7 +1061,7 @@ const shipping = reactive({
   cidade: "",
   estado: null,
   cep: "",
-  save: true,
+  save: false,
 });
 
 const shippingFormValidation = reactive({
@@ -1119,6 +1202,13 @@ const handleLogin = () => {
   });
 }
 
+const handleAccountOverview = () => {
+  router.push({
+    name: "AccountOverview",
+    query: { checkout: true }
+  });
+}
+
 // Frete Form
 const freteMethodRatio = ref(null);
 
@@ -1147,6 +1237,8 @@ const moveToPaymenteSection = (method) => {
 }
 
 // Payment Form
+const isLoadingPayment = ref(false);
+
 const maxInstallments = 3;
 
 const paymentMethodRatio = ref([]);
@@ -1170,10 +1262,10 @@ const payment = reactive({
   installments: null
 });
 
-const loadingPix = ref(false);
 
 const processPayment = async () => {
   let valid = true;
+  let statusFormatted = "Pedido Efetuado";
 
   const paymentMethod = paymentMethodRatio.value ? paymentMethodRatio.value[0] : null;
 
@@ -1203,6 +1295,8 @@ const processPayment = async () => {
   }
 
   if (valid) {
+    isLoadingPayment.value = true;
+
     const order = {
       payment: {
         method: paymentMethod,
@@ -1226,6 +1320,7 @@ const processPayment = async () => {
       products: products.value.length >= 0 ?
         products.value.map((product) => ({
           productId: product.id,
+          title: product.title,
           price: product.price,
           quantity: product.quantity
         })) : [],
@@ -1233,19 +1328,67 @@ const processPayment = async () => {
 
       userId: userId.value,
       createdAt: new Date(),
-      status: 'Pedido Efetuado'
+      status: statusFormatted
     }
 
     const responseOrderId = await createOrder(order);
 
     if (responseOrderId) {
-      await clearCart();
+      clearCart();
+
+      if (shippingData.value.save) {
+        const addressToSave = {
+          bairro: shippingData.value.bairro,
+          cep: shippingData.value.cep,
+          cidade: shippingData.value.cidade,
+          complemento: shippingData.value.complemento,
+          cpf: shippingData.value.cpf,
+          endereco: shippingData.value.endereco,
+          estado: shippingData.value.estado,
+          main: false,
+          nome: shippingData.value.nome,
+          numero: shippingData.value.numero,
+          sobrenome: shippingData.value.sobrenome,
+          telefone: shippingData.value.telefone,
+          userId: userId.value,
+        };
+
+        const existsResponse = await checkIfAddressExists(addressToSave);
+        if (!existsResponse) {
+          await createAddress(addressToSave);
+        } else {
+          console.log("Address already exists");
+        }
+      }
+
+      const methodMap = {
+        pix: "Pix",
+        boleto: "Boleto Bancário",
+        card: "Cartão de Crédito"
+      };
+
+      const formattedMethod = methodMap[order.payment.method]
+      await sendOrderEmail(
+        {
+          ...order,
+          id: responseOrderId,
+          payment: null,
+          paymentMethod: formattedMethod,
+          userId: null,
+          products: order.products.map(product => ({
+            title: product.title,
+            quantity: product.quantity
+          })),
+        }
+      );
 
       router.push({
         name: "Payment",
         query: { o: responseOrderId }
       });
     }
+
+    isLoadingPayment.value = false;
   }
 }
 
@@ -1281,24 +1424,7 @@ watch(paymentMethodRatio, (newMethod) => {
 
     loadInstallments();
   }
-
-  if (newMethod == "pix") {
-    loadingPix.value = true;
-
-    setTimeout(() => {
-      loadingPix.value = false;
-    }, 3000);
-  }
 });
-
-const userAddresses = ref([]);
-
-const indexMainUserAddress = computed(() => {
-  const index = userAddresses.value.findIndex(address => address.main === true);
-  return index !== -1 ? index : -1;
-});
-
-const selectedUserAddressIndex = ref();
 
 onBeforeMount(async () => {
   userId.value = authStore.getUserId();
@@ -1323,7 +1449,8 @@ onBeforeMount(async () => {
 
   if (isShippingDataValid.value) {
     Object.assign(shipping, shippingData.value);
-    displayAddressPartialForm.value = true;
+
+    alert("OI")
 
     if (shipping.numero == null || shipping.numero.length == 0) {
       cartStore.setShippingDataStatus(false);
@@ -1334,26 +1461,34 @@ onBeforeMount(async () => {
     }
   }
   else if (indexMainUserAddress.value != -1) {
-    const mainAddress = userAddresses.value[indexMainUserAddress.value];
+    if (
+      !shippingData.value ||
+      !shippingData.value.nome ||
+      !shippingData.value.email ||
+      !shippingData.value.cep
+    ) {
+      const mainAddress = userAddresses.value[indexMainUserAddress.value];
 
-    Object.assign(shipping, {
-      email: authStore.getUserEmail(),
-      telefone: mainAddress.telefone,
-      newsletter: false,
-      wpp: false,
-      nome: mainAddress.nome,
-      sobrenome: mainAddress.sobrenome,
-      cpf: mainAddress.cpf,
-      endereco: mainAddress.endereco,
-      numero: mainAddress.numero,
-      bairro: mainAddress.bairro,
-      complemento: mainAddress.complemento,
-      cidade: mainAddress.cidade,
-      estado: estados.find(e => e.sigla.toLowerCase() == mainAddress.estado.sigla.toLowerCase()),
-      cep: mainAddress.cep
-    });
+      Object.assign(shipping, {
+        email: authStore.getUserEmail(),
+        telefone: mainAddress.telefone,
+        newsletter: false,
+        wpp: false,
+        nome: mainAddress.nome,
+        sobrenome: mainAddress.sobrenome,
+        cpf: mainAddress.cpf,
+        endereco: mainAddress.endereco,
+        numero: mainAddress.numero,
+        bairro: mainAddress.bairro,
+        complemento: mainAddress.complemento,
+        cidade: mainAddress.cidade,
+        estado: estados.find(e => e.sigla.toLowerCase() == mainAddress.estado.sigla.toLowerCase()),
+        cep: mainAddress.cep,
+        save: false,
+      });
 
-    displayAddressPartialForm.value = true;
+      displayAddressPartialForm.value = true;
+    }
   }
 
   let stepParam = items.value.find(item => item.step === parseInt(route.query.step));

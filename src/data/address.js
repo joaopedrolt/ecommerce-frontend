@@ -1,14 +1,26 @@
 import { db, collectionNames } from '../firebase';
 import { addDoc, collection, where, query, getDocs, getDoc, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
+export const checkFirstAddressForUser = async (userId) => {
+    const addressesCollection = collection(db, collectionNames.address);
+    const addressesQuery = query(addressesCollection, where("userId", "==", userId));
+    const querySnapshot = await getDocs(addressesQuery);
+    return querySnapshot.empty;
+};
+
 export const createAddress = async (addressData) => {
     try {
+        if (await checkFirstAddressForUser(addressData.userId)) {
+            addressData.main = true;
+        }
+
         if (addressData.main) {
             await resetMainAddress(null);
         }
 
         await addDoc(collection(db, collectionNames.address), addressData);
 
+        console.log("Address created successfully!");
         return true;
     } catch (error) {
         console.error("Error creating order: ", error);
@@ -127,5 +139,29 @@ export const getUserAddresses = async (userId) => {
     } catch (error) {
         console.error("Error fetching addresses: ", error);
         return [];
+    }
+};
+
+export const checkIfAddressExists = async (addressData) => {
+    try {
+        const addressesCollection = collection(db, collectionNames.address);
+  
+        const addressesQuery = query(addressesCollection, where("cep", "==", addressData.cep));
+        const querySnapshot = await getDocs(addressesQuery);
+
+        const matchingAddress = querySnapshot.docs.some(doc => {
+            const data = doc.data();
+            console.log(data)
+
+            return data.nome === addressData.nome && 
+                   data.sobrenome === addressData.sobrenome &&
+                   data.endereco === addressData.endereco &&
+                   data.numero === addressData.numero;
+        });
+
+        return matchingAddress;
+    } catch (error) {
+        console.error("Error checking if address exists: ", error);
+        return false;
     }
 };

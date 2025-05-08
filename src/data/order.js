@@ -9,7 +9,7 @@ import formatPrice from "@/utils/formatPrice";
 export const createOrder = async (orderData) => {
     try {
         const docRef = await addDoc(collection(db, collectionNames.orders), orderData);
-        return docRef.id; 
+        return docRef.id;
     } catch (error) {
         console.error("Error creating order: ", error);
         return null;

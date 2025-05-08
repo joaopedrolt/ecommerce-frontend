@@ -4,7 +4,8 @@
       <div class="footer-column side-field brand-field">
         <div class="brand-column-wrapper">
           <div class="column-title logo-white">
-            <img style="width:120px; height:40px;" src="/logo.svg" />
+            <!-- <img style="width:120px; height:40px;" src="/logo.svg" /> -->
+            <logo width="120px" height="40px" />
           </div>
           <div class="column-components">
             <div class="text-caption opacity-text">
@@ -49,6 +50,7 @@
 
 <script setup>
 import { ref } from "vue";
+import Logo from "@/components/Logo.vue";
 
 const newsletterEmailInputValue = ref("");
 </script>

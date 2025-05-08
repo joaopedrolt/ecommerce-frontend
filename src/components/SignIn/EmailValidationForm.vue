@@ -44,7 +44,7 @@ import { emailRules } from "@/utils/rules";
 
 import { Motion, Presence } from "motion/vue";
 
-import { sendOtpEmail } from "@/services/otp";
+import { sendOtpEmail } from "@/services/emailService";
 
 import { checkEmailExists } from "@/data/user"
 
