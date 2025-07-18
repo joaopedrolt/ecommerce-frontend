@@ -119,6 +119,24 @@ const routes = [
           },
         ],
       },
+      {
+        path: "produto",
+        children: [
+          {
+            path: "cadastro",
+            name: "ProductForm",
+            component: () => import("@/views/Default/ProductForm.vue"),
+            beforeEnter(to, from, next) {
+              if (!to.query.from && from.name) {
+                next({ name: 'ProductForm', query: { from: from.name } });
+              }
+              else {
+                next();
+              }
+            },
+          },
+        ],
+      },
     ],
   },
   //Home
@@ -143,7 +161,7 @@ const routes = [
             path: ":productId",
             name: "Product",
             component: () => import("@/views/Default/Product.vue"),
-          },
+          }
         ],
       },
       {

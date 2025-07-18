@@ -369,3 +369,58 @@ export const installmentsRules = [
     return true;
   }
 ];
+
+export const imageUploadRules = [
+  (value) => {
+    if (!value) return 'Este campo é obrigatório.';
+    return true;
+  },
+  (value) => {
+    if (value) {
+      if (value.length > 0) {
+        return true;
+      }
+    }
+
+    return 'Este campo é obrigatório.';
+  }
+];
+
+export const precoRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  (value) => {
+    if (value.length == 0)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  (value) => /^\d{1,3}(\.\d{3})*,\d{2}$|^\d+,\d{2}$|^\d+$/.test(value) || 'Formato de preço inválido (ex: 20,00)',
+];
+
+export const productImageRules = [
+  (files) => {
+    if (!files || files.length === 0) {
+      return 'Pelo menos uma imagem é obrigatória';
+    }
+    if (files.length > 3) {
+      return 'Máximo de 3 imagens permitidas';
+    }
+    // Check file types
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
+    if (invalidFiles.length > 0) {
+      return 'Apenas arquivos de imagem são permitidos (JPEG, PNG, GIF, WebP)';
+    }
+    // Check file sizes (5MB limit per file)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      return 'Cada imagem deve ter no máximo 5MB';
+    }
+    return true;
+  }
+];
+

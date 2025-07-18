@@ -109,3 +109,13 @@ export const duplicateDocument = async () => {
         console.error('Error duplicating document:', error);
     }
 };
+
+export const createProduct = async (productData) => {
+    try {
+        const docRef = await addDoc(collection(db, collectionNames.products), productData);
+        return docRef.id;
+    } catch (error) {
+        console.error("Error creating product: ", error);
+        return null;
+    }
+};
