@@ -424,3 +424,15 @@ export const productImageRules = [
   }
 ];
 
+export const notEmptyRules = [
+  (value) => {
+    if (value == undefined || value == null)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  },
+  (value) => {
+    if (value.length == 0)
+      return EMPTY_FIELD_MESSAGE;
+    return true;
+  }
+];

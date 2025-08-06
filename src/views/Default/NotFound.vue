@@ -5,16 +5,20 @@
       <div class="text-overline" style="font-size: 0.8rem !important;">A página que você estava buscando não foi
         encontrada.</div>
 
-      <v-btn to="/" class="text-subtitle-2 text-uppercase font-weight-regular button-color button-light mt-4" height="45px"
-        width="100%" variant="flat" :ripple="false">
+      <v-btn to="/" class="text-subtitle-2 text-uppercase font-weight-regular button-color button-light mt-4"
+        height="45px" width="100%" variant="flat" :ripple="false">
         Voltar a página inicial
       </v-btn>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { onBeforeMount } from "vue";
 
+onBeforeMount(async () => {
+  document.title = "Não Encontrado | FURVANA";
+});
 </script>
 
 <style lang="scss" scoped>

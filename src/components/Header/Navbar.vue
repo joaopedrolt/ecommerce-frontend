@@ -19,8 +19,9 @@
             <template v-slot:activator="{ props }">
               <v-btn v-if="user && user.email.length > 0" v-bind="props" icon size="small">
                 <div class="d-flex align-center flex-column">
-                  <v-avatar density="compact" color="surface-variant" style="padding-bottom: 2px; padding-left: 2.1px;"> {{
-                    user.email.substring(0, 2).toUpperCase() }}</v-avatar>
+                  <v-avatar density="compact" color="surface-variant" style="padding-bottom: 2px; padding-left: 2.1px;">
+                    {{
+                      user.email.substring(0, 2).toUpperCase() }}</v-avatar>
                 </div>
               </v-btn>
               <v-btn v-else @click="handleSignInClick" icon size="small">
@@ -50,7 +51,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useDrawerStore, useSearchStore, useAuthStore } from "@/store/store";
+import { useDrawerStore, useSearchStore, useAuthStore, useCartStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
@@ -69,6 +70,7 @@ const items = [
 ]
 
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 const drawerStore = useDrawerStore();
 const searchStore = useSearchStore();
 const router = useRouter();
@@ -102,6 +104,7 @@ const handleSignOutClick = async () => {
   const response = await signOut();
 
   if (response) {
+    cartStore.clearCartLocalStorage();
     router.go(0);
   } else {
     alert("Não foi possivel finalizar sua sessão!");

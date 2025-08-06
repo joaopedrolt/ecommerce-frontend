@@ -3,10 +3,6 @@ import { collection, query, where, getDocs, doc, setDoc, updateDoc } from "fireb
 
 export const createUser = async (userdId, email, password) => {
     try {
-        console.log(userdId)
-        console.log(email)
-        console.log(password)
-
         const userDocRef = doc(db, collectionNames.users, userdId);
         await setDoc(userDocRef, { email, password });
 

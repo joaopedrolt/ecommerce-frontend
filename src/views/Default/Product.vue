@@ -4,17 +4,21 @@
     <template v-if="!loadingProduct">
       <div class="product-main container-size-padding desktop-padding">
         <div v-if="product.images.length" class="product-left">
-          <div class="product-header hide-desktop container-size-padding">
-            <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
+          <div class="product-header hide-desktop container-size-padding" style="display: flex; width: 100%;">
+            <div class="product-title font-weight-bold"
+              style="line-height: 1.3; text-transform: uppercase !important; flex: 1 1 0%; min-width: 0;">
               {{ product.name }}
             </div>
-            <div class="product-price mt-1">
-              <div class="final-price font-weight-regular"> {{ formatPrice(product.price) }}</div>
+            <div class="product-price mt-1" style="flex-shrink: 0; text-align: end;">
+              <div class="final-price font-weight-regular">
+                {{ formatPrice(product.price) }}
+              </div>
               <div class="gross-price font-weight-light" style="margin-top: 2.5px">
-                <s>{{ formatPrice(product.grossPrice) }}</s>
+                <s>{{ formatPrice(product.price + (product.price * 0.2)) }}</s>
               </div>
             </div>
           </div>
+
           <div class="product-images">
             <!-- <div class="product-images-grid">
             <img v-for="image in product.images.slice(0, 2)" class="product-img" :src="image" />
@@ -44,13 +48,13 @@
         </div>
         <div class="product-right container-size-padding mobile-padding">
           <div class="product-header hide-mobile">
-            <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important">
+            <div class="product-title font-weight-bold" style="line-height: 1.3; text-transform: uppercase !important;">
               {{ product.name }}
             </div>
             <div class="product-price mt-2">
               <div class="final-price font-weight-regular">{{ formatPrice(product.price) }}</div>
               <div class="gross-price font-weight-light" style="margin-top: 2.5px">
-                <s>{{ formatPrice(product.grossPrice) }}</s>
+                <s>{{ formatPrice(product.price + (product.price * 0.2)) }}</s>
               </div>
             </div>
           </div>
@@ -118,7 +122,7 @@
                   <div
                     class="w-100 h-100 d-flex flex-column text-center py-1 text-subtitle-2 font-weight-regular text-start"
                     style="opacity: 0.6;">
-                    <div class="pr-1">
+                    <div>
                       {{ product.longDescription }}
                     </div>
 
@@ -142,8 +146,8 @@
           :class="section.position == 'right' ? 'right-side' : 'left-side'">
           <div class="showcase-content d-flex flex-column align-center justify-center" style="flex: 7;">
             <div class="wrapper">
-              <div class="font-weight-bold mb-4" style="font-size: 1.6rem; max-width: 580px;">
-                {{ section.title }}
+              <div class="font-weight-bold mb-1" style="font-size: 1.6rem; max-width: 580px;">
+                {{ section.title.toUpperCase() }}
               </div>
               <div style="opacity: 0.6; padding-left: 2px;">
                 {{ section.subtitle }}
@@ -167,40 +171,24 @@
             Você também pode gostar
           </div>
 
-          <div class="product-container d-flex mt-5" style="gap: 15px;">
-            <div class="product-division d-flex" style="gap: 15px; flex: 1;">
-              <div v-for="recomendedProduct in recommendedProducts.slice(0, 2)" class="product-card d-flex flex-column"
-                elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
+          <div class="product-container w-100 mt-5">
+            <div class="product-grid">
+              <div v-for="recomendedProduct in recommendedProducts" :key="recomendedProduct.id"
+                class="product-card d-flex w-100 flex-column"
+                @click="handleRecommendedProductClick(recomendedProduct.id)">
                 <div class="product-card-top">
                   <img :src="recomendedProduct.displayImage" alt="" />
                 </div>
 
                 <div class="product-card-bottom">
                   <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
-                  <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
+                  <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px;">
                     {{ recomendedProduct.displayDescription }}
                   </p>
                   <div class="product-card-price">
-                    <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="recommendedProducts.length > 2" class="product-division d-flex" style="gap: 15px; flex: 1;">
-              <div v-for="recomendedProduct in recommendedProducts.slice(2, 4)" class="product-card d-flex flex-column"
-                elevation="0" style="flex: 1;" @click="handleRecommendedProductClick(recomendedProduct.id)">
-                <div class="product-card-top">
-                  <img :src="recomendedProduct.displayImage" alt="" />
-                </div>
-
-                <div class="product-card-bottom">
-                  <div class="font-weight-bold">{{ recomendedProduct.name }}</div>
-                  <p class="text-subtitle-2 font-weight-light" style="margin-bottom: 1px">
-                    {{ recomendedProduct.displayDescription }}
-                  </p>
-                  <div class="product-card-price">
-                    <div class="text-subtitle-2 font-weight-regular">{{ formatPrice(recomendedProduct.price) }}</div>
+                    <div class="text-subtitle-2 font-weight-regular">
+                      {{ formatPrice(recomendedProduct.price) }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -322,7 +310,9 @@ onBeforeMount(async () => {
 
   loadingProduct.value = false;
 
-  /*  await duplicateDocument(); */
+  if (product.value) {
+    document.title = product.value.name + " | FURVANA";
+  }
 });
 </script>
 
@@ -344,6 +334,7 @@ onBeforeMount(async () => {
       padding-top: 40px;
 
       .product-title {
+        word-wrap: break-word;
         font-size: 1.6rem;
       }
 
@@ -405,10 +396,16 @@ onBeforeMount(async () => {
       width: 40%;
 
       .product-checkout {
+        word-break: break-word !important;
+
         .small-desc {
           font-size: 0.9rem;
           margin-top: 16px;
         }
+      }
+
+      .product-details-list {
+        word-break: break-word !important;
       }
     }
   }
@@ -442,6 +439,7 @@ onBeforeMount(async () => {
 
     .wrapper {
       max-width: 450px;
+      word-break: break-word !important;
     }
 
     &.left-side {
@@ -463,6 +461,16 @@ onBeforeMount(async () => {
     display: flex;
     align-items: center;
     gap: 15px;
+
+    .product-card-bottom {
+      word-break: break-word !important;
+    }
+
+    .product-grid {
+      display: grid;
+      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
   }
 
   @media (max-width: $tablet) {
@@ -563,8 +571,9 @@ onBeforeMount(async () => {
     }
 
     .youmaylike {
-      .product-container {
-        flex-direction: column !important;
+      .product-grid {
+        /* grid-template-columns: repeat(4, 1fr); */
+        /* Max 4 columns on desktop */
       }
     }
   }
@@ -573,6 +582,12 @@ onBeforeMount(async () => {
     .product-division {
       flex-direction: column;
     }
+
+    /* .product-title {
+      max-width: 40% !important;
+      padding-right: 0 !important;
+      font-size: 1.1rem;
+    } */
   }
 }
 </style>

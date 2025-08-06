@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="displayFilterDrawer" width="320" style="top: 0; height: 100%" absolute temporary>
+  <v-navigation-drawer v-model="displayFilterDrawer" width="320" style="top: 0; height: 100%; z-index: 9999 !important;" absolute temporary>
     <div class="drawer-header d-flex justify-space-between">
       <div class="font-weight-bold" style="font-size: 1.1rem; margin-left: 14px;">Filtrar e Organizar</div>
       <v-btn @click="hideNavigationDrawer()" elevation="0" icon :ripple="false">

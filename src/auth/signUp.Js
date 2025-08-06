@@ -1,6 +1,12 @@
 import { auth } from '../firebase';
+
 import { createUser } from "@/data/user";
+import { addProductToCart } from "@/data/cart.js"
+
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useCartStore } from "@/store/store.js";
+
+const cartStore = useCartStore();
 
 const getAuthErrorMessage = (errorCode) => {
     const errorMessages = {
@@ -25,7 +31,19 @@ export default async (email, password) => {
         const user = userCredential.user;
 
         if (user.uid) {
+            const localCart = cartStore.getLocalCart();
+
             await createUser(user.uid, user.email, password);
+
+            if (localCart && localCart.length && user.uid) {
+                localCart.forEach(async item => {
+                    const response = await addProductToCart(user.uid, item.productId, item.quantity);
+
+                    if (response) {
+                        cartStore.updateCartProduct(item.productId, "remove");
+                    }
+                });
+            }
         } else {
             throw new Error("Credentials not returned");
         }

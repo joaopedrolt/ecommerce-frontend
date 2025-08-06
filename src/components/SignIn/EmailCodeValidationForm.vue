@@ -6,7 +6,8 @@
         <div class="signin-content">
           <SignInHeader title="Validação" subtitle="Insira o código de segurança recebido" />
 
-          <v-otp-input v-model="validationCodeInput" class="my-1" type="number" :disabled="loading" :error="validationError"></v-otp-input>
+          <v-otp-input v-model="validationCodeInput" class="my-1" type="number" :disabled="loading"
+            :error="validationError"></v-otp-input>
 
           <template v-if="validationErrorMessage && validationErrorMessage.length > 0">
             <transition name="dropdown" @before-leave="instantLeave">
@@ -52,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onUnmounted } from "vue";
+import { ref, watch, computed, onBeforeMount } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "vue-router";
@@ -95,11 +96,12 @@ const formattedTime = (props) => {
 };
 
 const codeStringValidation = (codeString) => {
-  return (
-    codeString.length >= 6 &&
-    !/\s/g.test(codeString) &&
-    !/[a-zA-Z]/.test(codeString)
-  );
+  try {
+    return codeString.trim().length >= 6
+  } catch (error) {
+    console.error("Erro ao formatar o código:", error);
+    return false;
+  }
 };
 
 const handleSendAnotherCodeClick = async () => {
@@ -128,7 +130,7 @@ const handleValidationClick = async () => {
     return;
   }
 
-  if (otpCode.value == validationCodeInput.value) {
+  if (otpCode.value.trim() == validationCodeInput.value.trim()) {
     let routeParams = {
       name: "Password",
       query: { type: queryParamType.value },
@@ -136,7 +138,6 @@ const handleValidationClick = async () => {
 
     if (fromQuery.value != null && fromQuery.value?.length > 0) {
       routeParams.query['from'] = fromQuery.value;
-      console.log(routeParams.query['from'])
     }
 
     validationErrorMessage.value = null;
@@ -165,9 +166,9 @@ const instantLeave = (el) => {
   el.style.opacity = "0";
 };
 
-/* onUnmounted(() => {
-  signInEmailInput.value = "";
-}); */
+onBeforeMount(() => {
+  document.title = "Validar | FURVANA"
+});
 </script>
 
 <style lang="scss">

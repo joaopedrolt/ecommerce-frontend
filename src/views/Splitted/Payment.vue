@@ -453,6 +453,8 @@ const handlePageExit = (route) => {
 }
 
 onBeforeMount(async () => {
+  document.title = "Pedido | FURVANA"
+
   const orderId = route.query.o;
 
   order.value = await getOrder(orderId);

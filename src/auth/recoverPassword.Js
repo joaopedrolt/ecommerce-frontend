@@ -1,11 +1,19 @@
 import { auth } from '../firebase';
 import { sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 
+import getHost from '@/utils/getHost';
 
 export async function recoverPasswordOut(email) {
   try {
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-    
+    const host = getHost();
+
+    if (!host)
+      throw new Error("Sem url");
+
+    const baseUrl = host;
+
+    console.log(baseUrl)
+
     const url = `${baseUrl}/c/entrar/criarsenha?type=recover&email=${encodeURIComponent(email)}`;
 
     console.log("Base URL: ", baseUrl);

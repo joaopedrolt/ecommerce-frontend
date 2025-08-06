@@ -101,6 +101,8 @@ onBeforeMount(async () => {
   await loadFeaturedProducts();
 
   if (queryParamCart) displayCartDrawerr();
+
+  document.title = "FURVANA";
 });
 </script>
 

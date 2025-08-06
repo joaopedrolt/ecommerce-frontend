@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
@@ -99,7 +99,6 @@ const handleContinueClick = async () => {
 
           if (fromQuery.value != null && fromQuery.value?.length > 0) {
             routeParams.query['from'] = fromQuery.value;
-            console.log(routeParams.query['from'])
           }
 
           router.push(routeParams);
@@ -124,6 +123,10 @@ onBeforeRouteLeave((to, from) => {
   /* if (otpCode.value && otpCode.value.length > 0) {
     router.push({ name: "EmailValidation" });
   } */
+});
+
+onBeforeMount(() => {
+  document.title = "Entrar | FURVANA"
 });
 </script>
 

@@ -1315,7 +1315,7 @@ const processPayment = async () => {
         cidade: shippingData.value.cidade,
         estado: shippingData.value.estado,
         cep: shippingData.value.cep,
-        price: shippingData.value.price
+        price: freteData.value.price
       },
       products: products.value.length >= 0 ?
         products.value.map((product) => ({
@@ -1427,6 +1427,9 @@ watch(paymentMethodRatio, (newMethod) => {
 });
 
 onBeforeMount(async () => {
+  document.title = "Checkout | FURVANA"
+
+
   userId.value = authStore.getUserId();
 
   if (userId.value) {
@@ -1449,8 +1452,6 @@ onBeforeMount(async () => {
 
   if (isShippingDataValid.value) {
     Object.assign(shipping, shippingData.value);
-
-    alert("OI")
 
     if (shipping.numero == null || shipping.numero.length == 0) {
       cartStore.setShippingDataStatus(false);
@@ -1488,6 +1489,16 @@ onBeforeMount(async () => {
       });
 
       displayAddressPartialForm.value = true;
+    }
+  }
+  else {
+    try {
+      const email = authStore.getUserEmail();
+
+      if (email && email.length > 0)
+        shipping.email = email;
+    } catch {
+      console.log("Sem email logado");
     }
   }
 

@@ -1,6 +1,6 @@
 <template>
-  <v-navigation-drawer scroll-strategy="block" v-model="displayCartDrawer" style="width: 500px;" fixed temporary
-    location="right">
+  <v-navigation-drawer scroll-strategy="block" v-model="displayCartDrawer"
+    style="width: 500px; z-index: 9999 !important;" fixed temporary location="right">
     <div class="pl-4 pr-3 drawer-header justify-space-between">
       <div class="d-flex align-center text-overline font-weight-regular">
         <v-icon class="mr-2">mdi-cart</v-icon>

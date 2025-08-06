@@ -16,7 +16,7 @@
             ]" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" :disabled="loadingRecovery"
               :type="showPassword ? 'text' : 'password'" label="Senha" variant="outlined"
               @click:append-inner="showPassword = !showPassword" :rules="passwordRules" persistent-hint
-              @keyup.enter="handleLogInClick" @keydown.enter.prevent
+              @keyup.enter="handleLoginClick" @keydown.enter.prevent
               :hide-details="isPasswordValid && signInErrorMessage && signInErrorMessage.length > 0"></v-text-field>
 
             <validation-filler :active="!isPasswordValid" />
@@ -32,7 +32,7 @@
             </transition>
           </template>
 
-          <v-btn @click="handleLogInClick" :disabled="loadingRecovery" :loading="loading"
+          <v-btn @click="handleLoginClick" :disabled="loadingRecovery" :loading="loading"
             class="text-subtitle-1 font-weight-regular button-color button-light mb-4" height="45px" width="100%"
             variant="flat" :ripple="false">
             Entrar
@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useSignInStore } from "@/store/store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "vue-router";
@@ -187,7 +187,7 @@ const handleEditClick = () => {
   router.push(routeParams);
 };
 
-const handleLogInClick = async () => {
+const handleLoginClick = async () => {
   loading.value = true;
   signInErrorMessage.value = null;
 
@@ -204,7 +204,9 @@ const handleLogInClick = async () => {
     } else {
       if (fromQuery.value != null && fromQuery.value?.length > 0) {
         try {
-          router.push({ name: fromQuery.value });
+          setTimeout(() => {
+            router.push({ name: fromQuery.value });
+          }, 400);
         } catch (error) {
           console.error(error);
           router.push({ name: "Home" });
@@ -237,15 +239,15 @@ const handleRecoverPassword = async () => {
   loadingRecovery.value = false;
 }
 
-onMounted(() => {
-  /*   emailInputValue = signInEmailInput.value; */
-});
-
 const instantLeave = (el) => {
   el.style.transition = "none";
   el.style.maxHeight = "none";
   el.style.opacity = "0";
 };
+
+onBeforeMount(() => {
+  document.title = "Entrar | FURVANA"
+});
 </script>
 
 <style lang="scss">

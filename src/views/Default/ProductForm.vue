@@ -40,15 +40,16 @@
                 <div class="parent-input-container">
                   <div class="d-flex flex-column" style="flex: 1;">
                     <v-text-field v-model="productBasicInfo.name" class="sibling-input" label="Nome do Produto"
-                      variant="outlined" :rules="nomeRules" :disabled="loadingProductInput" density="comfortable">
+                      variant="outlined" :rules="notEmptyRules" maxlength="50" :disabled="loadingProductInput"
+                      density="comfortable">
                     </v-text-field>
                     <validation-filler :active="!productBasicInfoFormValidation.name" />
                   </div>
 
                   <div class="d-flex flex-column" style="flex: 1;">
                     <v-text-field v-model="productBasicInfo.displayDescription" class="sibling-input"
-                      label="Descrição Curta" variant="outlined" :rules="nomeRules" :disabled="loadingProductInput"
-                      density="comfortable">
+                      label="Descrição de Exibição" variant="outlined" :rules="notEmptyRules" maxlength="50"
+                      :disabled="loadingProductInput" density="comfortable">
                     </v-text-field>
                     <validation-filler :active="!productBasicInfoFormValidation.displayDescription" />
                   </div>
@@ -72,16 +73,17 @@
                 </div>
 
                 <div class="d-flex flex-column" style="flex: 1;">
-                  <v-textarea v-model="productBasicInfo.shortDescription" class="sibling-input" label="Descrição Básica"
-                    variant="outlined" :rules="nomeRules" :disabled="loadingProductInput" density="comfortable">
-                  </v-textarea>
+                  <v-text-field v-model="productBasicInfo.shortDescription" class="sibling-input"
+                    label="Descrição Básica" variant="outlined" :rules="notEmptyRules" :disabled="loadingProductInput"
+                    density="comfortable" maxlength="185">
+                  </v-text-field>
                   <validation-filler :active="!productBasicInfoFormValidation.shortDescription" />
                 </div>
 
                 <div class="d-flex flex-column" style="flex: 1;">
                   <v-textarea v-model="productBasicInfo.longDescription" class="sibling-input"
-                    label="Características do Produto" variant="outlined" :rules="nomeRules"
-                    :disabled="loadingProductInput" density="comfortable">
+                    label="Características do Produto" variant="outlined" :rules="notEmptyRules"
+                    :disabled="loadingProductInput" density="comfortable" maxlength="600">
                   </v-textarea>
                   <validation-filler :active="!productBasicInfoFormValidation.longDescription" />
                 </div>
@@ -340,14 +342,16 @@
                   <div class="d-flex flex-column" style="flex: 1;">
 
                     <v-text-field v-model="selectedSectionPage.title" class="sibling-input" label="Titulo"
-                      variant="outlined" :rules="nomeRules" :disabled="loadingProductInput" density="comfortable">
+                      variant="outlined" :rules="notEmptyRules" maxlength="80" :disabled="loadingProductInput"
+                      density="comfortable">
                     </v-text-field>
                     <validation-filler :active="!selectedSectionPageFormValidation.title" />
                   </div>
 
                   <div class="d-flex flex-column" style="flex: 1;">
-                    <v-textarea v-model="selectedSectionPage.subtitle" class="sibling-input" label="Subtítulo"
-                      variant="outlined" :rules="nomeRules" :disabled="loadingProductInput" density="comfortable">
+                    <v-textarea v-model="selectedSectionPage.subtitle" class="sibling-input" label="Corpo da Sessão"
+                      variant="outlined" :rules="notEmptyRules" maxlength="300" :disabled="loadingProductInput"
+                      density="comfortable">
                     </v-textarea>
                     <validation-filler :active="!selectedSectionPageFormValidation.subtitle" />
                   </div>
@@ -447,14 +451,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 
 import {
   nomeRules,
   imageUploadRules,
   precoRules,
-  productImageRules
+  productImageRules,
+  notEmptyRules
 } from "@/utils/rules";
 
 import formatPrice from "@/utils/formatPrice";
@@ -929,7 +934,7 @@ const submitProduct = async () => {
         sectionPosition: index + 1
       })),
 
-      displayImageUrl: displayImageUrl
+      displayImage: displayImageUrl
     }
 
     const responseProductId = await createProduct(productData);
@@ -950,6 +955,12 @@ const submitProduct = async () => {
     loadingProductSubmit.value = false;
   }
 }
+
+onBeforeMount(async () => {
+  setTimeout(() => {
+      document.title =  "Cadastrar Produto" + " | FURVANA";
+  }, 500);
+})
 </script>
 
 <style lang="scss">

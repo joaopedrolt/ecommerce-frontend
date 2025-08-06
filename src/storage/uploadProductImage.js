@@ -16,5 +16,6 @@ export default async function uploadImage(productId, fileName, file) {
         return downloadURL;
     } catch (error) {
         console.error('Upload failed', error);
+        throw error;
     }
 }

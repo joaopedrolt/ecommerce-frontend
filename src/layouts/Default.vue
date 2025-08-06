@@ -13,12 +13,12 @@
 
     <v-tooltip v-model="showTooltip" location="left">
       <template v-slot:activator="{ props }">
-        <v-btn @click="handleProductForm" elevation="6" v-bind="props" icon class="chat-btn">
+        <v-btn @click="handleProductForm" size="large" elevation="6" v-bind="props" icon class="chat-btn">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
 
-      <div>Clique aqui para adicionar seu produto!</div>
+      <div class="text-subtitle-2 font-weight-regular">Clique no "+" para adicionar seu produto</div>
     </v-tooltip>
   </div>
 </template>
@@ -56,7 +56,7 @@ onBeforeMount(() => {
 
         setTimeout(() => {
           showTooltip.value = false;
-        }, 6000);
+        }, 15000);
       }, 500);
     }
   }

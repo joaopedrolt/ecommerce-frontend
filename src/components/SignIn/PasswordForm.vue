@@ -197,7 +197,9 @@ const handleSubmitPasswordFormClick = async () => {
       if (success) {
         if (fromQuery.value != null && fromQuery.value?.length > 0) {
           try {
-            router.push({ name: fromQuery.value });
+            setTimeout(() => {
+              router.push({ name: fromQuery.value });
+            }, 400);
           } catch (error) {
             console.log(error);
             router.push({ name: "Home" });
@@ -234,6 +236,8 @@ watch(passwordInputValue, () => {
 });
 
 onBeforeMount(async () => {
+  document.title = "Senha | FURVANA"
+
   if (typeQuery.value == "recover") {
     signInEmailInput.value = decodeURIComponent(emailQuery.value);
 

@@ -5,7 +5,8 @@
         <search />
 
         <template v-if="loadingProducts">
-          <div class="d-flex flex-column align-center px-3 height-limit h-100 justify-center" style="flex: 1; padding-bottom: 75px !important;">
+          <div class="d-flex flex-column align-center px-3 height-limit h-100 justify-center"
+            style="flex: 1; padding-bottom: 75px !important;">
             <div class="mb-2 text-subtitle-1 font-weight-light">Buscando Produtos...</div>
             <v-progress-linear indeterminate></v-progress-linear>
           </div>
@@ -67,15 +68,15 @@
 
                           </template>
 
-              <v-list elevation="1" class="dropdown-orderby-list" density="compact" :items="items">
-                <v-list-item :ripple="false" v-for="(item, index) in items" :key="index" @click="selectedItem = index"
-                  :active="index == selectedItem">
-                  <v-list-item-title>
-                    <div class="w-100 h-100 text-end font-weight-regular" style="font-size: 0.8rem;">{{ item }}</div>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-              </v-menu> -->
+<v-list elevation="1" class="dropdown-orderby-list" density="compact" :items="items">
+  <v-list-item :ripple="false" v-for="(item, index) in items" :key="index" @click="selectedItem = index"
+    :active="index == selectedItem">
+    <v-list-item-title>
+      <div class="w-100 h-100 text-end font-weight-regular" style="font-size: 0.8rem;">{{ item }}</div>
+    </v-list-item-title>
+  </v-list-item>
+</v-list>
+</v-menu> -->
             </div>
 
             <div class="d-flex">
@@ -83,7 +84,8 @@
                 <filter-list :filterList="filterList" :active-filters="activeFilters"
                   @update-filters="updateActiveFilters" />
               </div>
-              <products :products="products" :active-filters="activeFilters" :updateRenderComponent="updateRenderComponent" />
+              <products :products="products" :active-filters="activeFilters"
+                :updateRenderComponent="updateRenderComponent" />
             </div>
           </template>
         </template>
@@ -203,7 +205,9 @@ onBeforeMount(async () => {
 
   setTimeout(() => {
     searchQuery.value = route.query.q;
-    loadingProducts.value = false; 
+    loadingProducts.value = false;
+
+    document.title = searchQuery.value[0].toUpperCase() + searchQuery.value.slice(1) + " | FURVANA";
   }, 500);
 })
 </script>

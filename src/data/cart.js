@@ -63,7 +63,6 @@ export const getProductsDetails = async (basicProductList) => {
 
     try {
         return await Promise.all(basicProductList.map(async (cartProduct) => {
-
             const productId = cartProduct.productId;
             const product = await getProduct(productId);
 
@@ -127,7 +126,7 @@ export const addProductToCart = async (userId, productId, quantity) => {
         if (!userId || !productId || !quantity) return false;
 
         const cartRef = doc(db, collectionNames.carts, userId);
-        const cartDoc = await getDoc(cartRef);
+        var cartDoc = await getDoc(cartRef);
 
         if (!cartDoc.exists()) {
             console.warn(`No cart found for user ID: ${userId}`);

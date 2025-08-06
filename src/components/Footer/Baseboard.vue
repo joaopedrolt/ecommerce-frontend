@@ -19,17 +19,17 @@ const itemsBaseboardLinks = [
   {
     title: "Termos e condições",
     disabled: false,
-    href: "breadcrumbs_dashboard",
+    href: "/",
   },
   {
     title: "Contato",
     disabled: false,
-    href: "breadcrumbs_dashboard",
+    href: "/",
   },
   {
     title: "Política de privacidade",
     disabled: false,
-    href: "breadcrumbs_dashboard",
+    href: "/",
   },
 ];
 </script>

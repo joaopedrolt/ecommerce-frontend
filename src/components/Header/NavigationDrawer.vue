@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="displayNavigationDrawer" scroll-strategy="block" style="width: 500px;" fixed temporary>
+  <v-navigation-drawer v-model="displayNavigationDrawer" scroll-strategy="block" style="width: 500px; z-index: 9999 !important;" fixed temporary>
     <div class="px-2 drawer-header justify-space-between">
       <template v-if="window != 0">
         <v-btn @click="returnDefaultWindow()" class="d-flex h-100 align-top" elevation="0" icon :ripple="false"
