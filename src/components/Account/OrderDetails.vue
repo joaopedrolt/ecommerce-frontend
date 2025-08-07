@@ -256,12 +256,6 @@ $section-gap: 38px;
     }
 }
 
-.products-container {
-    .product-item {
-        /*  border-left: 1px solid $color-border; */
-    }
-}
-
 .border-left {
     border-left: 1px solid $color-border;
 }
@@ -287,6 +281,4 @@ $section-gap: 38px;
         gap: $section-gap;
     }
 }
-
-.battery-bar {}
 </style>
