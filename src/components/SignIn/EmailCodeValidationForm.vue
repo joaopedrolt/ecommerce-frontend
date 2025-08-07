@@ -22,7 +22,7 @@
           <div class="text-subtitle-2 font-weight-light">
             Enviamos um código para o e-mail
             <b>{{ signInEmailInput }}</b> para garantir sua segurança. Caso não
-            tenha recebido, verifique sua caixa de spam.
+            tenha recebido, <b>VERIFIQUE SUA CAIXA DE SPAM!</b>.
           </div>
 
           <div v-if="showCountdown" class="text-subtitle-1 font-weight-light mt-2 mb-3">

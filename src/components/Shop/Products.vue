@@ -16,8 +16,8 @@
                 {{ p.raw.displayDescription }}
               </p>
               <div class="product-card-price">
-                <div class="text-subtitle-2 font-weight-regular"> {{ p.raw.price }} </div>
-                <div class="text-caption price-cents">99</div>
+                <div class="text-subtitle-2 font-weight-regular"> {{ formatPrice(p.raw.price) }} </div>
+                <!--    <div class="text-caption price-cents">99</div> -->
               </div>
             </div>
           </div>
@@ -43,6 +43,8 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+
+import formatPrice from "@/utils/formatPrice";
 
 const props = defineProps({
   products: Array,

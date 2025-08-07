@@ -190,6 +190,8 @@ const handleFilterMobileClick = () => {
 
 watch(searchQuery, async () => {
   if (searchQuery.value) {
+    document.title = searchQuery.value[0].toUpperCase() + searchQuery.value.slice(1) + " | FURVANA";
+
     loadingProducts.value = true;
 
     products.value = [];

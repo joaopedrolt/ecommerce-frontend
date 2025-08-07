@@ -914,16 +914,18 @@ const submitProduct = async () => {
       throw new Error('Erro ao fazer upload das imagens section.');
     }
 
+    console.log(productBasicInfo.price);
+
     const productData = {
       name: productBasicInfo.name,
       imagesIdRef: imageIdRef,
       displayDescription: productBasicInfo.displayDescription,
-      price: parseInt(productBasicInfo.price),
+      price: parseFloat(productBasicInfo.price.replace(',', '.')),
       shortDescription: productBasicInfo.shortDescription,
       longDescription: productBasicInfo.longDescription,
       createdAt: new Date(),
       discount: 0,
-      grossPrice: parseInt(productBasicInfo.price),
+      grossPrice: parseFloat(productBasicInfo.price.replace(',', '.')),
       stock: 100,
       images: productImagesUrls,
       sections: sectionsPage.value.map((section, index) => ({
@@ -958,7 +960,7 @@ const submitProduct = async () => {
 
 onBeforeMount(async () => {
   setTimeout(() => {
-      document.title =  "Cadastrar Produto" + " | FURVANA";
+    document.title = "Cadastrar Produto" + " | FURVANA";
   }, 500);
 })
 </script>
