@@ -1,4 +1,4 @@
-import { db, collectionNames } from '../firebase';
+import { db, collectionNames } from "@/firebase";
 import { collection, query, where, getDocs, doc, setDoc, updateDoc } from "firebase/firestore";
 
 export const createUser = async (userdId, email, password) => {

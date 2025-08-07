@@ -1,4 +1,4 @@
-import { auth } from '../firebase';
+import { auth } from "@/firebase";
 
 import { createUser } from "@/data/user";
 import { addProductToCart } from "@/data/cart.js"

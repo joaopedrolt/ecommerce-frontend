@@ -1,4 +1,4 @@
-import { auth } from "../firebase";
+import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 import setUserState from "@/store/setUserState";
@@ -13,8 +13,6 @@ export default async () => {
                 } else {
                     resolve(false);
                 }
-            
-               /* Arruamr Atualizar carrinho quando logar  */
         });
     });
 };

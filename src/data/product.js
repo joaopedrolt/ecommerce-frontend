@@ -1,4 +1,4 @@
-import { db, collectionNames } from '../firebase';
+import { db, collectionNames } from "@/firebase";
 import { doc, getDoc, getDocs, addDoc, collection, query, orderBy, startAt, endAt, where } from 'firebase/firestore';
 import getRandomListItens from "@/utils/getRandomListItens";
 

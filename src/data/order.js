@@ -1,4 +1,4 @@
-import { db, collectionNames } from '../firebase';
+import { db, collectionNames } from "@/firebase";
 import { addDoc, doc, collection, query, where, getDocs, getDoc, updateDoc } from 'firebase/firestore';
 
 import { getProduct } from '@/data/product';

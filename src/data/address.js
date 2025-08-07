@@ -1,4 +1,4 @@
-import { db, collectionNames } from '../firebase';
+import { db, collectionNames } from "@/firebase"; 
 import { addDoc, collection, where, query, getDocs, getDoc, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 export const checkFirstAddressForUser = async (userId) => {
