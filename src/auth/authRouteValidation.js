@@ -1,6 +1,5 @@
 import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-
 import setUserState from "@/store/setUserState";
 
 export default async () => {

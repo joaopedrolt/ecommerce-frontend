@@ -1,6 +1,5 @@
 import { auth } from "@/firebase";
 import { sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-
 import getHost from '@/utils/getHost';
 
 export async function recoverPasswordOut(email) {

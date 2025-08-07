@@ -8,4 +8,4 @@ export default async (user, newPassword) => {
     console.error("Update Password: ", error);
     return false;
   }
-}
+} 

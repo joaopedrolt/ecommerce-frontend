@@ -1,8 +1,6 @@
 import { auth } from "@/firebase";
-
 import { createUser } from "@/data/user";
 import { addProductToCart } from "@/data/cart.js"
-
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useCartStore } from "@/store/store.js";
 

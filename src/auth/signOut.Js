@@ -6,7 +6,7 @@ export default async () => {
         await signOut(auth);
         return true;
     } catch (error) {
-        console.error("Erro ao fazer deslogar:", error); // Log para depuração
+        console.error("Erro ao fazer deslogar:", error); 
         return false;
     }
 }
