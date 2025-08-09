@@ -1,6 +1,6 @@
 {
-  "name": "eSupplements",
-  "version": "0.0.0",
+  "name": "furvana-ecommerce",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

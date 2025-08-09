@@ -1,6 +1,6 @@
-# eSupplements Frontend (Português)
+# Furvana E-commerce Frontend
 
-Uma aplicação web de e-commerce moderna (SPA) para suplementos nutricionais construída com **Vue 3**, **Vite**, **Vuetify 3** e **Pinia**. O app integra-se ao **Firebase** para autenticação e dados, oferecendo uma experiência de compra e checkout suave.
+Um **template** de aplicação web de e-commerce moderna (SPA), construído com **Vue 3**, **Vite**, **Vuetify 3** e **Pinia**. O app integra-se ao **Firebase** para autenticação e dados, oferecendo uma experiência de compra e checkout suave.
 
 ---
 
@@ -10,9 +10,6 @@ Uma aplicação web de e-commerce moderna (SPA) para suplementos nutricionais co
 3. [Fluxo da Aplicação](#fluxo-da-aplicação)
 4. [Variáveis de Ambiente](#variáveis-de-ambiente)
 5. [Configuração do Projeto](#configuração-do-projeto)
-6. [Compilação & Hot-Reload](#compilação-e-hot-reload-para-desenvolvimento)
-7. [Build para Produção](#compila-e-minifica-para-produção)
-8. [Licença](#licença)
 
 ## Stack Tecnológico
 - **Vue 3** + **Vite** – servidor de desenvolvimento e bundle super-rápidos.
@@ -66,14 +63,11 @@ VITE_FIREBASE_AUTH_DOMAIN=<seu-domínio>
 
 ## Configuração do Projeto
 ```bash
-# yarn
-yarn
-
 # npm
 npm install
 
-# npm
+# dev
 npm run dev
 
-# npm
+# produção
 npm run build
