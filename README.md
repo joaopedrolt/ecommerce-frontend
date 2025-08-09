@@ -1,4 +1,4 @@
-<h2 align="center">Furvana E-commerce Frontend</h2>
+<h2 align="center">Furvana E-commerce Template</h2>
 
 ## Índice
 
@@ -15,6 +15,8 @@
 
 Um **template** de aplicação web de e-commerce moderna (SPA), construída com **Vue 3**, **Vite**, **Vuetify 3** e **Pinia**.  
 O app integra-se ao **Firebase** para autenticação e dados, oferecendo uma experiência de compra e checkout suave.
+
+<h4><a href="https://joaopedrolt.github.io/whatsapp-clone-reactjs/">Você pode acessar esse projeto clicando aqui</a></h3>
 
 ## Stack Tecnológico
 
@@ -96,6 +98,6 @@ Este projeto foi criado como base para aplicações de e-commerce modernas, perm
 
 ## Imagens do Projeto
 
-<div><img src="http://drive.google.com/uc?export=view&id=1S4OJjIsantdD5A-9bkKvpYTlzOUhSTA5" alt="Home" /></div> 
-<div><img src="http://drive.google.com/uc?export=view&id=1lE-Ejfg6dfh_pl1O_e4MEpIgjWrT6k_c" alt="Checkout" /></div>
-<div><img src="http://drive.google.com/uc?export=view&id=1Xo_luIUXzbKpbsG0-qLP2uTQGAIeuhQV" alt="Overview" /></div>
+<div align="center"><img src="http://drive.google.com/uc?export=view&id=1S4OJjIsantdD5A-9bkKvpYTlzOUhSTA5" width=600 alt="Home" /></div> 
+<div align="center"><img src="http://drive.google.com/uc?export=view&id=1Xo_luIUXzbKpbsG0-qLP2uTQGAIeuhQV" width=600 alt="Overview" /></div>
+<div align="center"><img src="http://drive.google.com/uc?export=view&id=1lE-Ejfg6dfh_pl1O_e4MEpIgjWrT6k_c" width=300 alt="Checkout" /></div>
