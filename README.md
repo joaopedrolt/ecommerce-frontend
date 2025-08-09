@@ -16,7 +16,7 @@
 Um **template** de aplicação web de e-commerce moderna (SPA), construída com **Vue 3**, **Vite**, **Vuetify 3** e **Pinia**.  
 O app integra-se ao **Firebase** para autenticação e dados, oferecendo uma experiência de compra e checkout suave.
 
-<h4><a href="https://joaopedrolt.github.io/whatsapp-clone-reactjs/">Você pode acessar esse projeto clicando aqui</a></h3>
+<h4><a href="https://furvana-ecommerce.vercel.app/">Você pode acessar esse projeto clicando aqui</a></h3>
 
 ## Stack Tecnológico
 
